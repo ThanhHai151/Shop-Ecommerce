@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Đơn Hàng - Computer Shop Admin</title>
+    <link rel="stylesheet" th:href="@{/CSS/admin.css}">
+    <link rel="stylesheet" th:href="@{/CSS/admin-order.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <h2><i class="fas fa-laptop"></i> Admin Panel</h2>
+            </div>
+            <ul class="admin-nav">
+                <li><a th:href="@{/admin/dashboard}"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> Người Dùng</a></li>
+                <li><a th:href="@{/admin/products}"><i class="fas fa-box"></i> Sản Phẩm</a></li>
+                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> Danh Mục</a></li>
+                <li><a th:href="@{/admin/orders}" class="active"><i class="fas fa-shopping-cart"></i> Đơn Hàng</a></li>
+                <li><a th:href="@{/}"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+            </ul>
+        </nav>
+
+        
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1><i class="fas fa-shopping-cart"></i> Quản Lý Đơn Hàng</h1>
+                <p>Theo dõi và quản lý tất cả đơn hàng</p>
+            </div>
+
+            
+            <div th:if="${success}" class="admin-alert admin-alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="admin-alert admin-alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            
+            <div class="admin-table-container">
+                <div class="admin-table-header">
+                    <h2><i class="fas fa-list"></i> Danh Sách Đơn Hàng</h2>
+                    <div class="admin-table-actions">
+                        <span class="admin-summary-count">
+                            <i class="fas fa-shopping-cart"></i>
+                            Tổng: <strong th:text="${#lists.size(orders)}">0</strong> đơn hàng
+                        </span>
+                    </div>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Khách Hàng</th>
+                            <th>Ngày Đặt</th>
+                            <th>Tổng Tiền</th>
+                            <th>Trạng Thái</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td>
+                                <strong th:text="'#' + ${order.orderId}"></strong>
+                            </td>
+                            <td>
+                                <div class="customer-info">
+                                    <strong th:text="${order.user?.username ?: 'N/A'}"></strong>
+                                    <small class="text-muted" th:text="${order.user?.email ?: ''}"></small>
+                                </div>
+                            </td>
+                            <td>N/A</td>
+                            <td>
+                                <strong class="text-success money-display" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'"></strong>
+                            </td>
+                            <td>
+                                <span class="admin-badge admin-badge-info" th:text="${order.status ?: 'Đang xử lý'}"></span>
+                            </td>
+                            <td>
+                                <div class="admin-actions">
+                                    
+                                    <a th:href="@{/admin/orders/{id}(id=${order.orderId})}" 
+                                       class="admin-btn admin-btn-info admin-btn-sm">
+                                        <i class="fas fa-eye"></i> Xem Chi Tiết
+                                    </a>
+                                    
+                                    
+                                    <div class="admin-dropdown">
+                                        <button class="admin-btn admin-btn-secondary admin-btn-sm dropdown-toggle" 
+                                                type="button" 
+                                                th:onclick="|toggleDropdown('status-${order.orderId}')|">
+                                            <i class="fas fa-edit"></i> Trạng Thái
+                                        </button>
+                                        <div th:id="|status-${order.orderId}|" class="admin-dropdown-menu" style="display: none;">
+                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
+                                                <input type="hidden" name="status" value="pending">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="fas fa-clock"></i> Đang xử lý
+                                                </button>
+                                            </form>
+                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
+                                                <input type="hidden" name="status" value="confirmed">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="fas fa-check"></i> Đã xác nhận
+                                                </button>
+                                            </form>
+                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
+                                                <input type="hidden" name="status" value="shipping">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="fas fa-truck"></i> Đang giao
+                                                </button>
+                                            </form>
+                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
+                                                <input type="hidden" name="status" value="completed">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="fas fa-check-circle"></i> Hoàn thành
+                                                </button>
+                                            </form>
+                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
+                                                <input type="hidden" name="status" value="cancelled">
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="fas fa-times"></i> Hủy bỏ
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(orders)}">
+                            <td colspan="6" class="text-center text-muted">
+                                <i class="fas fa-shopping-cart"></i> Không có đơn hàng nào
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-primary">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${#lists.size(orders)}">0</h3>
+                        <p>Tổng Đơn Hàng</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${pendingCount}">0</h3>
+                        <p>Đang Xử Lý</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-info">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${shippingCount}">0</h3>
+                        <p>Đang Giao</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${completedCount}">0</h3>
+                        <p>Hoàn Thành</p>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="admin-revenue-summary">
+                <div class="admin-form-container">
+                    <div class="admin-form-header">
+                        <h2><i class="fas fa-chart-line"></i> Tổng Quan Doanh Thu</h2>
+                    </div>
+                    <div class="admin-stats-grid">
+                        <div class="admin-stat-card admin-stat-large">
+                            <div class="admin-stat-icon admin-stat-success">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="admin-stat-content">
+                                <h3 class="money-display money-large money-highlight" th:text="${#numbers.formatDecimal(#aggregates.sum(orders.![totalAmount]), 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</h3>
+                                <p>Tổng Doanh Thu</p>
+                            </div>
+                        </div>
+                        <div class="admin-stat-card admin-stat-large">
+                            <div class="admin-stat-icon admin-stat-primary">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="admin-stat-content">
+                                <h3 class="money-display money-large" th:text="${#numbers.formatDecimal(#aggregates.avg(orders.![totalAmount]), 0, 'COMMA', 0, 'POINT')} + ' VND'" th:if="${!#lists.isEmpty(orders)}">0 VND</h3>
+                                <h3 th:if="${#lists.isEmpty(orders)}">0 VND</h3>
+                                <p>Giá Trị Trung Bình</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.admin-alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 5000);
+        });
+
+        // Toggle dropdown menu
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const isVisible = dropdown.style.display !== 'none';
+            
+            // Hide all dropdowns first
+            document.querySelectorAll('.admin-dropdown-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+            
+            // Show/hide current dropdown
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.admin-dropdown')) {
+                document.querySelectorAll('.admin-dropdown-menu').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

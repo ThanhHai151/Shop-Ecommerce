@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${product.productName} + ' - JSB ComputerShop'">Chi tiết sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/CSS/style.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/header.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
+    <style>
+        .product-detail-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+            color: #999;
+        }
+
+        .product-detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .product-image-section {
+            text-align: center;
+        }
+
+        .product-main-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #f0f0f0;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .product-info-section h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .product-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .product-price-section {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .product-price-section .price-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .product-price-section .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .product-stock-info {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .stock-available {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .stock-low {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .stock-out {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .product-description {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .product-description h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .product-description p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            flex: 1;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .quantity-selector label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #f0f0f0;
+            border-color: #007bff;
+        }
+
+        .quantity-input {
+            width: 70px;
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .product-meta {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .product-meta-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .product-meta-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-meta-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .product-meta-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px;
+            }
+
+            .product-info-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .product-price-section .price {
+                font-size: 2rem;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div th:replace="~{header :: header}"></div>
+
+    <main class="product-detail-container">
+        
+        <div class="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <span>›</span>
+            <a href="/products">Sản phẩm</a>
+            <span>›</span>
+            <span th:text="${product.productName}">Product Name</span>
+        </div>
+
+        
+        <div class="product-detail-content">
+            
+            <div class="product-image-section">
+                <img class="product-main-image" 
+                     th:src="${product.image != null ? product.image.imageUrl : '/Images/placeholder.svg'}" 
+                     th:alt="${product.productName}" 
+                     onerror="this.src='/Images/placeholder.svg'" />
+            </div>
+
+            
+            <div class="product-info-section">
+                <h1 th:text="${product.productName}">Product Name</h1>
+                
+                <div class="product-category" th:if="${product.category != null}">
+                    <span th:text="${product.category.categoryName}">Category</span>
+                </div>
+
+                
+                <div class="product-price-section">
+                    <div class="price-label">Giá bán</div>
+                    <div class="price" th:text="${#numbers.formatDecimal(product.price,1,'COMMA',0,'POINT')} + ' ₫'">0 ₫</div>
+                </div>
+
+                
+                <div class="product-stock-info" 
+                     th:classappend="${product.stockQuantity > 5 ? 'stock-available' : (product.stockQuantity > 0 ? 'stock-low' : 'stock-out')}">
+                    <span th:if="${product.stockQuantity > 5}">
+                        ✓ Còn hàng - Sẵn sàng giao hàng
+                    </span>
+                    <span th:if="${product.stockQuantity <= 5 and product.stockQuantity > 0}">
+                        ⚠ Chỉ còn <strong th:text="${product.stockQuantity}">0</strong> sản phẩm
+                    </span>
+                    <span th:if="${product.stockQuantity == 0}">
+                        ✗ Tạm hết hàng
+                    </span>
+                </div>
+
+                
+                <div class="quantity-selector" th:if="${product.stockQuantity > 0}">
+                    <label>Số lượng:</label>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="quantity" class="quantity-input" value="1" min="1" 
+                               th:max="${product.stockQuantity}" />
+                        <button class="quantity-btn" onclick="increaseQuantity()"
+                                th:attr="data-max=${product.stockQuantity}">+</button>
+                    </div>
+                </div>
+
+                
+                <div class="product-description">
+                    <h3>Mô tả sản phẩm</h3>
+                    <p th:text="${product.description != null and !#strings.isEmpty(product.description) ? product.description : 'Chưa có mô tả chi tiết cho sản phẩm này.'}">
+                        Product description
+                    </p>
+                </div>
+
+                
+                <div class="product-meta">
+                    <div class="product-meta-item">
+                        <span class="product-meta-label">Mã sản phẩm:</span>
+                        <span class="product-meta-value" th:text="'SP' + ${product.productId}">SP001</span>
+                    </div>
+                    <div class="product-meta-item" th:if="${product.category != null}">
+                        <span class="product-meta-label">Danh mục:</span>
+                        <span class="product-meta-value" th:text="${product.category.categoryName}">Category</span>
+                    </div>
+                    <div class="product-meta-item">
+                        <span class="product-meta-label">Tình trạng:</span>
+                        <span class="product-meta-value" th:text="${product.stockQuantity > 0 ? 'Còn hàng' : 'Hết hàng'}">Status</span>
+                    </div>
+                </div>
+
+                
+                <div class="product-actions">
+                    <button type="button" 
+                            class="btn btn-primary" 
+                            th:attr="data-id=${product.productId}"
+                            th:disabled="${product.stockQuantity == 0}"
+                            onclick="addToCart(this)">
+                        <span th:if="${product.stockQuantity > 0}">Thêm vào giỏ hàng</span>
+                        <span th:if="${product.stockQuantity == 0}">Hết hàng</span>
+                    </button>
+                    <a href="/products" class="btn btn-secondary">Tiếp tục mua sắm</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+    <div th:replace="~{footer :: footer}"></div>
+
+    <script th:src="@{/JavaScript/main.js}"></script>
+    <script>
+        function increaseQuantity() {
+            const input = document.getElementById('quantity');
+            const max = parseInt(input.max);
+            if (parseInt(input.value) < max) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('quantity');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        function addToCart(button) {
+            const productId = button.getAttribute('data-id');
+            const quantity = document.getElementById('quantity') ? parseInt(document.getElementById('quantity').value) : 1;
+            
+            // Disable button during request
+            button.disabled = true;
+            const originalText = button.innerHTML;
+            button.innerHTML = 'Đang thêm...';
+            
+            // Call backend API
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `productId=${productId}&quantity=${quantity}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || 'Đã thêm sản phẩm vào giỏ hàng!');
+                    // Update cart count in header
+                    if (typeof updateCartCount === 'function') {
+                        updateCartCount();
+                    }
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra khi thêm vào giỏ hàng');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi thêm vào giỏ hàng');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
+    </script>
+</body>
+</html>

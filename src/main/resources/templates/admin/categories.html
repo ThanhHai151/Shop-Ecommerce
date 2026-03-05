@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Danh Mục - Computer Shop Admin</title>
+    <link rel="stylesheet" th:href="@{/CSS/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/CSS/admin-category.css}">
+</head>
+<body>
+    <div class="admin-container">
+        
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <h2><i class="fas fa-laptop"></i> Admin Panel</h2>
+            </div>
+            <ul class="admin-nav">
+                <li><a th:href="@{/admin/dashboard}"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> Người Dùng</a></li>
+                <li><a th:href="@{/admin/products}"><i class="fas fa-box"></i> Sản Phẩm</a></li>
+                <li><a th:href="@{/admin/categories}" class="active"><i class="fas fa-tags"></i> Danh Mục</a></li>
+                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> Đơn Hàng</a></li>
+                <li><a th:href="@{/}"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+            </ul>
+        </nav>
+
+        
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1><i class="fas fa-tags"></i> Quản Lý Danh Mục</h1>
+                <p>Quản lý các danh mục sản phẩm</p>
+            </div>
+
+            
+            <div th:if="${success}" class="admin-alert admin-alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="admin-alert admin-alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            
+            <div class="admin-form-container">
+                <div class="admin-form-header">
+                    <h2><i class="fas fa-plus"></i> Thêm Danh Mục Mới</h2>
+                </div>
+                <form th:action="@{/admin/categories/create}" method="post" th:object="${newCategory}" class="admin-form">
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label for="categoryName"><i class="fas fa-tag"></i> Tên Danh Mục</label>
+                            <input type="text" 
+                                   id="categoryName"
+                                   th:field="*{categoryName}" 
+                                   placeholder="Nhập tên danh mục..." 
+                                   required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="description"><i class="fas fa-align-left"></i> Mô Tả</label>
+                            <textarea id="description"
+                                     th:field="*{description}" 
+                                     placeholder="Nhập mô tả danh mục..." 
+                                     rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="admin-btn admin-btn-primary">
+                        <i class="fas fa-plus"></i> Thêm Danh Mục
+                    </button>
+                </form>
+            </div>
+
+            
+            <div class="admin-table-container">
+                <div class="admin-table-header">
+                    <h2><i class="fas fa-list"></i> Danh Sách Danh Mục</h2>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên Danh Mục</th>
+                            <th>Mô Tả</th>
+                            <th>Ngày Tạo</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="category : ${categories}">
+                            <td th:text="${category.categoryId}"></td>
+                            <td>
+                                <strong th:text="${category.categoryName}"></strong>
+                            </td>
+                            <td th:text="${category.description ?: 'Không có mô tả'}"></td>
+                            <td>N/A</td>
+                            <td>
+                                <div class="admin-actions">
+                                    
+                                    <button type="button" 
+                                            class="admin-btn admin-btn-info admin-btn-sm"
+                                            th:onclick="|toggleEditForm(${category.categoryId})|">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </button>
+                                    
+                                    
+                                    <form th:action="@{/admin/categories/{id}/delete(id=${category.categoryId})}" 
+                                          method="post" 
+                                          style="display: inline-block;">
+                                        <button type="submit" 
+                                                class="admin-btn admin-btn-danger admin-btn-sm"
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này? Hành động này không thể hoàn tác.')">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div th:id="|edit-form-${category.categoryId}|" class="admin-edit-form" style="display: none;">
+                                    <form th:action="@{/admin/categories/{id}/update(id=${category.categoryId})}" method="post">
+                                        <div class="admin-form-group">
+                                            <label>Tên Danh Mục:</label>
+                                            <input type="text" 
+                                                   name="categoryName" 
+                                                   th:value="${category.categoryName}" 
+                                                   required>
+                                        </div>
+                                        <div class="admin-form-group">
+                                            <label>Mô Tả:</label>
+                                            <textarea name="description" 
+                                                     rows="2" 
+                                                     th:text="${category.description}"></textarea>
+                                        </div>
+                                        <div class="admin-form-actions">
+                                            <button type="submit" class="admin-btn admin-btn-success admin-btn-sm">
+                                                <i class="fas fa-save"></i> Lưu
+                                            </button>
+                                            <button type="button" 
+                                                    class="admin-btn admin-btn-secondary admin-btn-sm"
+                                                    th:onclick="|toggleEditForm(${category.categoryId})|">
+                                                <i class="fas fa-times"></i> Hủy
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(categories)}">
+                            <td colspan="5" class="text-center text-muted">
+                                <i class="fas fa-tags"></i> Không có danh mục nào
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-primary">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${#lists.size(categories)}">0</h3>
+                        <p>Tổng Danh Mục</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.admin-alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 5000);
+        });
+
+        // Toggle edit form visibility
+        function toggleEditForm(categoryId) {
+            const editForm = document.getElementById('edit-form-' + categoryId);
+            if (editForm.style.display === 'none') {
+                editForm.style.display = 'block';
+            } else {
+                editForm.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

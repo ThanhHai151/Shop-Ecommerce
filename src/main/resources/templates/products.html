@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sản phẩm - JSB ComputerShop</title>
+    <link rel="stylesheet" th:href="@{/CSS/style.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/header.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/products.css}" />
+</head>
+<body>
+    
+    <div th:replace="~{header :: header}"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1>Danh sách sản phẩm</h1>
+                <p class="text-muted">
+                    <span th:if="${searchQuery != null and !#strings.isEmpty(searchQuery)}">
+                        Kết quả tìm kiếm cho "<span class="search-highlight" th:text="${searchQuery}"></span>" - 
+                    </span>
+                    <span th:if="${selectedCategory != null and !#strings.isEmpty(selectedCategory)}">
+                        Danh mục: <span class="category-highlight" th:text="${selectedCategory}"></span> - 
+                    </span>
+                    Tìm thấy <span class="products-count"><i class="fas fa-box"></i><strong th:text="${totalProducts}">0</strong> sản phẩm</span>
+                </p>
+            </div>
+
+            
+            <div class="filters-section">
+                <form method="get" action="/products">
+                    <input type="hidden" name="search" th:value="${searchQuery}" />
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Danh mục:</label>
+                        <select class="form-control" name="category" th:value="${selectedCategory}">
+                            <option value="">Tất cả</option>
+                            <option th:each="category : ${categories}" 
+                                    th:value="${category}" 
+                                    th:text="${category}"
+                                    th:selected="${category == selectedCategory}">Category</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Khoảng giá:</label>
+                        <input type="number" name="minPrice" placeholder="Từ" th:value="${minPrice}" class="form-control price-input" />
+                        <span>-</span>
+                        <input type="number" name="maxPrice" placeholder="Đến" th:value="${maxPrice}" class="form-control price-input" />
+                    </div>
+                    <div class="filter-group">
+                        <label>Sắp xếp:</label>
+                        <select class="form-control" name="sort">
+                            <option value="name" th:selected="${currentSort == 'name'}">Tên sản phẩm</option>
+                            <option value="popular" th:selected="${currentSort == 'popular'}">Phổ biến nhất</option>
+                            <option value="price-asc" th:selected="${currentSort == 'price-asc'}">Giá thấp đến cao</option>
+                            <option value="price-desc" th:selected="${currentSort == 'price-desc'}">Giá cao đến thấp</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>
+                </form>
+            </div>
+
+            
+            <div class="products-grid">
+                
+                <div class="product-card" th:each="product : ${products}">
+                    <div class="product-image">
+                        <img th:src="${product.image != null ? product.image.imageUrl : '/Images/placeholder.svg'}" 
+                             th:alt="${product.productName}" 
+                             src="/Images/placeholder.svg"
+                             onerror="this.src='/Images/placeholder.svg'" />
+                        <div class="product-overlay">
+                            <button type="button" class="btn btn-primary add-to-cart-btn" th:attr="data-id=${product.productId}">
+                                Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" th:text="${product.productName}">Sample product</h3>
+                        <div class="product-brand" th:text="${product.category != null ? product.category.categoryName : 'N/A'}">Category</div>
+                        <div class="product-price">
+                            <span class="price" th:text="${#numbers.formatDecimal(product.price,1,'COMMA',0,'POINT')} + ' ₫'">0 ₫</span>
+                        </div>
+                        <div class="product-stock" th:if="${product.stockQuantity <= 5 and product.stockQuantity > 0}" 
+                             style="color: orange; font-size: 0.9em;">
+                            Chỉ còn <span th:text="${product.stockQuantity}">0</span> sản phẩm
+                        </div>
+                        <div class="product-stock" th:if="${product.stockQuantity == 0}" 
+                             style="color: red; font-size: 0.9em;">
+                            Hết hàng
+                        </div>
+                        <div class="product-actions">
+                            <a th:href="@{/products/{id}(id=${product.productId})}" class="btn btn-detail">
+                                Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div th:if="${products == null or #lists.isEmpty(products)}" class="empty-state">
+                    <div class="empty-message">
+                        <h3>Không tìm thấy sản phẩm</h3>
+                        <p th:if="${searchQuery != null and !#strings.isEmpty(searchQuery)}">
+                            Không có sản phẩm nào phù hợp với từ khóa "<strong th:text="${searchQuery}"></strong>"
+                        </p>
+                        <p th:if="${selectedCategory != null and !#strings.isEmpty(selectedCategory)}">
+                            Không có sản phẩm nào trong danh mục "<strong th:text="${selectedCategory}"></strong>"
+                        </p>
+                        <p th:if="${(searchQuery == null or #strings.isEmpty(searchQuery)) and (selectedCategory == null or #strings.isEmpty(selectedCategory))}">
+                            Hiện tại chưa có sản phẩm nào trong cửa hàng.
+                        </p>
+                        <a href="/products" class="btn btn-primary">Xem tất cả sản phẩm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+    <div th:replace="~{footer :: footer}"></div>
+
+    <script th:src="@{/JavaScript/header.js}"></script>
+    <script th:src="@{/JavaScript/main.js}"></script>
+</body>
+</html>

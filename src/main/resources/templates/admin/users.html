@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Người Dùng - Computer Shop Admin</title>
+    <link rel="stylesheet" th:href="@{/CSS/admin.css}">
+    <link rel="stylesheet" th:href="@{/CSS/admin-user.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <h2><i class="fas fa-laptop"></i> Admin Panel</h2>
+            </div>
+            <ul class="admin-nav">
+                <li><a th:href="@{/admin/dashboard}"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                <li><a th:href="@{/admin/users}" class="active"><i class="fas fa-users"></i> Người Dùng</a></li>
+                <li><a th:href="@{/admin/products}"><i class="fas fa-box"></i> Sản Phẩm</a></li>
+                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> Danh Mục</a></li>
+                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> Đơn Hàng</a></li>
+                <li><a th:href="@{/}"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+            </ul>
+        </nav>
+
+        
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1><i class="fas fa-users"></i> Quản Lý Người Dùng</h1>
+                <p>Quản lý thông tin và trạng thái của tất cả người dùng</p>
+            </div>
+
+            
+            <div th:if="${success}" class="admin-alert admin-alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="admin-alert admin-alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            
+            <div class="admin-table-container">
+                <div class="user-table-header">
+                    <h2 class="user-table-title">
+                        <i class="fas fa-users"></i> 
+                        Danh Sách Người Dùng
+                    </h2>
+                    <div class="user-count-badge">
+                        <i class="fas fa-user-friends"></i>
+                        Tổng: <strong th:text="${#lists.size(users)}">0</strong> người dùng
+                    </div>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-user"></i> Tên Đăng Nhập</th>
+                            <th><i class="fas fa-envelope"></i> Email</th>
+                            <th><i class="fas fa-user-tag"></i> Vai Trò</th>
+                            <th><i class="fas fa-calendar-alt"></i> Ngày Tạo</th>
+                            <th><i class="fas fa-cogs"></i> Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td>
+                                <span class="user-id-badge" th:text="${user.userId}"></span>
+                            </td>
+                            <td>
+                                <div class="user-info-cell">
+                                    <div class="user-avatar" th:text="${#strings.substring(user.username,0,1).toUpperCase()}">U</div>
+                                    <div class="user-details">
+                                        <span class="username" th:text="${user.username}"></span>
+                                        <small class="user-status">
+                                            <i class="fas fa-circle text-success"></i> Hoạt động
+                                        </small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="email-cell">
+                                    <i class="fas fa-envelope text-muted"></i>
+                                    <span class="user-email" th:text="${user.email}"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="admin-badge" 
+                                      th:classappend="${user.role.roleName == 'admin'} ? 'admin-badge-danger' : 'admin-badge-primary'"
+                                      th:text="${user.role.roleName}">
+                                </span>
+                            </td>
+                            <td>
+                                <div class="date-cell">
+                                    <i class="fas fa-calendar text-muted"></i>
+                                    <span class="date-text">Chưa cập nhật</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="admin-actions">
+                                    <form th:action="@{/admin/users/{id}/toggle-status(id=${user.userId})}" 
+                                          method="post" 
+                                          style="display: inline-block;"
+                                          th:if="${user.role.roleName != 'admin'}">
+                                        <button type="submit" 
+                                                class="admin-btn admin-btn-warning"
+                                                onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái người dùng này?')"
+                                                title="Thay đổi trạng thái">
+                                            <i class="fas fa-toggle-on"></i> Đổi Trạng Thái
+                                        </button>
+                                    </form>
+                                    <div th:if="${user.role.roleName == 'admin'}" class="protected-admin">
+                                        <i class="fas fa-shield-alt"></i> Admin được bảo vệ
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(users)}">
+                            <td colspan="6" class="empty-state-cell">
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <h3>Không có người dùng nào</h3>
+                                    <p>Chưa có người dùng nào được tạo trong hệ thống</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${#lists.size(users)}">0</h3>
+                        <p>Tổng Người Dùng</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-success">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${adminCount}">0</h3>
+                        <p>Admin</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-info">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${customerCount}">0</h3>
+                        <p>Khách Hàng</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.admin-alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

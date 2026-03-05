@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang chủ - JSB ComputerShop</title>
+    <link rel="stylesheet" th:href="@{/CSS/style.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/header.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/home.css}" />
+</head>
+<body>
+    
+    <div th:replace="~{header :: header}"></div>
+
+    <main class="main-content">
+        
+        <section class="hero-banners">
+            <div class="container">
+                <div class="banners-grid">
+                    <div class="banner banner-main">
+                        <div class="banner-content">
+                            <h1 class="banner-title">Phụ kiện máy tính chất lượng cao</h1>
+                            <p class="banner-subtitle">Khuyến mãi lên đến 50% cho tất cả sản phẩm gaming</p>
+                            <a href="/products" class="btn-banner">Mua ngay</a>
+                        </div>
+                    </div>
+                    
+                    <div class="banner banner-secondary">
+                        <div class="banner-content">
+                            <h2 class="banner-title">Linh kiện Gaming Pro</h2>
+                            <p class="banner-subtitle">Nâng cấp setup của bạn với các sản phẩm cao cấp</p>
+                            <a href="/products" class="btn-banner-secondary">Khám phá</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <section>
+                <div class="section-title">
+                    <h2>Danh mục nổi bật</h2>
+                    <a href="/categories" class="muted">Xem tất cả</a>
+                </div>
+                <div class="categories">
+                    <div class="category">
+                        <div class="category-icon">⌨️</div>
+                        <h3>Bàn phím</h3>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">🖱️</div>
+                        <h3>Chuột</h3>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">🎧</div>
+                        <h3>Tai nghe</h3>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">💺</div>
+                        <h3>Ghế gaming</h3>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">🔧</div>
+                        <h3>Linh kiện</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <h2>Sản phẩm nổi bật</h2>
+                    <a href="/products?sort=popular" class="muted">Xem thêm</a>
+                </div>
+
+                <div class="products-grid">
+                    
+                    <div class="product-card" th:each="product : ${products}">
+                        <div class="product-image">
+                            <img th:src="${product.image != null ? product.image.imageUrl : '/Images/placeholder.svg'}" 
+                                 th:alt="${product.productName}" 
+                                 src="/Images/placeholder.svg"
+                                 onerror="this.src='/Images/placeholder.svg'" />
+                            <div class="product-overlay">
+                                <button type="button" class="btn btn-primary add-to-cart-btn" th:attr="data-id=${product.productId}">Thêm vào giỏ</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name" th:text="${product.productName}">Sample product</h3>
+                            <div class="product-brand" th:text="${product.category != null ? product.category.categoryName : 'N/A'}">Category</div>
+                            <div class="product-price">
+                                <span class="price" th:text="${#numbers.formatDecimal(product.price,1,'COMMA',0,'POINT')} + ' ₫'">0 ₫</span>
+                            </div>
+                            <div class="product-actions">
+                                <a th:href="@{/products/{id}(id=${product.productId})}" class="btn btn-detail">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div th:if="${products == null or #lists.isEmpty(products)}" class="no-products-message">
+                        <p>Đang cập nhật sản phẩm mới...</p>
+                        <a href="/products" class="btn btn-primary">Xem tất cả sản phẩm</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    
+    <div th:replace="~{footer :: footer}"></div>
+
+    <script th:src="@{/JavaScript/header.js}"></script>
+    <script th:src="@{/JavaScript/main.js}"></script>
+</body>
+</html>

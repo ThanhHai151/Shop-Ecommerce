@@ -1,0 +1,161 @@
+
+.header {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    gap: 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand img {
+    width: 40px;
+    height: 40px;
+}
+
+.brand-name {
+    font-weight: 700;
+    color: var(--brand);
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1px solid #e6e9ee;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.btn-search {
+    padding: 10px 20px;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-guest, .nav-user, .nav-admin {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-link {
+    color: #6c757d;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--brand);
+    background: #f8f9fa;
+}
+
+.cart-link {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.cart-count.is-empty {
+    display: none;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu-btn {
+    background: none;
+    border: 1px solid #e6e9ee;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-menu-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e6e9ee;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 200px;
+    display: none;
+    z-index: 200;
+}
+
+.user-menu-dropdown.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+}
+
+.dropdown-divider {
+    margin: 8px 0;
+    border: none;
+    border-top: 1px solid #e6e9ee;
+}
+
+.nav-link.btn-primary {
+    background: var(--brand) !important;
+    color: white !important;
+}
+.nav-link.btn-primary:hover {
+    background: white !important;
+    color: var(--brand) !important;
+}

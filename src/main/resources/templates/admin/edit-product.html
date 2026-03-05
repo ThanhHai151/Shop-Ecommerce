@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh Sửa Sản Phẩm - Computer Shop Admin</title>
+    <link rel="stylesheet" th:href="@{/CSS/admin.css}">
+    <link rel="stylesheet" th:href="@{/CSS/admin-product.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <h2><i class="fas fa-laptop"></i> Admin Panel</h2>
+            </div>
+            <ul class="admin-nav">
+                <li><a th:href="@{/admin/dashboard}"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> Người Dùng</a></li>
+                <li><a th:href="@{/admin/products}" class="active"><i class="fas fa-box"></i> Sản Phẩm</a></li>
+                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> Danh Mục</a></li>
+                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> Đơn Hàng</a></li>
+                <li><a th:href="@{/}"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+            </ul>
+        </nav>
+
+        
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1><i class="fas fa-edit"></i> Chỉnh Sửa Sản Phẩm</h1>
+                <div class="admin-breadcrumb">
+                    <a th:href="@{/admin/products}"><i class="fas fa-arrow-left"></i> Quay lại danh sách sản phẩm</a>
+                </div>
+            </div>
+
+            
+            <div th:if="${success}" class="admin-alert admin-alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="admin-alert admin-alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            
+            <div class="admin-form-container">
+                <div class="admin-form-header">
+                    <h2><i class="fas fa-edit"></i> Thông Tin Sản Phẩm</h2>
+                    <span class="admin-badge admin-badge-info">ID: <span th:text="${product.productId}"></span></span>
+                </div>
+                
+                <form th:action="@{/admin/products/{id}/update(id=${product.productId})}" 
+                      method="post" 
+                      th:object="${product}" 
+                      class="admin-form">
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label for="productName"><i class="fas fa-box"></i> Tên Sản Phẩm *</label>
+                            <input type="text" 
+                                   id="productName"
+                                   th:field="*{productName}" 
+                                   placeholder="Nhập tên sản phẩm..." 
+                                   required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="categoryId"><i class="fas fa-tag"></i> Danh Mục *</label>
+                            <select id="categoryId" name="categoryId" required>
+                                <option value="">-- Chọn Danh Mục --</option>
+                                <option th:each="category : ${categories}" 
+                                        th:value="${category.categoryId}" 
+                                        th:selected="${category.categoryId == product.category?.categoryId}"
+                                        th:text="${category.categoryName}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label for="price"><i class="fas fa-dollar-sign"></i> Giá (VND) *</label>
+                            <input type="number" 
+                                   id="price"
+                                   th:field="*{price}" 
+                                   step="0.01"
+                                   min="0"
+                                   placeholder="0.00" 
+                                   required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="stockQuantity"><i class="fas fa-warehouse"></i> Số Lượng</label>
+                            <input type="number" 
+                                   id="stockQuantity"
+                                   th:field="*{stockQuantity}" 
+                                   min="0"
+                                   placeholder="0">
+                            <small class="form-help">
+                                Trạng thái hiện tại: 
+                                <span th:if="${product.stockQuantity > 20}" class="text-success">
+                                    <i class="fas fa-check-circle"></i> Còn nhiều hàng
+                                </span>
+                                <span th:if="${product.stockQuantity > 0 && product.stockQuantity <= 20}" class="text-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Sắp hết hàng
+                                </span>
+                                <span th:if="${product.stockQuantity <= 0}" class="text-danger">
+                                    <i class="fas fa-times-circle"></i> Hết hàng
+                                </span>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label for="description"><i class="fas fa-align-left"></i> Mô Tả</label>
+                        <textarea id="description"
+                                 th:field="*{description}" 
+                                 placeholder="Nhập mô tả sản phẩm..." 
+                                 rows="4"></textarea>
+                    </div>
+
+                    
+                    <div class="admin-info-section">
+                        <h3><i class="fas fa-info-circle"></i> Thông Tin Bổ Sung</h3>
+                        <div class="admin-info-grid">
+                            <div class="admin-info-item">
+                                <label>Ngày Tạo:</label>
+                                <span>N/A</span>
+                            </div>
+                            <div class="admin-info-item">
+                                <label>Danh Mục Hiện Tại:</label>
+                                <span th:text="${product.category?.categoryName ?: 'Chưa phân loại'}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="submit" class="admin-btn admin-btn-success">
+                            <i class="fas fa-save"></i> Cập Nhật Sản Phẩm
+                        </button>
+                        <a th:href="@{/admin/products}" class="admin-btn admin-btn-secondary">
+                            <i class="fas fa-times"></i> Hủy Bỏ
+                        </a>
+                        
+                        
+                        <form th:action="@{/admin/products/{id}/delete(id=${product.productId})}" 
+                              method="post" 
+                              style="display: inline-block;"
+                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.')">
+                            <button type="submit" class="admin-btn admin-btn-danger">
+                                <i class="fas fa-trash"></i> Xóa Sản Phẩm
+                            </button>
+                        </form>
+                    </div>
+                </form>
+            </div>
+
+            
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-primary">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"></h3>
+                        <p>Giá Bán</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-info">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${product.stockQuantity}"></h3>
+                        <p>Tồn Kho</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-secondary">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${product.category?.categoryName ?: 'N/A'}"></h3>
+                        <p>Danh Mục</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.admin-alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

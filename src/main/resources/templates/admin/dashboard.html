@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Computer Shop Admin</title>
+    <link rel="stylesheet" th:href="@{/CSS/admin.css}">
+    <link rel="stylesheet" th:href="@{/CSS/admin-dashboard.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <h2><i class="fas fa-laptop"></i> Admin Panel</h2>
+            </div>
+            <ul class="admin-nav">
+                <li><a th:href="@{/admin/dashboard}" class="active"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> Người Dùng</a></li>
+                <li><a th:href="@{/admin/products}"><i class="fas fa-box"></i> Sản Phẩm</a></li>
+                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> Danh Mục</a></li>
+                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> Đơn Hàng</a></li>
+                <li><a th:href="@{/}"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+            </ul>
+        </nav>
+
+        
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+                <p>Tổng quan về hệ thống và hoạt động kinh doanh</p>
+                <div class="header-actions">
+                    <span class="welcome-text">Xin chào, <strong th:text="${session.username ?: 'Admin'}">Admin</strong></span>
+                    <span class="current-time" id="currentTime"></span>
+                </div>
+            </div>
+
+            
+            <div th:if="${success}" class="admin-alert admin-alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="admin-alert admin-alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${totalUsers ?: 0}">0</h3>
+                        <p>Tổng Người Dùng</p>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12% từ tháng trước</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-success">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${totalProducts ?: 0}">0</h3>
+                        <p>Tổng Sản Phẩm</p>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+5% từ tháng trước</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-warning">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${totalOrders ?: 0}">0</h3>
+                        <p>Tổng Đơn Hàng</p>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+18% từ tháng trước</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-danger">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${totalRevenue != null ? (#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT') + ' VND') : '0 VND'}">0 VND</h3>
+                        <p>Tổng Doanh Thu</p>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+25% từ tháng trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="dashboard-content-grid">
+                
+                <div class="admin-form-container">
+                    <div class="admin-form-header">
+                        <h2><i class="fas fa-clock"></i> Hoạt động Gần Đây</h2>
+                        <a th:href="@{/admin/users}" class="admin-btn admin-btn-secondary admin-btn-sm">
+                            <i class="fas fa-eye"></i> Xem Tất Cả
+                        </a>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item" th:each="user : ${recentUsers}" th:if="${recentUsers != null and !#lists.isEmpty(recentUsers)}">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title" th:text="'Người dùng mới: ' + ${user.username}">Người dùng mới</div>
+                                <div class="activity-subtitle" th:text="${user.email}">Email</div>
+                            </div>
+                            <div class="activity-meta">
+                                <span class="admin-badge admin-badge-primary" th:text="${user.role?.roleName ?: 'N/A'}">Role</span>
+                            </div>
+                        </div>
+                        <div class="activity-empty" th:if="${recentUsers == null or #lists.isEmpty(recentUsers)}">
+                            <i class="fas fa-inbox"></i>
+                            <p>Chưa có hoạt động nào gần đây</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="admin-form-container">
+                    <div class="admin-form-header">
+                        <h2><i class="fas fa-exclamation-triangle"></i> Cảnh Báo Tồn Kho</h2>
+                        <a th:href="@{/admin/products}" class="admin-btn admin-btn-warning admin-btn-sm">
+                            <i class="fas fa-boxes"></i> Quản Lý Kho
+                        </a>
+                    </div>
+                    <div class="stock-alert-list">
+                        <div class="stock-alert-item" th:each="product : ${lowStockProducts}" th:if="${lowStockProducts != null and !#lists.isEmpty(lowStockProducts)}">
+                            <div class="stock-alert-icon" th:classappend="${product.stockQuantity <= 5} ? 'critical' : 'warning'">
+                                <i class="fas fa-box" th:if="${product.stockQuantity > 5}"></i>
+                                <i class="fas fa-exclamation-triangle" th:if="${product.stockQuantity <= 5}"></i>
+                            </div>
+                            <div class="stock-alert-content">
+                                <div class="stock-alert-title" th:text="${product.productName}">Sản phẩm</div>
+                                <div class="stock-alert-subtitle" th:text="${product.category?.categoryName ?: 'Không có danh mục'}">Danh mục</div>
+                            </div>
+                            <div class="stock-alert-quantity">
+                                <span class="stock-number" 
+                                      th:classappend="${product.stockQuantity <= 5} ? 'critical' : 'warning'"
+                                      th:text="${product.stockQuantity}">0</span>
+                                <span class="stock-unit">sản phẩm</span>
+                            </div>
+                        </div>
+                        <div class="stock-alert-empty" th:if="${lowStockProducts == null or #lists.isEmpty(lowStockProducts)}">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Tất cả sản phẩm đều đủ hàng</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="admin-form-container">
+                <div class="admin-form-header">
+                    <h2><i class="fas fa-bolt"></i> Thao Tác Nhanh</h2>
+                    <span class="text-muted">Các thao tác thường dùng</span>
+                </div>
+                <div class="admin-quick-actions dashboard-actions">
+                    <a th:href="@{/admin/products/add}" class="admin-btn admin-btn-primary admin-btn-large">
+                        <i class="fas fa-plus-circle"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">Thêm Sản Phẩm</span>
+                            <span class="btn-subtitle">Thêm sản phẩm mới vào hệ thống</span>
+                        </div>
+                    </a>
+                    
+                    <a th:href="@{/admin/users}" class="admin-btn admin-btn-info admin-btn-large">
+                        <i class="fas fa-users"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">Quản Lý Users</span>
+                            <span class="btn-subtitle">Xem và quản lý người dùng</span>
+                        </div>
+                    </a>
+                    
+                    <a th:href="@{/admin/orders}" class="admin-btn admin-btn-warning admin-btn-large">
+                        <i class="fas fa-shopping-cart"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">Đơn Hàng</span>
+                            <span class="btn-subtitle">Theo dõi và xử lý đơn hàng</span>
+                        </div>
+                    </a>
+                    
+                    <a th:href="@{/admin/categories}" class="admin-btn admin-btn-secondary admin-btn-large">
+                        <i class="fas fa-tags"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">Danh Mục</span>
+                            <span class="btn-subtitle">Quản lý danh mục sản phẩm</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            
+            <div class="admin-form-container">
+                <div class="admin-form-header">
+                    <h2><i class="fas fa-server"></i> Trạng Thái Hệ Thống</h2>
+                </div>
+                <div class="system-status-grid">
+                    <div class="status-item">
+                        <div class="status-icon status-online">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="status-content">
+                            <div class="status-title">Cơ Sở Dữ Liệu</div>
+                            <div class="status-subtitle">Hoạt động bình thường</div>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="status-badge status-success">Online</span>
+                        </div>
+                    </div>
+                    
+                    <div class="status-item">
+                        <div class="status-icon status-online">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="status-content">
+                            <div class="status-title">Web Server</div>
+                            <div class="status-subtitle">Đang chạy ổn định</div>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="status-badge status-success">Active</span>
+                        </div>
+                    </div>
+                    
+                    <div class="status-item">
+                        <div class="status-icon status-online">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="status-content">
+                            <div class="status-title">Bảo Mật</div>
+                            <div class="status-subtitle">Tất cả hệ thống được bảo vệ</div>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="status-badge status-success">Secure</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update current time
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleString('vi-VN', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                const timeElement = document.getElementById('currentTime');
+                if (timeElement) {
+                    timeElement.textContent = timeString;
+                }
+            }
+            
+            updateTime();
+            setInterval(updateTime, 60000); // Update every minute
+            
+            // Auto-hide flash messages
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.admin-alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

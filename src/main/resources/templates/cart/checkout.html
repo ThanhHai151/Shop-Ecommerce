@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Thanh toán</title>
+    <link rel="stylesheet" th:href="@{/CSS/style.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/header.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/cart.css}" />
+</head>
+<body>
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="container checkout-page">
+    <h1>Thanh toán</h1>
+
+    <div class="checkout-grid">
+        <div class="checkout-form">
+            <form th:action="@{/cart/checkout}" method="post">
+                <div class="form-group">
+                    <label>Địa chỉ giao hàng</label>
+                    <input type="text" name="shippingAddress" required />
+                </div>
+                <div class="form-group">
+                    <label>Phương thức thanh toán</label>
+                    <select name="paymentMethod">
+                        <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                        <option value="CARD">Thẻ/Tài khoản</option>
+                        <option value="MOMO">Ví MoMo (quét QR)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea name="notes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn primary" type="submit">Xác nhận đặt hàng</button>
+                    <a class="btn" th:href="@{/cart}">Quay lại giỏ hàng</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h3>Đơn hàng</h3>
+            <div th:each="item : ${cartItems}" class="summary-item">
+                <div class="left">
+                    <span th:text="${item.productName}"></span>
+                    <small>x<span th:text="${item.quantity}"></span></small>
+                </div>
+                <div class="right" th:text="${#numbers.formatDecimal(item.subtotal,1,'COMMA',2,'POINT')}"></div>
+            </div>
+            <div class="summary-total">
+                <span>Tổng cộng</span>
+                <strong th:text="${#numbers.formatDecimal(cartTotal,1,'COMMA',2,'POINT')}"></strong>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div th:replace="~{footer :: footer}"></div>
+
+<script th:src="@{/JavaScript/header.js}"></script>
+</body>
+</html>

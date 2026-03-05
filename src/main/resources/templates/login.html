@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Đăng nhập - JSB ComputerShop</title>
+	<link rel="stylesheet" th:href="@{/CSS/style.css}" />
+	<link rel="stylesheet" th:href="@{/CSS/header.css}" />
+	<link rel="stylesheet" th:href="@{/CSS/footer.css}" />
+	<link rel="stylesheet" th:href="@{/CSS/login.css}" />
+</head>
+<body>
+	
+	<div th:replace="~{header :: header}"></div>
+
+	<main class="container">
+		<div class="auth-wrapper">
+		<div class="auth-header">
+			<div>
+				<h2>Đăng nhập vào tài khoản</h2>
+				<div class="muted">Đăng nhập để tiếp tục mua sắm và quản lý đơn hàng</div>
+			</div>
+		</div>
+
+		<div th:if="${error}" class="error" th:text="${error}">Lỗi đăng nhập</div>
+		<div th:if="${param.error}" class="error">Tên đăng nhập hoặc mật khẩu không đúng.</div>
+		<div th:if="${message}" class="success" th:text="${message}">Thông báo</div>
+		<div th:if="${success}" class="success" th:text="${success}">Thành công</div>
+		<div th:if="${param.logout}" class="success">Bạn đã đăng xuất thành công.</div>			<form th:action="@{/login}" method="post">
+
+				<div class="form-row">
+					<label for="username" class="muted">Email hoặc tên đăng nhập</label>
+					<input id="username" name="username" type="text" placeholder="you@example.com" required />
+				</div>
+
+				<div class="form-row">
+					<label for="password" class="muted">Mật khẩu</label>
+					<input id="password" name="password" type="password" placeholder="••••••••" required />
+				</div>
+
+				<div class="helper">
+					<label><input type="checkbox" name="remember-me" /> Ghi nhớ tôi</label>
+					<a href="/forgot-password" class="muted">Quên mật khẩu?</a>
+				</div>
+
+				<div class="login-actions">
+					<button class="btn" type="submit">Đăng nhập</button>
+					<a class="muted" href="/register">Tạo tài khoản mới</a>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	
+	<div th:replace="~{footer :: footer}"></div>
+
+	<script th:src="@{/JavaScript/header.js}"></script>
+	<script th:src="@{/JavaScript/main.js}"></script>
+	<script>
+		// small enhancement: toggle password visibility on double-click
+		document.addEventListener('DOMContentLoaded', ()=>{
+			const pwd = document.getElementById('password');
+			if(pwd){
+				pwd.addEventListener('dblclick', ()=>{
+					pwd.type = pwd.type === 'password' ? 'text' : 'password';
+				});
+			}
+		});
+	</script>
+</body>
+</html>

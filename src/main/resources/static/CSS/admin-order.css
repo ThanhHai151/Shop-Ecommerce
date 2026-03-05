@@ -1,0 +1,356 @@
+
+
+
+.admin-table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+    margin: 2rem;
+    overflow: visible;
+    border: 1px solid #e2e8f0;
+}
+
+.admin-table-header {
+    padding: 2rem 2.5rem 1.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-bottom: 2px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-table-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-summary-count {
+    background: linear-gradient(135deg, #e0f2fe, #b3e5fc);
+    color: #0277bd;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid #4fc3f7;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-summary-count i {
+    font-size: 1rem;
+}
+
+
+.customer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.customer-info strong {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.customer-info small {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+
+.money-display {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 700;
+    color: #059669;
+    font-size: 1rem;
+}
+
+
+.admin-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropdown-toggle:hover {
+    background: linear-gradient(135deg, #4b5563, #374151);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+.admin-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    min-width: 200px;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    color: #1e293b;
+}
+
+.dropdown-item.text-danger {
+    color: #dc2626;
+}
+
+.dropdown-item.text-danger:hover {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    color: #991b1b;
+}
+
+.dropdown-item i {
+    width: 16px;
+    text-align: center;
+}
+
+
+.admin-order-container {
+    margin: 2rem;
+}
+
+.admin-order-header {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.admin-order-info h2 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.admin-order-status {
+    margin-top: 0.5rem;
+}
+
+.admin-badge-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+.admin-order-actions {
+    flex-shrink: 0;
+}
+
+
+.admin-order-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.admin-order-section {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.admin-order-section h3 {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.admin-order-section h3 i {
+    color: #3b82f6;
+    font-size: 1.2rem;
+}
+
+
+.admin-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.admin-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f8fafc;
+}
+
+.admin-info-item:last-child {
+    border-bottom: none;
+}
+
+.admin-info-item label {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.admin-info-item span {
+    color: #1e293b;
+    font-weight: 500;
+    text-align: right;
+}
+
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.product-info strong {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.product-info small {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+
+.admin-table-total {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    font-weight: 700;
+}
+
+.admin-table-total td {
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+
+.admin-order-stats {
+    margin-top: 2rem;
+}
+
+
+.admin-revenue-summary {
+    margin-top: 2rem;
+}
+
+.admin-revenue-summary .admin-stats-grid {
+    margin: 0;
+}
+
+.admin-revenue-summary .admin-form-container {
+    margin: 2rem;
+}
+
+
+.text-success {
+    color: #059669;
+}
+
+.text-danger {
+    color: #dc2626;
+}
+
+.text-warning {
+    color: #d97706;
+}
+
+.text-muted {
+    color: #64748b;
+}
+
+
+@media (max-width: 1024px) {
+    .admin-order-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .admin-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .admin-info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .admin-info-item span {
+        text-align: left;
+    }
+    
+    .customer-info {
+        text-align: left;
+    }
+    
+    .admin-dropdown-menu {
+        left: 0;
+        right: auto;
+    }
+}
+
