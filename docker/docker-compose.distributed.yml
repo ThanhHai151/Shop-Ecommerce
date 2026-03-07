@@ -1,0 +1,88 @@
+version: '3.8'
+
+# Docker Compose for Distributed Database Mode (2 Databases)
+# Usage: docker-compose -f docker-compose.distributed.yml up --build
+#
+# Database Distribution by Module:
+# - DB1 (computershop_main): Users, Products, Categories, Images, Roles
+# - DB2 (computershop_orders): Orders, OrderDetails, Carts, CartItems, Payments
+
+services:
+  # Spring Boot Application
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: computershop-app-distributed
+    ports:
+      - "2345:2345"
+    environment:
+      - SPRING_PROFILES_ACTIVE=distributed
+      # Primary Database (Users, Products, Categories)
+      - SPRING_DATASOURCE_URL=jdbc:sqlserver://mssql-main:1433;databaseName=computershop_main;encrypt=true;trustServerCertificate=true
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=YourStrong@Passw0rd
+      # Orders Database (Orders, Carts)
+      - SPRING_DATASOURCE_ORDERS_URL=jdbc:sqlserver://mssql-orders:1433;databaseName=computershop_orders;encrypt=true;trustServerCertificate=true
+      - SPRING_DATASOURCE_ORDERS_USERNAME=sa
+      - SPRING_DATASOURCE_ORDERS_PASSWORD=YourStrong@Passw0rd
+    depends_on:
+      mssql-main:
+        condition: service_healthy
+      mssql-orders:
+        condition: service_healthy
+    networks:
+      - computershop-network
+    restart: on-failure
+
+  # SQL Server - Main Database (Products, Users, Categories)
+  mssql-main:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: computershop-db-main
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-main-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" -Q "SELECT 1" -C || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - computershop-network
+
+  # SQL Server - Orders Database (Orders, Carts)
+  mssql-orders:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: computershop-db-orders
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1434:1433"
+    volumes:
+      - mssql-orders-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" -Q "SELECT 1" -C || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - computershop-network
+
+# Networks
+networks:
+  computershop-network:
+    driver: bridge
+
+# Volumes
+volumes:
+  mssql-main-data:
+  mssql-orders-data:

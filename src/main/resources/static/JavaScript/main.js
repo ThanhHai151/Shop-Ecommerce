@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
       });
   };
 
+  // Always sync cart count from server on page load
+  window.updateCartCount();
+
   const searchForm = document.getElementById('search-form');
   if(searchForm){
     searchForm.addEventListener('submit', e=>{

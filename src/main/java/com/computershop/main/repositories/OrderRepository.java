@@ -50,4 +50,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     
     @Query("SELECT o FROM Order o ORDER BY o.orderDate DESC")
     List<Order> findRecentOrdersForAdmin(Pageable pageable);
+
+    List<Order> findByStatus(String status);
 }

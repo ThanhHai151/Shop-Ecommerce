@@ -7,6 +7,56 @@
     <link rel="stylesheet" th:href="@{/CSS/header.css}" />
     <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
     <link rel="stylesheet" th:href="@{/CSS/cart.css}" />
+    <style>
+        .momo-payment-section {
+            text-align: center;
+            padding: 20px;
+            background: #fff3e0;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #ff9800;
+        }
+        .momo-payment-section h3 {
+            color: #e65100;
+            margin-bottom: 15px;
+        }
+        .qr-code-container {
+            display: inline-block;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .qr-code-container img {
+            max-width: 250px;
+            height: auto;
+        }
+        .payment-instructions {
+            margin-top: 15px;
+            text-align: left;
+            padding: 15px;
+            background: #fff8e1;
+            border-radius: 8px;
+        }
+        .payment-instructions ol {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+        .payment-instructions li {
+            margin-bottom: 8px;
+            color: #5d4037;
+        }
+        .payment-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d32f2f;
+            margin: 15px 0;
+        }
+        .payment-phone {
+            font-weight: bold;
+            color: #1976d2;
+        }
+    </style>
 </head>
 <body>
 
@@ -22,20 +72,25 @@
                     <label>Địa chỉ giao hàng</label>
                     <input type="text" name="shippingAddress" required />
                 </div>
-                <div class="form-group">
-                    <label>Phương thức thanh toán</label>
-                    <select name="paymentMethod">
-                        <option value="COD">Thanh toán khi nhận hàng (COD)</option>
-                        <option value="CARD">Thẻ/Tài khoản</option>
-                        <option value="MOMO">Ví MoMo (quét QR)</option>
-                    </select>
-                </div>
+                <!-- Hidden field for MoMo payment (only payment method now) -->
+                <input type="hidden" name="paymentMethod" value="MOMO" />
+
                 <div class="form-group">
                     <label>Ghi chú</label>
                     <textarea name="notes" rows="3"></textarea>
                 </div>
+
+                <!-- MoMo Payment Display -->
+                <div class="momo-payment-section">
+                    <h3>Thanh toán qua Ví MoMo</h3>
+                    <div class="payment-amount">
+                        Số tiền: <span th:text="${#numbers.formatDecimal(cartTotal,1,'COMMA',0,'POINT')}">0</span> ₫
+                    </div>
+                    <p>Vui lòng quét mã QR bên dưới để thanh toán</p>
+                </div>
+
                 <div class="form-actions">
-                    <button class="btn primary" type="submit">Xác nhận đặt hàng</button>
+                    <button class="btn primary" type="submit">Xác nhận thanh toán MoMo</button>
                     <a class="btn" th:href="@{/cart}">Quay lại giỏ hàng</a>
                 </div>
             </form>
@@ -48,11 +103,11 @@
                     <span th:text="${item.productName}"></span>
                     <small>x<span th:text="${item.quantity}"></span></small>
                 </div>
-                <div class="right" th:text="${#numbers.formatDecimal(item.subtotal,1,'COMMA',2,'POINT')}"></div>
+                <div class="right" th:text="${#numbers.formatDecimal(item.subtotal,1,'COMMA',0,'POINT')}"></div>
             </div>
             <div class="summary-total">
                 <span>Tổng cộng</span>
-                <strong th:text="${#numbers.formatDecimal(cartTotal,1,'COMMA',2,'POINT')}"></strong>
+                <strong th:text="${#numbers.formatDecimal(cartTotal,1,'COMMA',0,'POINT')}"></strong>
             </div>
         </div>
     </div>
