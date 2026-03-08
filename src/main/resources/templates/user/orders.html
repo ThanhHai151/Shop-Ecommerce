@@ -221,7 +221,9 @@
           <div class="order-summary">
             <div class="order-items">
               <i class="fas fa-box"></i>
-              <span th:text="${order.orderDetails != null ? #lists.size(order.orderDetails) : 0}"></span>
+              <span
+                th:text="${order.orderDetails != null ? #lists.size(order.orderDetails) : 0}"
+              ></span>
               sản phẩm
             </div>
             <div class="order-total">

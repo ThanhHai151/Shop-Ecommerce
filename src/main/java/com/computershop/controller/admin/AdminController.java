@@ -1,24 +1,30 @@
 package com.computershop.controller.admin;
 
-import com.computershop.service.impl.UserServiceImpl;
-import com.computershop.service.impl.ProductServiceImpl;
-import com.computershop.service.impl.CategoryServiceImpl;
-import com.computershop.service.impl.OrderServiceImpl;
-import com.computershop.main.entities.User;
-import com.computershop.main.entities.Product;
-import com.computershop.main.entities.Category;
-import com.computershop.main.entities.Order;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.computershop.main.entities.Category;
+import com.computershop.main.entities.Order;
+import com.computershop.main.entities.Product;
+import com.computershop.main.entities.User;
+import com.computershop.service.impl.CategoryServiceImpl;
+import com.computershop.service.impl.OrderServiceImpl;
+import com.computershop.service.impl.ProductServiceImpl;
+import com.computershop.service.impl.UserServiceImpl;
+
 import jakarta.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller for admin dashboard and management.
