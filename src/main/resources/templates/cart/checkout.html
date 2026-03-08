@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Thanh toán</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
@@ -8,115 +8,126 @@
     <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
     <link rel="stylesheet" th:href="@{/CSS/cart.css}" />
     <style>
-        .momo-payment-section {
-            text-align: center;
-            padding: 20px;
-            background: #fff3e0;
-            border-radius: 12px;
-            margin: 20px 0;
-            border: 2px solid #ff9800;
-        }
-        .momo-payment-section h3 {
-            color: #e65100;
-            margin-bottom: 15px;
-        }
-        .qr-code-container {
-            display: inline-block;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .qr-code-container img {
-            max-width: 250px;
-            height: auto;
-        }
-        .payment-instructions {
-            margin-top: 15px;
-            text-align: left;
-            padding: 15px;
-            background: #fff8e1;
-            border-radius: 8px;
-        }
-        .payment-instructions ol {
-            margin: 10px 0 0 20px;
-            padding: 0;
-        }
-        .payment-instructions li {
-            margin-bottom: 8px;
-            color: #5d4037;
-        }
-        .payment-amount {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #d32f2f;
-            margin: 15px 0;
-        }
-        .payment-phone {
-            font-weight: bold;
-            color: #1976d2;
-        }
+      .momo-payment-section {
+        text-align: center;
+        padding: 20px;
+        background: #fff3e0;
+        border-radius: 12px;
+        margin: 20px 0;
+        border: 2px solid #ff9800;
+      }
+      .momo-payment-section h3 {
+        color: #e65100;
+        margin-bottom: 15px;
+      }
+      .qr-code-container {
+        display: inline-block;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .qr-code-container img {
+        max-width: 250px;
+        height: auto;
+      }
+      .payment-instructions {
+        margin-top: 15px;
+        text-align: left;
+        padding: 15px;
+        background: #fff8e1;
+        border-radius: 8px;
+      }
+      .payment-instructions ol {
+        margin: 10px 0 0 20px;
+        padding: 0;
+      }
+      .payment-instructions li {
+        margin-bottom: 8px;
+        color: #5d4037;
+      }
+      .payment-amount {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #d32f2f;
+        margin: 15px 0;
+      }
+      .payment-phone {
+        font-weight: bold;
+        color: #1976d2;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div th:replace="~{header :: header}"></div>
 
-<div th:replace="~{header :: header}"></div>
+    <div class="container checkout-page">
+      <h1>Thanh toán</h1>
 
-<div class="container checkout-page">
-    <h1>Thanh toán</h1>
-
-    <div class="checkout-grid">
+      <div class="checkout-grid">
         <div class="checkout-form">
-            <form th:action="@{/cart/checkout}" method="post">
-                <div class="form-group">
-                    <label>Địa chỉ giao hàng</label>
-                    <input type="text" name="shippingAddress" required />
-                </div>
-                <!-- Hidden field for MoMo payment (only payment method now) -->
-                <input type="hidden" name="paymentMethod" value="MOMO" />
+          <form th:action="@{/cart/checkout}" method="post">
+            <div class="form-group">
+              <label>Địa chỉ giao hàng</label>
+              <input type="text" name="shippingAddress" required />
+            </div>
+            <!-- Hidden field for MoMo payment (only payment method now) -->
+            <input type="hidden" name="paymentMethod" value="MOMO" />
 
-                <div class="form-group">
-                    <label>Ghi chú</label>
-                    <textarea name="notes" rows="3"></textarea>
-                </div>
+            <div class="form-group">
+              <label>Ghi chú</label>
+              <textarea name="notes" rows="3"></textarea>
+            </div>
 
-                <!-- MoMo Payment Display -->
-                <div class="momo-payment-section">
-                    <h3>Thanh toán qua Ví MoMo</h3>
-                    <div class="payment-amount">
-                        Số tiền: <span th:text="${#numbers.formatDecimal(cartTotal,1,'COMMA',0,'POINT')}">0</span> ₫
-                    </div>
-                    <p>Vui lòng quét mã QR bên dưới để thanh toán</p>
-                </div>
+            <!-- MoMo Payment Display -->
+            <div class="momo-payment-section">
+              <h3>💜 Thanh toán qua Ví MoMo</h3>
+              <div class="payment-amount">
+                Số tiền:
+                <span
+                  th:text="${#numbers.formatDecimal(cartTotal, 1, 'COMMA', 0, 'POINT')}"
+                  >0</span
+                >
+                ₫
+              </div>
+              <p>
+                Sau khi xác nhận, hệ thống sẽ tạo mã QR để bạn quét thanh toán.
+              </p>
+            </div>
 
-                <div class="form-actions">
-                    <button class="btn primary" type="submit">Xác nhận thanh toán MoMo</button>
-                    <a class="btn" th:href="@{/cart}">Quay lại giỏ hàng</a>
-                </div>
-            </form>
+            <div class="form-actions">
+              <button class="btn primary" type="submit">
+                Đặt hàng &amp; Lấy mã QR MoMo
+              </button>
+              <a class="btn" th:href="@{/cart/view}">Quay lại giỏ hàng</a>
+            </div>
+          </form>
         </div>
 
         <div class="order-summary">
-            <h3>Đơn hàng</h3>
-            <div th:each="item : ${cartItems}" class="summary-item">
-                <div class="left">
-                    <span th:text="${item.productName}"></span>
-                    <small>x<span th:text="${item.quantity}"></span></small>
-                </div>
-                <div class="right" th:text="${#numbers.formatDecimal(item.subtotal,1,'COMMA',0,'POINT')}"></div>
+          <h3>Đơn hàng</h3>
+          <div th:each="item : ${cartItems}" class="summary-item">
+            <div class="left">
+              <span th:text="${item.product.productName}"></span>
+              <small>x<span th:text="${item.quantity}"></span></small>
             </div>
-            <div class="summary-total">
-                <span>Tổng cộng</span>
-                <strong th:text="${#numbers.formatDecimal(cartTotal,1,'COMMA',0,'POINT')}"></strong>
-            </div>
+            <div
+              class="right"
+              th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 1, 'COMMA', 0, 'POINT')}"
+            ></div>
+          </div>
+          <div class="summary-total">
+            <span>Tổng cộng</span>
+            <strong
+              th:text="${#numbers.formatDecimal(cartTotal, 1, 'COMMA', 0, 'POINT')}"
+            ></strong>
+          </div>
         </div>
+      </div>
     </div>
 
-</div>
+    <div th:replace="~{footer :: footer}"></div>
 
-
-<div th:replace="~{footer :: footer}"></div>
-
-<script th:src="@{/JavaScript/header.js}"></script>
-</body>
+    <script th:src="@{/JavaScript/header.js}"></script>
+  </body>
 </html>

@@ -83,16 +83,23 @@
     border-radius: 8px;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    /* Prevent flickering on mobile */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .dropdown-toggle:hover {
     background: linear-gradient(135deg, #4b5563, #374151);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+.dropdown-toggle:active {
+    transform: translateY(0);
 }
 
 .admin-dropdown-menu {
@@ -120,13 +127,16 @@
     border: none;
     text-align: left;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
     font-size: 0.9rem;
     color: #374151;
+    /* Prevent flickering */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .dropdown-item:hover {
-    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    background-color: #f1f5f9;
     color: #1e293b;
 }
 
@@ -135,7 +145,7 @@
 }
 
 .dropdown-item.text-danger:hover {
-    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    background-color: #fee2e2;
     color: #991b1b;
 }
 

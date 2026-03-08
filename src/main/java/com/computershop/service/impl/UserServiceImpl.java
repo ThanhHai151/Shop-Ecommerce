@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> authenticate(String usernameOrEmail, String password) {
         Optional<User> user = getUserByUsernameOrEmail(usernameOrEmail);
         if (user.isPresent()) {
-            if (user.get().getPasswordHash().equals(password)) {
+            if (verifyPassword(password, user.get().getPasswordHash())) {
                 return user;
             }
         }

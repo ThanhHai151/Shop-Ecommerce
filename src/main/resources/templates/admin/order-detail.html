@@ -52,8 +52,19 @@
                     <div class="admin-order-info">
                         <h2>Thông Tin Đơn Hàng</h2>
                         <div class="admin-order-status">
-                            <span class="admin-badge admin-badge-lg admin-badge-info" 
-                                  th:text="${order.status ?: 'Đang xử lý'}"></span>
+                            <span class="admin-badge admin-badge-lg"
+                                  th:classappend="${order.status == 'pending'} ? 'admin-badge-warning' :
+                                                  (${order.status == 'pending_payment'} ? 'admin-badge-secondary' :
+                                                  (${order.status == 'confirmed'} ? 'admin-badge-info' :
+                                                  (${order.status == 'shipping'} ? 'admin-badge-primary' :
+                                                  (${order.status == 'completed'} ? 'admin-badge-success' :
+                                                  'admin-badge-danger'))))"
+                                  th:text="${order.status == 'pending' ? 'Đang xử lý' :
+                                           (order.status == 'pending_payment' ? 'Chờ thanh toán' :
+                                           (order.status == 'confirmed' ? 'Đã xác nhận' :
+                                           (order.status == 'shipping' ? 'Đang vận chuyển' :
+                                           (order.status == 'completed' ? 'Hoàn thành' :
+                                           (order.status == 'cancelled' ? 'Đã hủy' : (order.status ?: 'Đang xử lý'))))))}"></span>
                         </div>
                     </div>
                     <div class="admin-order-actions">
@@ -131,12 +142,24 @@
                             </div>
                             <div class="admin-info-item">
                                 <label>Ngày đặt hàng:</label>
-                                <span>N/A</span>
+                                <span th:if="${order.orderDate != null}" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+                                <span th:if="${order.orderDate == null}">Chưa cập nhật</span>
                             </div>
                             <div class="admin-info-item">
                                 <label>Trạng thái:</label>
-                                <span class="admin-badge admin-badge-info" 
-                                      th:text="${order.status ?: 'Đang xử lý'}"></span>
+                                <span class="admin-badge"
+                                      th:classappend="${order.status == 'pending'} ? 'admin-badge-warning' :
+                                                      (${order.status == 'pending_payment'} ? 'admin-badge-secondary' :
+                                                      (${order.status == 'confirmed'} ? 'admin-badge-info' :
+                                                      (${order.status == 'shipping'} ? 'admin-badge-primary' :
+                                                      (${order.status == 'completed'} ? 'admin-badge-success' :
+                                                      'admin-badge-danger'))))"
+                                      th:text="${order.status == 'pending' ? 'Đang xử lý' :
+                                               (order.status == 'pending_payment' ? 'Chờ thanh toán' :
+                                               (order.status == 'confirmed' ? 'Đã xác nhận' :
+                                               (order.status == 'shipping' ? 'Đang vận chuyển' :
+                                               (order.status == 'completed' ? 'Hoàn thành' :
+                                               (order.status == 'cancelled' ? 'Đã hủy' : (order.status ?: 'Đang xử lý'))))))}"></span>
                             </div>
                             <div class="admin-info-item">
                                 <label>Tổng tiền:</label>
@@ -244,7 +267,11 @@
         });
 
         // Toggle status dropdown
-        function toggleStatusDropdown() {
+        function toggleStatusDropdown(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
             const dropdown = document.getElementById('status-dropdown');
             dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
         }

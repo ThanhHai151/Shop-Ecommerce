@@ -14,6 +14,8 @@ public final class Constants {
 
     // ==================== Order Statuses ====================
     public static final String ORDER_STATUS_PENDING = "pending";
+    public static final String ORDER_STATUS_PENDING_PAYMENT = "pending_payment";
+    public static final String ORDER_STATUS_CONFIRMED = "confirmed";
     public static final String ORDER_STATUS_SHIPPING = "shipping";
     public static final String ORDER_STATUS_COMPLETED = "completed";
     public static final String ORDER_STATUS_CANCELLED = "cancelled";

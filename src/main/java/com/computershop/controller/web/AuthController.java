@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -42,28 +44,47 @@ public class AuthController {
      */
     @PostMapping("/login")
     public String login(
-            @RequestParam String usernameOrEmail,
+            @RequestParam(value = "usernameOrEmail", required = false) String usernameOrEmail,
+            @RequestParam(value = "username", required = false) String usernameField,
             @RequestParam String password,
             HttpSession session,
+            jakarta.servlet.http.HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
 
+        // Support both "usernameOrEmail" and "username" field names
+        String loginInput = usernameOrEmail != null ? usernameOrEmail : usernameField;
+        if (loginInput == null || loginInput.isBlank()) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng nhập tên đăng nhập hoặc email");
+            return "redirect:/login";
+        }
+
         try {
-            var userOpt = userService.authenticate(usernameOrEmail, password);
+            var userOpt = userService.authenticate(loginInput, password);
 
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
+
+                // Invalidate old session and create new one to prevent session fixation
+                session.invalidate();
+                session = request.getSession(true);
+
                 session.setAttribute("userId", user.getUserId());
                 session.setAttribute("username", user.getUsername());
-                session.setAttribute("role", user.getRole().getRoleName());
 
-                redirectAttributes.addFlashAttribute("success", "Welcome, " + user.getUsername() + "!");
-                return "redirect:/";
+                String role = (user.getRole() != null) ? user.getRole().getRoleName() : "customer";
+                session.setAttribute("role", role);
+
+                if ("admin".equalsIgnoreCase(role)) {
+                    return "redirect:/admin/dashboard";
+                } else {
+                    return "redirect:/";
+                }
             } else {
-                redirectAttributes.addFlashAttribute("error", "Invalid username or password");
+                redirectAttributes.addFlashAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng");
                 return "redirect:/login";
             }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Login failed: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Đăng nhập thất bại: " + e.getMessage());
             return "redirect:/login";
         }
     }
@@ -75,8 +96,12 @@ public class AuthController {
      * @return redirect to home
      */
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, HttpServletResponse response) {
         session.invalidate();
+        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("JSESSIONID", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return "redirect:/";
     }
 

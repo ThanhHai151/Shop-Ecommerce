@@ -1,8 +1,19 @@
 package com.computershop.main.entities;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders")
@@ -24,7 +35,13 @@ public class Order {
     private List<OrderDetail> orderDetails;
     
     @Column(name = "status")
-    private String status = "pending"; 
+    private String status = "pending";
+
+    @Column(name = "shipping_address")
+    private String shippingAddress;
+
+    @Column(name = "notes")
+    private String notes;
     
     public Order() {}
     
@@ -38,12 +55,16 @@ public class Order {
     public LocalDateTime getOrderDate() {return orderDate;}
     public List<OrderDetail> getOrderDetails() {return orderDetails;}
     public String getStatus() {return status;}
+    public String getShippingAddress() {return shippingAddress;}
+    public String getNotes() {return notes;}
 
     public void setOrderId(Integer orderId) {this.orderId = orderId;}
     public void setUser(User user) {this.user = user;}
     public void setOrderDate(LocalDateTime orderDate) {this.orderDate = orderDate;}
     public void setOrderDetails(List<OrderDetail> orderDetails) {this.orderDetails = orderDetails;}
     public void setStatus(String status) {this.status = status;}
+    public void setShippingAddress(String shippingAddress) {this.shippingAddress = shippingAddress;}
+    public void setNotes(String notes) {this.notes = notes;}
     
     public double getTotalAmount() {
         if (orderDetails == null || orderDetails.isEmpty()) {

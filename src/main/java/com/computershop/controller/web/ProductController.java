@@ -1,9 +1,7 @@
 package com.computershop.controller.web;
 
-import com.computershop.service.impl.ProductServiceImpl;
-import com.computershop.service.impl.CategoryServiceImpl;
-import com.computershop.main.entities.Product;
-import com.computershop.main.entities.Category;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-import java.util.Optional;
+import com.computershop.main.entities.Category;
+import com.computershop.main.entities.Product;
+import com.computershop.service.impl.CategoryServiceImpl;
+import com.computershop.service.impl.ProductServiceImpl;
 
 /**
  * Controller for product-related public routes.
@@ -40,6 +40,7 @@ public class ProductController {
      */
     @GetMapping("/products")
     public String products(
+            @RequestParam(required = false) String search,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) Double minPrice,
@@ -48,44 +49,55 @@ public class ProductController {
         try {
             List<Product> products;
 
-            // Filter by category
-            if (category != null && !category.isEmpty()) {
+            // Search by keyword takes priority
+            if (search != null && !search.trim().isEmpty()) {
+                products = productService.searchProducts(search.trim());
+            } else if (category != null && !category.isEmpty()) {
                 products = productService.getProductsByCategoryName(category);
             } else {
                 products = productService.getAllProducts();
             }
 
-            // Sort products
-            if (sort != null) {
-                switch (sort) {
-                    case "price-asc":
-                        products = productService.getProductsByPriceAsc();
-                        break;
-                    case "price-desc":
-                        products = productService.getProductsByPriceDesc();
-                        break;
-                    default:
-                        // Default sorting
-                        break;
-                }
-            }
-
-            // Filter by price range
-            if (minPrice != null && maxPrice != null) {
+            // Filter by price range (always applies after fetching)
+            if (minPrice != null || maxPrice != null) {
+                final double min = (minPrice != null) ? minPrice : 0;
+                final double max = (maxPrice != null) ? maxPrice : Double.MAX_VALUE;
                 products = products.stream()
-                        .filter(p -> p.getPrice().doubleValue() >= minPrice && p.getPrice().doubleValue() <= maxPrice)
+                        .filter(p -> p.getPrice().doubleValue() >= min && p.getPrice().doubleValue() <= max)
                         .toList();
             }
 
+            // Sort products
+            if (sort != null) {
+                products = switch (sort) {
+                    case "price-asc" -> products.stream()
+                            .sorted(java.util.Comparator.comparing(p -> p.getPrice()))
+                            .toList();
+                    case "price-desc" -> products.stream()
+                            .sorted(java.util.Comparator.comparing((Product p) -> p.getPrice()).reversed())
+                            .toList();
+                    case "popular" -> products; // keep DB order (most sold first when no filter)
+                    default -> products.stream()
+                            .sorted(java.util.Comparator.comparing(p -> p.getProductName()))
+                            .toList();
+                };
+            }
+
             model.addAttribute("products", products);
+            model.addAttribute("totalProducts", products.size());
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("selectedCategory", category);
-            model.addAttribute("selectedSort", sort);
+            model.addAttribute("currentSort", sort != null ? sort : "name");
+            model.addAttribute("searchQuery", search);
+            model.addAttribute("minPrice", minPrice);
+            model.addAttribute("maxPrice", maxPrice);
 
             return "products";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to load products: " + e.getMessage());
             model.addAttribute("products", List.of());
+            model.addAttribute("totalProducts", 0);
+            model.addAttribute("categories", categoryService.getAllCategories());
             return "products";
         }
     }
@@ -97,7 +109,7 @@ public class ProductController {
      * @param model the model
      * @return product detail view or redirect to products page
      */
-    @GetMapping("/product/{id}")
+    @GetMapping({"/product/{id}", "/products/{id}"})
     public String productDetail(@PathVariable("id") Integer id, Model model) {
         try {
             Optional<Product> productOpt = productService.getProductById(id);
@@ -135,17 +147,21 @@ public class ProductController {
      * @return search results view
      */
     @GetMapping("/search")
-    public String search(@RequestParam("keyword") String keyword, Model model) {
+    public String search(@RequestParam("q") String q, Model model) {
         try {
-            List<Product> products = productService.searchProducts(keyword);
+            List<Product> products = productService.searchProducts(q);
             model.addAttribute("products", products);
-            model.addAttribute("keyword", keyword);
+            model.addAttribute("totalProducts", products.size());
+            model.addAttribute("searchQuery", q);
             model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("currentSort", "name");
 
             return "products";
         } catch (Exception e) {
             model.addAttribute("error", "Search failed: " + e.getMessage());
             model.addAttribute("products", List.of());
+            model.addAttribute("totalProducts", 0);
+            model.addAttribute("categories", categoryService.getAllCategories());
             return "products";
         }
     }

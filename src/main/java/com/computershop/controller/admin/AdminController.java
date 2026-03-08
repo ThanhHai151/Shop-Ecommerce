@@ -568,12 +568,12 @@ public class AdminController {
                 Order order = orderOpt.get();
                 order.setStatus(status);
                 orderService.updateOrder(orderId, order);
-                redirectAttributes.addFlashAttribute("success", "Order status updated");
+                redirectAttributes.addFlashAttribute("success", "Cập nhật trạng thái đơn hàng thành công!");
             } else {
-                redirectAttributes.addFlashAttribute("error", "Order not found");
+                redirectAttributes.addFlashAttribute("error", "Không tìm thấy đơn hàng");
             }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
         }
 
         return "redirect:/admin/orders/" + orderId;

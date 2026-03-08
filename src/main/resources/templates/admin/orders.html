@@ -66,7 +66,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="order : ${orders}">
+                        <tr th:each="order : ${orders}" th:id="'order-' + ${order.orderId}">
                             <td>
                                 <strong th:text="'#' + ${order.orderId}"></strong>
                             </td>
@@ -76,12 +76,27 @@
                                     <small class="text-muted" th:text="${order.user?.email ?: ''}"></small>
                                 </div>
                             </td>
-                            <td>N/A</td>
+                            <td>
+                                <span th:if="${order.orderDate != null}" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+                                <span th:if="${order.orderDate == null}">-</span>
+                            </td>
                             <td>
                                 <strong class="text-success money-display" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'"></strong>
                             </td>
                             <td>
-                                <span class="admin-badge admin-badge-info" th:text="${order.status ?: 'Đang xử lý'}"></span>
+                                <span class="admin-badge"
+                                      th:classappend="${order.status == 'pending'} ? 'admin-badge-warning' :
+                                                      (${order.status == 'pending_payment'} ? 'admin-badge-secondary' :
+                                                      (${order.status == 'confirmed'} ? 'admin-badge-info' :
+                                                      (${order.status == 'shipping'} ? 'admin-badge-primary' :
+                                                      (${order.status == 'completed'} ? 'admin-badge-success' :
+                                                      'admin-badge-danger'))))"
+                                      th:text="${order.status == 'pending' ? 'Đang xử lý' :
+                                               (order.status == 'pending_payment' ? 'Chờ thanh toán' :
+                                               (order.status == 'confirmed' ? 'Đã xác nhận' :
+                                               (order.status == 'shipping' ? 'Đang vận chuyển' :
+                                               (order.status == 'completed' ? 'Hoàn thành' :
+                                               (order.status == 'cancelled' ? 'Đã hủy' : (order.status ?: 'Đang xử lý'))))))}"></span>
                             </td>
                             <td>
                                 <div class="admin-actions">
@@ -93,42 +108,30 @@
                                     
                                     
                                     <div class="admin-dropdown">
-                                        <button class="admin-btn admin-btn-secondary admin-btn-sm dropdown-toggle" 
-                                                type="button" 
-                                                th:onclick="|toggleDropdown('status-${order.orderId}')|">
+                                        <button class="admin-btn admin-btn-secondary admin-btn-sm dropdown-toggle"
+                                                type="button"
+                                                th:onclick="|toggleDropdown('status-${order.orderId}', event)|">
                                             <i class="fas fa-edit"></i> Trạng Thái
                                         </button>
                                         <div th:id="|status-${order.orderId}|" class="admin-dropdown-menu" style="display: none;">
-                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
-                                                <input type="hidden" name="status" value="pending">
-                                                <button type="submit" class="dropdown-item">
-                                                    <i class="fas fa-clock"></i> Đang xử lý
-                                                </button>
-                                            </form>
-                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
-                                                <input type="hidden" name="status" value="confirmed">
-                                                <button type="submit" class="dropdown-item">
-                                                    <i class="fas fa-check"></i> Đã xác nhận
-                                                </button>
-                                            </form>
-                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
-                                                <input type="hidden" name="status" value="shipping">
-                                                <button type="submit" class="dropdown-item">
-                                                    <i class="fas fa-truck"></i> Đang giao
-                                                </button>
-                                            </form>
-                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
-                                                <input type="hidden" name="status" value="completed">
-                                                <button type="submit" class="dropdown-item">
-                                                    <i class="fas fa-check-circle"></i> Hoàn thành
-                                                </button>
-                                            </form>
-                                            <form th:action="@{/admin/orders/{id}/status(id=${order.orderId})}" method="post">
-                                                <input type="hidden" name="status" value="cancelled">
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="fas fa-times"></i> Hủy bỏ
-                                                </button>
-                                            </form>
+                                            <button type="button" class="dropdown-item" th:onclick="|updateStatus(${order.orderId}, 'pending', 'Đang xử lý', event)|">
+                                                <i class="fas fa-clock"></i> Đang xử lý
+                                            </button>
+                                            <button type="button" class="dropdown-item" th:onclick="|updateStatus(${order.orderId}, 'pending_payment', 'Chờ thanh toán', event)|">
+                                                <i class="fas fa-wallet"></i> Chờ thanh toán
+                                            </button>
+                                            <button type="button" class="dropdown-item" th:onclick="|updateStatus(${order.orderId}, 'confirmed', 'Đã xác nhận', event)|">
+                                                <i class="fas fa-check"></i> Đã xác nhận
+                                            </button>
+                                            <button type="button" class="dropdown-item" th:onclick="|updateStatus(${order.orderId}, 'shipping', 'Đang vận chuyển', event)|">
+                                                <i class="fas fa-truck"></i> Đang giao
+                                            </button>
+                                            <button type="button" class="dropdown-item" th:onclick="|updateStatus(${order.orderId}, 'completed', 'Hoàn thành', event)|">
+                                                <i class="fas fa-check-circle"></i> Hoàn thành
+                                            </button>
+                                            <button type="button" class="dropdown-item text-danger" th:onclick="|updateStatus(${order.orderId}, 'cancelled', 'Đã hủy', event)|">
+                                                <i class="fas fa-times"></i> Hủy bỏ
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -228,15 +231,19 @@
         });
 
         // Toggle dropdown menu
-        function toggleDropdown(id) {
+        function toggleDropdown(id, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
             const dropdown = document.getElementById(id);
             const isVisible = dropdown.style.display !== 'none';
-            
+
             // Hide all dropdowns first
             document.querySelectorAll('.admin-dropdown-menu').forEach(menu => {
                 menu.style.display = 'none';
             });
-            
+
             // Show/hide current dropdown
             dropdown.style.display = isVisible ? 'none' : 'block';
         }
@@ -249,6 +256,102 @@
                 });
             }
         });
+
+        // Update status via AJAX (no page refresh)
+        function updateStatus(orderId, newStatus, statusText, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            // Get the status button and dropdown
+            const statusButton = document.querySelector('#status-' + orderId).previousElementSibling;
+            const dropdown = document.getElementById('status-' + orderId);
+
+            // Disable button to prevent double clicks
+            if (statusButton) {
+                statusButton.style.pointerEvents = 'none';
+                statusButton.style.opacity = '0.7';
+            }
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]')?.content
+                            || document.querySelector('input[name="_csrf"]')?.value;
+
+            fetch('/admin/orders/' + orderId + '/status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-Token': csrfToken
+                },
+                body: 'status=' + newStatus
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Update status badge without page refresh
+                    updateStatusBadge(orderId, newStatus, statusText);
+
+                    // Show success message
+                    showAlert('Cập nhật trạng thái thành công!', 'success');
+                } else {
+                    showAlert('Cập nhật trạng thái thất bại!', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Đã xảy ra lỗi!', 'error');
+            })
+            .finally(() => {
+                // Re-enable button
+                if (statusButton) {
+                    statusButton.style.pointerEvents = 'auto';
+                    statusButton.style.opacity = '1';
+                }
+            });
+
+            // Close dropdown
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        // Update status badge display
+        function updateStatusBadge(orderId, status, statusText) {
+            const badge = document.querySelector('#order-' + orderId + ' .admin-badge');
+            if (badge) {
+                badge.textContent = statusText;
+
+                // Update badge class
+                badge.className = 'admin-badge';
+                if (status === 'pending') {
+                    badge.classList.add('admin-badge-warning');
+                } else if (status === 'pending_payment') {
+                    badge.classList.add('admin-badge-secondary');
+                } else if (status === 'confirmed') {
+                    badge.classList.add('admin-badge-info');
+                } else if (status === 'shipping') {
+                    badge.classList.add('admin-badge-primary');
+                } else if (status === 'completed') {
+                    badge.classList.add('admin-badge-success');
+                } else if (status === 'cancelled') {
+                    badge.classList.add('admin-badge-danger');
+                }
+            }
+        }
+
+        // Show alert message
+        function showAlert(message, type) {
+            const main = document.querySelector('.admin-main');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'admin-alert ' + (type === 'success' ? 'admin-alert-success' : 'admin-alert-error');
+            alertDiv.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i><span>' + message + '</span>';
+            main.insertBefore(alertDiv, main.firstChild);
+
+            // Auto-hide after 3 seconds
+            setTimeout(function() {
+                alertDiv.style.opacity = '0';
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>

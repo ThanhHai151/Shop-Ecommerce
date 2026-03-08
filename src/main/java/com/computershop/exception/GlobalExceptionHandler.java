@@ -52,8 +52,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public String handleGenericException(Exception ex, Model model) {
         model.addAttribute("errorTitle", "System Error");
-        model.addAttribute("errorMessage", "An unexpected error occurred. Please try again later.");
-        // Log the exception details in a real application
+        // Build full stack trace string for debugging
+        StringBuilder sb = new StringBuilder();
+        sb.append(ex.getClass().getName()).append(": ").append(ex.getMessage());
+        Throwable cause = ex.getCause();
+        while (cause != null) {
+            sb.append(" | CAUSE: ").append(cause.getClass().getSimpleName()).append(": ").append(cause.getMessage());
+            cause = cause.getCause();
+        }
+        for (StackTraceElement el : ex.getStackTrace()) {
+            if (el.getClassName().startsWith("com.computershop")) {
+                sb.append(" | AT: ").append(el.toString());
+                break;
+            }
+        }
+        model.addAttribute("errorMessage", sb.toString());
         ex.printStackTrace();
         return "error/500";
     }

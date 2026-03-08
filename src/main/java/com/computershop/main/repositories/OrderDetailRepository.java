@@ -48,4 +48,15 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Intege
     
     @Query("SELECT od, od.product.productName, od.product.price FROM OrderDetail od WHERE od.order.orderId = :orderId")
     List<Object[]> findOrderDetailsWithProductInfo(@Param("orderId") Integer orderId);
+
+    // Get all order details for a user (for "My Ordered Products" feature)
+    @Query("SELECT od FROM OrderDetail od JOIN FETCH od.product p JOIN FETCH od.order o JOIN FETCH o.user u WHERE u.userId = :userId ORDER BY o.orderDate DESC")
+    List<OrderDetail> findAllByUserId(@Param("userId") Integer userId);
+
+    // Get all ordered products (distinct products) for a user with total quantity ordered
+    @Query("SELECT od.product, SUM(od.quantity) as totalQuantity, MAX(od.order.orderDate) as lastOrderDate " +
+           "FROM OrderDetail od JOIN od.order o JOIN o.user u " +
+           "WHERE u.userId = :userId " +
+           "GROUP BY od.product ORDER BY lastOrderDate DESC")
+    List<Object[]> findOrderedProductsSummaryByUserId(@Param("userId") Integer userId);
 }

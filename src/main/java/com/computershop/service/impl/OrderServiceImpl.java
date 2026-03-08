@@ -1,19 +1,20 @@
 package com.computershop.service.impl;
 
-import com.computershop.main.entities.Order;
-import com.computershop.main.entities.User;
-import com.computershop.main.entities.OrderDetail;
-import com.computershop.main.repositories.OrderRepository;
-import com.computershop.service.api.OrderService;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.computershop.main.entities.Order;
+import com.computershop.main.entities.OrderDetail;
+import com.computershop.main.entities.User;
+import com.computershop.main.repositories.OrderDetailRepository;
+import com.computershop.main.repositories.OrderRepository;
+import com.computershop.service.api.OrderService;
 
 /**
  * Implementation of OrderService.
@@ -24,6 +25,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     @Autowired
     private UserServiceImpl userService;
@@ -38,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<Order> getOrderById(Integer orderId) {
-        return orderRepository.findById(orderId);
+        return orderRepository.findByIdWithDetails(orderId);
     }
 
     @Override
@@ -135,10 +139,38 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByStatus("completed");
     }
 
+    @Override
+    public List<Object[]> getOrderedProductsByUserId(Integer userId) {
+        return orderDetailRepository.findOrderedProductsSummaryByUserId(userId);
+    }
+
     // ==================== Additional Methods from Original Service ====================
 
     public List<Order> getUserOrdersRecent(Integer userId) {
-        return orderRepository.findByUserUserIdOrderByOrderDateDesc(userId);
+        return orderRepository.findByUserUserIdWithDetailsFetched(userId);
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<Order> getOrdersWithDetailsForUser(Integer userId) {
+        List<Order> orders = orderRepository.findByUserUserIdWithDetailsFetched(userId);
+        // Force-initialize all lazy proxies inside the transaction
+        for (Order order : orders) {
+            if (order.getOrderDetails() != null) {
+                order.getOrderDetails().size();
+                for (var detail : order.getOrderDetails()) {
+                    if (detail.getProduct() != null) {
+                        detail.getProduct().getProductName();
+                        if (detail.getProduct().getCategory() != null) {
+                            detail.getProduct().getCategory().getCategoryName();
+                        }
+                        if (detail.getProduct().getImage() != null) {
+                            detail.getProduct().getImage().getImageUrl();
+                        }
+                    }
+                }
+            }
+        }
+        return orders;
     }
 
     public List<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {

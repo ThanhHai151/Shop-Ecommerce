@@ -1,0 +1,336 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thanh toán - Chuyển khoản ngân hàng</title>
+    <link rel="stylesheet" th:href="@{/CSS/style.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/header.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/cart.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      .payment-page {
+        max-width: 620px;
+        margin: 40px auto;
+        padding: 0 16px 40px;
+      }
+      .payment-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+        padding: 36px 32px;
+        text-align: center;
+      }
+      .vcb-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .vcb-icon {
+        width: 52px;
+        height: 52px;
+        background: #007b3e;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+      }
+      .vcb-title {
+        margin: 0;
+        font-size: 1.55rem;
+        color: #007b3e;
+        font-weight: 700;
+      }
+      .vcb-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e8f5ec;
+        border: 1px solid #86efac;
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 0.82rem;
+        color: #166534;
+        margin-bottom: 18px;
+      }
+      .order-info {
+        background: #f0faf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 10px;
+        padding: 14px 20px;
+        margin: 18px 0;
+        text-align: left;
+      }
+      .order-info p {
+        margin: 7px 0;
+        color: #444;
+        font-size: 0.95rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .order-info strong {
+        color: #007b3e;
+      }
+      .amount-display {
+        font-size: 2.1rem;
+        font-weight: 700;
+        color: #007b3e;
+        margin: 10px 0 22px;
+        letter-spacing: 1px;
+      }
+      .qr-outer {
+        display: inline-block;
+        background: white;
+        border: 3px solid #007b3e;
+        border-radius: 14px;
+        padding: 16px 16px 12px;
+        box-shadow: 0 2px 16px rgba(0, 123, 62, 0.15);
+      }
+      .qr-outer img {
+        width: 250px;
+        height: 250px;
+        display: block;
+      }
+      .qr-bank-label {
+        margin-top: 10px;
+        font-size: 0.88rem;
+        color: #007b3e;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .qr-account-label {
+        font-size: 1rem;
+        color: #222;
+        font-weight: 700;
+        margin-top: 4px;
+      }
+      .qr-name-label {
+        font-size: 0.85rem;
+        color: #555;
+        margin-top: 2px;
+      }
+      .qr-scan-hint {
+        margin-top: 12px;
+        color: #666;
+        font-size: 0.88rem;
+      }
+      .bank-support {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+        margin: 14px 0 4px;
+      }
+      .bank-tag {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 0.78rem;
+        color: #555;
+      }
+      .steps {
+        text-align: left;
+        background: #f0faf4;
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 22px 0 18px;
+      }
+      .steps h4 {
+        margin: 0 0 10px;
+        color: #007b3e;
+      }
+      .steps ol {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .steps li {
+        margin-bottom: 6px;
+        color: #444;
+        font-size: 0.92rem;
+      }
+      .note-box {
+        background: #fffbeb;
+        border: 1px solid #fcd34d;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 0.88rem;
+        color: #92400e;
+        text-align: left;
+        margin-bottom: 20px;
+      }
+      .note-box strong {
+        color: #b45309;
+      }
+      .btn-primary {
+        display: inline-block;
+        background: #007b3e;
+        color: white;
+        padding: 14px 32px;
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s;
+        margin: 6px;
+      }
+      .btn-primary:hover {
+        background: #005a2d;
+      }
+      .btn-outline {
+        display: inline-block;
+        border: 2px solid #007b3e;
+        color: #007b3e;
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        margin: 6px;
+      }
+      .btn-outline:hover {
+        background: #007b3e;
+        color: white;
+      }
+      .divider {
+        border: none;
+        border-top: 1px solid #eee;
+        margin: 22px 0;
+      }
+      .success-note {
+        font-size: 0.85rem;
+        color: #888;
+        margin-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="~{header :: header}"></div>
+
+    <div class="payment-page">
+      <div class="payment-card">
+        <!-- Vietcombank Header -->
+        <div class="vcb-header">
+          <div class="vcb-icon"><i class="fas fa-university"></i></div>
+          <h2 class="vcb-title">Vietcombank</h2>
+        </div>
+        <div class="vcb-badge">
+          <i class="fas fa-check-circle"></i>
+          VietQR — Quét được bằng tất cả app ngân hàng
+        </div>
+
+        <!-- Thông tin đơn hàng -->
+        <div class="order-info">
+          <p>
+            <span>Mã đơn hàng</span>
+            <strong th:text="'#' + ${order.orderId}">-</strong>
+          </p>
+          <p>
+            <span>Ngân hàng</span>
+            <strong th:text="${bankName}">-</strong>
+          </p>
+          <p>
+            <span>Số tài khoản</span>
+            <strong th:text="${accountNumber}">-</strong>
+          </p>
+          <p>
+            <span>Chủ tài khoản</span>
+            <strong th:text="${accountName}">-</strong>
+          </p>
+          <p>
+            <span>Nội dung CK</span>
+            <strong th:text="${note}">-</strong>
+          </p>
+        </div>
+
+        <!-- Số tiền -->
+        <div class="amount-display">
+          <span
+            th:text="${#numbers.formatDecimal(amount, 1, 'COMMA', 0, 'POINT')}"
+            >0</span
+          >&nbsp;&#8363;
+        </div>
+
+        <!-- QR Code (VietQR EMVCo — tự điền STK + số tiền + nội dung) -->
+        <div class="qr-outer">
+          <img th:src="${qrImageUrl}" alt="VietQR Vietcombank" />
+          <div class="qr-bank-label">Vietcombank &middot; VietQR</div>
+          <div class="qr-account-label" th:text="${accountNumber}">-</div>
+          <div class="qr-name-label" th:text="${accountName}">-</div>
+        </div>
+        <p class="qr-scan-hint">
+          <i class="fas fa-qrcode"></i>
+          Quét bằng app ngân hàng bất kỳ — số tiền &amp; nội dung tự điền
+        </p>
+
+        <!-- Ngân hàng hỗ trợ -->
+        <div class="bank-support">
+          <span class="bank-tag">Vietcombank</span>
+          <span class="bank-tag">MB Bank</span>
+          <span class="bank-tag">BIDV</span>
+          <span class="bank-tag">Techcombank</span>
+          <span class="bank-tag">VietinBank</span>
+          <span class="bank-tag">TPBank</span>
+          <span class="bank-tag">ACB</span>
+          <span class="bank-tag">VPBank</span>
+          <span class="bank-tag">MoMo</span>
+          <span class="bank-tag">ZaloPay</span>
+        </div>
+
+        <!-- Hướng dẫn -->
+        <div class="steps">
+          <h4><i class="fas fa-info-circle"></i> Hướng dẫn thanh toán</h4>
+          <ol>
+            <li>Mở app ngân hàng hoặc ví điện tử (MoMo, ZaloPay, ...)</li>
+            <li>
+              Chọn <strong>Quét mã QR</strong> hoặc
+              <strong>Chuyển khoản</strong>
+            </li>
+            <li>
+              Quét mã QR bên trên — thông tin sẽ <strong>tự động điền</strong>
+            </li>
+            <li>
+              Kiểm tra <strong>số tiền</strong> và
+              <strong>nội dung chuyển khoản</strong>
+            </li>
+            <li>Xác nhận thanh toán</li>
+          </ol>
+        </div>
+
+        <div class="note-box">
+          <strong><i class="fas fa-exclamation-triangle"></i> Lưu ý:</strong>
+          Vui lòng điền đúng nội dung chuyển khoản
+          <strong th:text="${note}"></strong>
+          để đơn hàng được xác nhận tự động.
+        </div>
+
+        <hr class="divider" />
+
+        <a th:href="@{/user/orders}" class="btn-primary">
+          <i class="fas fa-list-alt"></i> Xem đơn hàng của tôi
+        </a>
+        <a th:href="@{/products}" class="btn-outline">
+          <i class="fas fa-shopping-bag"></i> Tiếp tục mua sắm
+        </a>
+
+        <p class="success-note">
+          Sau khi thanh toán thành công, đơn hàng của bạn sẽ được xử lý trong
+          vòng 24 giờ.
+        </p>
+      </div>
+    </div>
+
+    <div th:replace="~{footer :: footer}"></div>
+    <script th:src="@{/JavaScript/header.js}"></script>
+  </body>
+</html>

@@ -34,20 +34,20 @@
             <tbody>
             <tr th:each="item : ${cartItems}">
                 <td class="product-col">
-                    <img th:src="${item.imageUrl}" alt="img" class="thumb" onerror="this.src='/Images/placeholder.svg'"/>
+                    <img th:src="${item.product.image != null ? item.product.image.imageUrl : '/Images/placeholder.svg'}" alt="img" class="thumb" onerror="this.src='/Images/placeholder.svg'"/>
                     <div class="product-info">
-                        <div class="name" th:text="${item.productName}"></div>
+                        <div class="name" th:text="${item.product.productName}"></div>
                     </div>
                 </td>
-                <td th:text="${#numbers.formatDecimal(item.price,1,'COMMA',2,'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(item.product.price,1,'COMMA',0,'POINT')} + ' ₫'"></td>
                 <td>
                     <input type="number" min="0" th:value="${item.quantity}" class="qty-input"
-                           th:attr="data-product-id=${item.productId}" />
-                    <button class="btn small update-btn" th:attr="data-product-id=${item.productId}">Cập nhật</button>
+                           th:attr="data-cart-item-id=${item.cartItemId}" />
+                    <button class="btn small update-btn" th:attr="data-cart-item-id=${item.cartItemId}">Cập nhật</button>
                 </td>
-                <td th:text="${#numbers.formatDecimal(item.subtotal,1,'COMMA',2,'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(item.subtotal,1,'COMMA',0,'POINT')} + ' ₫'"></td>
                 <td>
-                    <button class="btn danger remove-btn" th:attr="data-product-id=${item.productId}">Xóa</button>
+                    <button class="btn danger remove-btn" th:attr="data-cart-item-id=${item.cartItemId}">Xóa</button>
                 </td>
             </tr>
             </tbody>
@@ -78,25 +78,23 @@
     // Simple AJAX handlers for update/remove
     document.addEventListener('click', function (e) {
         if (e.target.matches('.update-btn')) {
-            const id = e.target.getAttribute('data-product-id');
-            const input = document.querySelector('.qty-input[data-product-id="' + id + '"]');
+            const id = e.target.getAttribute('data-cart-item-id');
+            const input = document.querySelector('.qty-input[data-cart-item-id="' + id + '"]');
             const qty = parseInt(input.value || '0');
             fetch('/cart/update', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: new URLSearchParams({productId: id, quantity: qty})
-            }).then(r => r.json()).then(data => {
-                if (data.success) location.reload(); else alert(data.message || 'Lỗi');
-            });
+                body: new URLSearchParams({cartItemId: id, quantity: qty})
+            }).then(() => location.reload());
         }
 
         if (e.target.matches('.remove-btn')) {
-            const id = e.target.getAttribute('data-product-id');
+            const id = e.target.getAttribute('data-cart-item-id');
             fetch('/cart/remove', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: new URLSearchParams({productId: id})
-            }).then(r => r.json()).then(data => { if (data.success) location.reload(); else alert(data.message || 'Lỗi'); });
+                body: new URLSearchParams({cartItemId: id})
+            }).then(() => location.reload());
         }
     });
 </script>

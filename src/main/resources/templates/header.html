@@ -18,7 +18,7 @@
             
             <nav class="nav">
                 
-                <div th:if="${session.currentUser == null}" class="nav-guest">
+                <div th:if="${session.userId == null}" class="nav-guest">
                     <a href="/" class="nav-link">Trang chủ</a>
                     <a href="/products" class="nav-link">Sản phẩm</a>
                     <a href="/about" class="nav-link">Giới thiệu</a>
@@ -27,7 +27,7 @@
                 </div>
                 
                 
-                <div th:if="${session.currentUser != null && session.role != 'admin'}" class="nav-user">
+                <div th:if="${session.userId != null && session.role != 'admin'}" class="nav-user">
                     <a href="/" class="nav-link">Trang chủ</a>
                     <a href="/products" class="nav-link">Sản phẩm</a>
                     <a href="/about" class="nav-link">Giới thiệu</a>
@@ -46,6 +46,7 @@
                         <div class="user-menu-dropdown" id="userMenuDropdown">
                             <a href="/user/profile" class="dropdown-item">Thông tin tài khoản</a>
                             <a href="/user/orders" class="dropdown-item">Đơn hàng</a>
+                            <a href="/user/ordered-products" class="dropdown-item">Sản phẩm đã mua</a>
                             <hr class="dropdown-divider">
                             <a href="/logout" class="dropdown-item">Đăng xuất</a>
                         </div>
@@ -53,7 +54,7 @@
                 </div>
                 
                 
-                <div th:if="${session.currentUser != null && session.role == 'admin'}" class="nav-admin">
+                <div th:if="${session.userId != null && session.role == 'admin'}" class="nav-admin">
                     <a href="/admin/products" class="nav-link">Danh sách sản phẩm</a>
                     <a href="/admin/users" class="nav-link">Danh sách tài khoản</a>
                     <a href="/admin/orders" class="nav-link">Danh sách đơn hàng</a>

@@ -118,4 +118,13 @@ public interface OrderService {
      * @return list of completed orders
      */
     List<Order> getCompletedOrders();
+
+    /**
+     * Retrieves all ordered products for a user.
+     * Returns product details along with total quantity ordered and last order date.
+     *
+     * @param userId the user ID
+     * @return list of objects containing product, total quantity, and last order date
+     */
+    List<Object[]> getOrderedProductsByUserId(Integer userId);
 }

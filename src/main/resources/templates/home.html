@@ -74,8 +74,8 @@
                 </div>
 
                 <div class="products-grid">
-                    
-                    <div class="product-card" th:each="product : ${products}">
+
+                    <div class="product-card" th:each="product : ${featuredProducts}">
                         <div class="product-image">
                             <img th:src="${product.image != null ? product.image.imageUrl : '/Images/placeholder.svg'}" 
                                  th:alt="${product.productName}" 
@@ -100,7 +100,7 @@
                     </div>
 
                     
-                    <div th:if="${products == null or #lists.isEmpty(products)}" class="no-products-message">
+                    <div th:if="${featuredProducts == null or #lists.isEmpty(featuredProducts)}" class="no-products-message">
                         <p>Đang cập nhật sản phẩm mới...</p>
                         <a href="/products" class="btn btn-primary">Xem tất cả sản phẩm</a>
                     </div>
