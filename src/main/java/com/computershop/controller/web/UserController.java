@@ -95,13 +95,8 @@ public class UserController {
             return "redirect:/login";
         }
 
-        try {
-            List<Order> orders = orderService.getOrdersWithDetailsForUser(userId);
-            model.addAttribute("orders", orders);
-        } catch (Exception e) {
-            model.addAttribute("error", "Không thể tải đơn hàng: " + e.getMessage());
-            model.addAttribute("orders", List.of());
-        }
+        List<Order> orders = orderService.getOrdersWithDetailsForUser(userId);
+        model.addAttribute("orders", orders);
 
         return "user/orders";
     }

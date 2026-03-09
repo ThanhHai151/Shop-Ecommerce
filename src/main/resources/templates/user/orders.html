@@ -201,18 +201,8 @@
             <div>
               <span
                 class="order-status"
-                th:classappend="${order.status == 'pending'} ? 'status-pending' :
-                                             (${order.status == 'pending_payment'}) ? 'status-pending_payment' :
-                                             (${order.status == 'confirmed'}) ? 'status-confirmed' :
-                                             (${order.status == 'shipping'}) ? 'status-shipping' :
-                                             (${order.status == 'completed'}) ? 'status-completed' :
-                                             'status-cancelled'"
-                th:text="${order.status == 'pending' ? 'Đang xử lý' :
-                                       (order.status == 'pending_payment' ? 'Chờ thanh toán' :
-                                       (order.status == 'confirmed' ? 'Đã xác nhận' :
-                                       (order.status == 'shipping' ? 'Đang vận chuyển' :
-                                       (order.status == 'completed' ? 'Hoàn thành' :
-                                       (order.status == 'cancelled' ? 'Đã hủy' : order.status)))))}"
+                th:classappend="${order.status == 'pending'} ? 'status-pending' : (${order.status == 'pending_payment'} ? 'status-pending_payment' : (${order.status == 'confirmed'} ? 'status-confirmed' : (${order.status == 'shipping'} ? 'status-shipping' : (${order.status == 'completed'} ? 'status-completed' : 'status-cancelled'))))"
+                th:text="${order.status == 'pending'} ? 'Đang xử lý' : (${order.status == 'pending_payment'} ? 'Chờ thanh toán' : (${order.status == 'confirmed'} ? 'Đã xác nhận' : (${order.status == 'shipping'} ? 'Đang vận chuyển' : (${order.status == 'completed'} ? 'Hoàn thành' : (${order.status == 'cancelled'} ? 'Đã hủy' : order.status)))))"
               >
               </span>
             </div>

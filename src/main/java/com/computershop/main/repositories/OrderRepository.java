@@ -45,7 +45,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o FROM Order o WHERE o.user.userId = :userId ORDER BY o.orderDate DESC")
     List<Order> findRecentOrdersByUserId(@Param("userId") Integer userId, Pageable pageable);
 
-    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product WHERE o.user.userId = :userId ORDER BY o.orderDate DESC")
+    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product WHERE o.user.userId = :userId ORDER BY o.orderDate DESC")
     List<Order> findByUserUserIdWithDetailsFetched(@Param("userId") Integer userId);
 
     @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product p LEFT JOIN FETCH p.image LEFT JOIN FETCH p.category WHERE o.orderId = :orderId")

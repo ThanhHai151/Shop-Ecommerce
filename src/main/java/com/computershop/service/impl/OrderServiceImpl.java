@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.computershop.main.entities.Order;
 import com.computershop.main.entities.OrderDetail;
@@ -21,6 +23,7 @@ import com.computershop.service.api.OrderService;
  * Handles all order-related business logic.
  */
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -150,22 +153,20 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByUserUserIdWithDetailsFetched(userId);
     }
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<Order> getOrdersWithDetailsForUser(Integer userId) {
         List<Order> orders = orderRepository.findByUserUserIdWithDetailsFetched(userId);
         // Force-initialize all lazy proxies inside the transaction
         for (Order order : orders) {
+            Hibernate.initialize(order);
             if (order.getOrderDetails() != null) {
-                order.getOrderDetails().size();
+                Hibernate.initialize(order.getOrderDetails());
                 for (var detail : order.getOrderDetails()) {
+                    Hibernate.initialize(detail);
                     if (detail.getProduct() != null) {
-                        detail.getProduct().getProductName();
-                        if (detail.getProduct().getCategory() != null) {
-                            detail.getProduct().getCategory().getCategoryName();
-                        }
-                        if (detail.getProduct().getImage() != null) {
-                            detail.getProduct().getImage().getImageUrl();
-                        }
+                        Hibernate.initialize(detail.getProduct());
+                        Hibernate.initialize(detail.getProduct().getCategory());
+                        Hibernate.initialize(detail.getProduct().getImage());
                     }
                 }
             }
