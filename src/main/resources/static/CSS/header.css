@@ -159,3 +159,86 @@
     background: white !important;
     color: var(--brand) !important;
 }
+
+/* ========== RESPONSIVE HEADER ========== */
+@media (max-width: 992px) {
+    .header-top {
+        flex-wrap: wrap;
+    }
+
+    .search {
+        order: 3;
+        flex: 100%;
+        max-width: 100%;
+        margin-top: 12px;
+    }
+
+    .nav {
+        gap: 8px;
+    }
+
+    .nav-link {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-top {
+        padding: 10px 0;
+    }
+
+    .brand-name {
+        font-size: 18px;
+    }
+
+    .search input {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .btn-search {
+        padding: 8px 12px;
+    }
+
+    .nav-guest, .nav-user, .nav-admin {
+        gap: 8px;
+    }
+
+    .nav-link {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+
+    .user-menu-btn {
+        padding: 6px 8px;
+    }
+
+    .user-menu-btn span {
+        display: none;
+    }
+
+    .cart-count {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .nav-link i {
+        font-size: 16px;
+    }
+
+    .user-menu-dropdown {
+        min-width: 160px;
+    }
+}
