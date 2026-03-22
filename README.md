@@ -2,13 +2,62 @@
 
 E-commerce website for computer parts built with Spring Boot and Thymeleaf.
 
-## Yêu cầu
+## Requirements
 
 - Java 17+
-- Docker & Docker Compose (chỉ để chạy SQL Server)
-- Maven (hoặc dùng `./mvnw` đi kèm)
+- Maven (or use the included `./mvnw` wrapper)
 
-## Cấu trúc dự án
+## Quick Start (Any OS — Linux, macOS, Windows)
+
+### Option A: Local Development (No Docker Needed) — Recommended
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=h2"
+```
+
+Access: **http://localhost:2345**
+
+This uses H2 in-memory database — no installation required. Works out of the box on any OS.
+
+### Option B: With SQL Server (Production-like)
+
+1. Start SQL Server:
+```bash
+docker compose -f docker/docker-compose.single.yml up mssql --detach
+```
+
+2. Wait ~60s for SQL Server to be healthy, then:
+```bash
+./mvnw spring-boot:run
+```
+
+> **Docker Desktop users (Windows/macOS):** Docker handles networking automatically. App connects to `localhost:1433`.
+>
+> **Linux users:** Docker containers may not be reachable via `localhost`. Use Docker's `host.docker.internal` or run the app inside the Docker network.
+
+Check DB is ready:
+```bash
+docker ps
+# computershop-db   Up ... (healthy)   0.0.0.0:1433->1433/tcp
+```
+
+### Option C: Full Docker (App + DB in containers)
+
+```bash
+docker compose -f docker/docker-compose.single.yml up --build
+```
+
+Access: **http://localhost:2345**
+
+### Option D: Distributed Mode (2 Databases)
+
+```bash
+docker compose -f docker/docker-compose.distributed.yml up --build
+```
+
+---
+
+## Project Structure
 
 ```
 Shop-Ecommerce/
@@ -26,86 +75,53 @@ Shop-Ecommerce/
 │   └── util/             # Utilities
 ├── docker/               # Docker configs
 └── src/main/resources/
-    ├── application.properties
+    ├── application.properties        # Default (SQL Server, localhost)
+    ├── application-h2.properties    # H2 in-memory DB (local dev, cross-platform)
     └── application-distributed.properties
 ```
 
-## Cách chạy (Development — Khuyến nghị)
+---
 
-Chạy theo 2 bước: **khởi động DB** → **khởi động app**.  
-Không cần rebuild Docker mỗi lần sửa code.
+## Hot Reload
 
-### Bước 1 — Khởi động SQL Server (chỉ chạy 1 lần cho đến khi tắt máy)
+When running with Maven:
 
-```bash
-docker compose -f docker/docker-compose.single.yml up mssql --detach
-```
-
-Kiểm tra DB đã sẵn sàng:
-
-```bash
-docker ps
-# computershop-db   Up ... (healthy)   0.0.0.0:1433->1433/tcp
-```
-
-### Bước 2 — Chạy Spring Boot app (có Hot Reload)
-
-```bash
-./mvnw spring-boot:run
-```
-
-Truy cập: **http://localhost:2345**
-
-> **Hot reload:** Khi sửa file Java, nhấn **Ctrl+S** — VS Code tự build, DevTools tự restart app (~1-2 giây).  
-> Khi sửa HTML/CSS/JS, chỉ cần **refresh browser**, không cần restart.
-
-### Chạy bằng VS Code (nhanh nhất)
-
-1. Cài extension **"Extension Pack for Java"**
-2. Nhấn **`F5`** (Debug) hoặc **`Ctrl+F5`** (Run)
-3. Hoặc dùng task: **Ctrl+Shift+P** → `Tasks: Run Task` → chọn task
-
-| Task                         | Mô tả                          |
-| ---------------------------- | ------------------------------ |
-| `Start DB (SQL Server only)` | Khởi động SQL Server container |
-| `Stop DB`                    | Dừng SQL Server container      |
-| `Build (skip tests)`         | Build nhanh không chạy test    |
-
-### Kết nối DBeaver / SQL client
-
-| Thông tin                | Giá trị               |
-| ------------------------ | --------------------- |
-| Host                     | `localhost`           |
-| Port                     | `1433`                |
-| Database                 | `computershop`        |
-| Username                 | `sa`                  |
-| Password                 | `YourStrong@Passw0rd` |
-| Encrypt                  | `true`                |
-| Trust Server Certificate | `true`                |
+- Edit Java files → DevTools auto-restarts (~1-2 seconds)
+- Edit HTML/CSS/JS → refresh browser, no restart needed
 
 ---
 
-## Chạy toàn bộ bằng Docker (Production / Demo)
+## Default Accounts
 
-Chạy cả app lẫn DB trong Docker:
-
-```bash
-docker compose -f docker/docker-compose.single.yml up --build
-```
-
-Truy cập: **http://localhost:2345**
-
-### Distributed mode (2 Databases)
-
-```bash
-docker compose -f docker/docker-compose.distributed.yml up --build
-```
+| Role    | Username  | Password  |
+|---------|-----------|-----------|
+| Admin   | `admin`   | `admin123`|
+| Customer| `user`    | `user123` |
+| Customer| `customer1`| `123456`|
+| Customer| `customer2`| `123456`|
 
 ---
 
-## Tài khoản mặc định
+## Database Connections
 
-| Role  | Username | Password  |
-| ----- | -------- | --------- |
-| Admin | `admin`  | `123456`  |
-| User  | `user`   | `user123` |
+### H2 Console (when using `--spring.profiles.active=h2`)
+
+Browse at: **http://localhost:2345/h2-console**
+
+| Field            | Value                          |
+|------------------|--------------------------------|
+| JDBC URL         | `jdbc:h2:mem:computershop`     |
+| User Name        | `sa`                           |
+| Password         | *(empty)*                      |
+
+### DBeaver / SQL Client (SQL Server)
+
+| Field                    | Value                    |
+|--------------------------|--------------------------|
+| Host                     | `localhost`              |
+| Port                     | `1433`                   |
+| Database                 | `computershop`           |
+| Username                 | `sa`                     |
+| Password                 | `YourStrong@Passw0rd`    |
+| Encrypt                  | `true`                   |
+| Trust Server Certificate | `true`                   |

@@ -3,3 +3,9 @@ BEGIN
     CREATE DATABASE computershop;
 END
 GO
+
+-- Run the full schema + seed data script
+USE computershop;
+GO
+:r /init/database.sql
+GO

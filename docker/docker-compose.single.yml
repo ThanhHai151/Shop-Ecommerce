@@ -1,32 +1,16 @@
 version: '3.8'
 
 # Docker Compose for Single Database Mode
-# Usage: docker-compose -f docker-compose.single.yml up --build
+# Usage (Linux/macOS): docker compose -f docker/docker-compose.single.yml up mssql -d
+#   Then run the app:  ./mvnw spring-boot:run
+#
+# Usage (Windows/Docker Desktop): Same commands.
+#   The app connects to localhost:1433 (mapped by the `ports` section below).
 
 services:
-  # Spring Boot Application
-  app:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    container_name: computershop-app
-    ports:
-      - "2345:2345"
-    environment:
-      - SPRING_PROFILES_ACTIVE=single
-      - SPRING_DATASOURCE_URL=jdbc:sqlserver://mssql:1433;databaseName=computershop;encrypt=true;trustServerCertificate=true
-      - SPRING_DATASOURCE_USERNAME=sa
-      - SPRING_DATASOURCE_PASSWORD=YourStrong@Passw0rd
-    depends_on:
-      mssql:
-        condition: service_healthy
-    networks:
-      - computershop-network
-    restart: on-failure
-
   # SQL Server Database
   mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: computershop-db
     environment:
       - ACCEPT_EULA=Y
@@ -36,14 +20,13 @@ services:
       - "1433:1433"
     volumes:
       - mssql-data:/var/opt/mssql
-      - ./init:/init
-    entrypoint: /bin/bash /init/entrypoint.sh
+      - ./init:/init:ro
     healthcheck:
       test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" -Q "SELECT 1" -C || exit 1
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 20
+      start_period: 60s
     networks:
       - computershop-network
 
