@@ -2,6 +2,8 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
+    <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - JSB ComputerShop</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
@@ -157,14 +159,6 @@
             font-size: 1rem;
             font-weight: 500;
         }
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .dashboard-container {

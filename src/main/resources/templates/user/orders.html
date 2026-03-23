@@ -2,6 +2,8 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
+    <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đơn hàng của tôi - JSB ComputerShop</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
@@ -126,13 +128,6 @@
         text-decoration: none;
         display: inline-block;
         font-size: 0.9rem;
-      }
-      .btn-primary {
-        background-color: #007bff;
-        color: white;
-      }
-      .btn-primary:hover {
-        background-color: #0056b3;
       }
       .empty-state {
         text-align: center;

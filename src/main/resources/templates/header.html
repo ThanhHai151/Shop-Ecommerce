@@ -1,23 +1,24 @@
 
 <header class="header" th:fragment="header">
     <div class="container">
-        <div class="header-top">
-            <div class="brand">
-                <img src="/Images/logo.png" alt="logo" onerror="this.style.display='none'" />
-                <a href="/" class="brand-name">JSB ComputerShop</a>
+        <div class="header-grid">
+            <div class="header-cell header-cell-brand">
+                <div class="brand">
+                    <span class="brand-sparkle" aria-hidden="true">✨</span>
+                    <img src="/Images/logo.png" alt="logo" onerror="this.style.display='none'" />
+                    <a href="/" class="brand-name">JSB ComputerShop</a>
+                    <span class="brand-sparkle" aria-hidden="true">✨</span>
+                </div>
             </div>
-            
-            
-            <form id="search-form" class="search" th:action="@{/search}" method="get">
+
+            <form id="search-form" class="header-cell header-cell-search search" th:action="@{/search}" method="get">
                 <input id="q" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." />
-                <button class="btn btn-search" type="submit">
+                <button class="btn btn-search btn-primary" type="submit">
                     <span>Tìm kiếm</span>
                 </button>
             </form>
-            
-            
-            <nav class="nav">
-                
+
+            <nav class="header-cell header-cell-nav nav">
                 <div th:if="${session.userId == null}" class="nav-guest">
                     <a href="/" class="nav-link">Trang chủ</a>
                     <a href="/products" class="nav-link">Sản phẩm</a>
@@ -25,8 +26,7 @@
                     <a href="/login" class="nav-link btn btn-primary">Đăng nhập</a>
                     <a href="/register" class="nav-link">Đăng ký</a>
                 </div>
-                
-                
+
                 <div th:if="${session.userId != null && session.role != 'admin'}" class="nav-user">
                     <a href="/" class="nav-link">Trang chủ</a>
                     <a href="/products" class="nav-link">Sản phẩm</a>
@@ -37,9 +37,9 @@
                               th:text="${session.cartCount ?: 0}"
                               th:classappend="${(session.cartCount ?: 0) == 0} ? ' is-empty' : ''">0</span>
                     </a>
-                    
+
                     <div class="user-menu">
-                        <button class="user-menu-btn" onclick="toggleUserMenu()">
+                        <button type="button" class="user-menu-btn" onclick="toggleUserMenu()">
                             <span th:text="${session.username}">User</span>
                             <span class="dropdown-arrow">▼</span>
                         </button>
@@ -52,15 +52,14 @@
                         </div>
                     </div>
                 </div>
-                
-                
+
                 <div th:if="${session.userId != null && session.role == 'admin'}" class="nav-admin">
-                    <a href="/admin/products" class="nav-link">Danh sách sản phẩm</a>
-                    <a href="/admin/users" class="nav-link">Danh sách tài khoản</a>
-                    <a href="/admin/orders" class="nav-link">Danh sách đơn hàng</a>
-                    
+                    <a href="/admin/products" class="nav-link">Sản phẩm</a>
+                    <a href="/admin/users" class="nav-link">Tài khoản</a>
+                    <a href="/admin/orders" class="nav-link">Đơn hàng</a>
+
                     <div class="user-menu">
-                        <button class="user-menu-btn" onclick="toggleUserMenu()">
+                        <button type="button" class="user-menu-btn" onclick="toggleUserMenu()">
                             <span th:text="${session.username}">Admin</span>
                             <span class="dropdown-arrow">▼</span>
                         </button>
@@ -73,6 +72,10 @@
                     </div>
                 </div>
             </nav>
+
+            <div class="header-cell header-cell-theme" aria-hidden="false">
+                <th:block th:replace="~{fragments/theme-toggle :: button}"></th:block>
+            </div>
         </div>
     </div>
 </header>

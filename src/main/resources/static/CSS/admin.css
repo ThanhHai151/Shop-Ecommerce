@@ -1,5 +1,6 @@
 
-
+@import url("variables.css");
+@import url("theme-toggle.css");
 
 * {
     margin: 0;
@@ -9,8 +10,8 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8fafc;
-    color: #1e293b;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -27,7 +28,7 @@ body {
 
 .admin-sidebar {
     width: 280px;
-    background: linear-gradient(180deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%);
+    background: var(--gradient-sidebar);
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
     position: fixed;
     height: 100vh;
@@ -68,7 +69,7 @@ body {
 
 .admin-logo i {
     font-size: 1.75rem;
-    color: #fbbf24;
+    color: var(--color-highlight);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
@@ -140,7 +141,8 @@ body {
 .admin-main {
     flex: 1;
     margin-left: 280px;
-    background-color: #f8fafc;
+    background-color: var(--color-admin-canvas);
+    color: var(--color-admin-ink);
     min-height: 100vh;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -149,6 +151,7 @@ body {
 .admin-header {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     padding: 2.5rem 2rem;
+    padding-right: 5rem;
     border-bottom: 1px solid #e2e8f0;
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
     position: sticky;
@@ -165,14 +168,14 @@ body {
     align-items: center;
     gap: 1rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #1e40af, #7c3aed);
+    background: linear-gradient(135deg, var(--main-background), var(--button-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .admin-header h1 i {
-    background: linear-gradient(135deg, #1e40af, #7c3aed);
+    background: linear-gradient(135deg, var(--main-background), var(--button-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -201,18 +204,18 @@ body {
 }
 
 .welcome-text strong {
-    color: #1e40af;
+    color: var(--button-color);
     font-weight: 600;
 }
 
 .current-time {
-    color: #7c3aed;
+    color: var(--color-link);
     font-weight: 600;
     font-family: 'JetBrains Mono', 'Courier New', monospace;
-    background: rgba(124, 58, 237, 0.1);
+    background: var(--color-info-muted);
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    border: 1px solid rgba(124, 58, 237, 0.2);
+    border: 1px solid var(--color-border-strong);
 }
 
 
@@ -647,14 +650,27 @@ body {
 }
 
 .admin-btn-primary {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    color: white;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-fg);
+    border: 1px solid var(--btn-primary-border);
+    border-radius: var(--border-radius-pill);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition:
+        var(--transition-btn-glow),
+        transform 0.25s ease,
+        background 0.25s ease,
+        color 0.25s ease;
+    box-shadow: var(--shadow-btn-primary-rest);
 }
 
 .admin-btn-primary:hover {
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    background: var(--btn-primary-bg-hover);
+    color: var(--btn-primary-fg-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    box-shadow: var(--shadow-btn-primary-hover);
 }
 
 .admin-btn-secondary {
@@ -1086,4 +1102,56 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+/* ----- Admin: light theme (sidebar + chrome) ----- */
+[data-theme="light"] .admin-sidebar {
+    background: linear-gradient(180deg, #e8f5ef 0%, #dff5ea 45%, #c8ebdc 100%);
+    box-shadow: 4px 0 16px rgba(26, 61, 50, 0.08);
+}
+
+[data-theme="light"] .admin-logo {
+    border-bottom-color: var(--color-border);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="light"] .admin-logo h2 {
+    color: var(--color-text);
+    -webkit-text-fill-color: var(--color-text);
+    text-shadow: none;
+}
+
+[data-theme="light"] .admin-nav a {
+    color: var(--color-text-muted);
+}
+
+[data-theme="light"] .admin-nav a:hover,
+[data-theme="light"] .admin-nav a.active {
+    color: var(--color-text);
+    background: rgba(40, 90, 72, 0.1);
+}
+
+[data-theme="light"] .admin-nav a::before {
+    background: linear-gradient(90deg, var(--button-color), #408a71);
+}
+
+[data-theme="light"] .admin-header {
+    background: linear-gradient(135deg, #ffffff 0%, var(--color-admin-canvas) 100%);
+    border-bottom-color: var(--color-border);
+}
+
+[data-theme="light"] .admin-header h1 {
+    -webkit-text-fill-color: var(--color-text);
+    color: var(--color-text);
+    background: none;
+}
+
+[data-theme="light"] .admin-header h1 i {
+    -webkit-text-fill-color: var(--button-color);
+    background: none;
+    color: var(--button-color);
+}
+
+[data-theme="light"] .admin-header p {
+    color: var(--color-text-muted);
 }

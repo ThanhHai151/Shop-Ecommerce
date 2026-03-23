@@ -2,6 +2,8 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Danh Mục - Computer Shop Admin</title>
     <link rel="stylesheet" th:href="@{/CSS/admin.css}">
@@ -38,6 +40,7 @@
             </button>
 
             <div class="admin-header">
+            <th:block th:replace="~{fragments/theme-toggle :: buttonAdmin}"></th:block>
                 <h1><i class="fas fa-tags"></i> Quản Lý Danh Mục</h1>
                 <p>Quản lý các danh mục sản phẩm</p>
             </div>
@@ -202,5 +205,7 @@
         }
     </script>
     <script th:src="@{/JavaScript/admin-sidebar.js}"></script>
+    <th:block th:replace="~{fragments/admin-scripts :: themeScript}"></th:block>
+
 </body>
 </html>

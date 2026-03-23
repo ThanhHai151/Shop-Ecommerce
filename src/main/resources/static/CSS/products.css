@@ -8,6 +8,7 @@
 .page-header h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
+    color: var(--color-text);
 }
 
 .filters-section {
@@ -47,51 +48,66 @@
 .price-input {
     width: 100px;
     padding: 8px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     font-size: 0.9rem;
+    background: var(--color-surface-raised);
+    color: var(--color-text);
 }
 
 .filter-group span {
     margin: 0 5px;
-    color: #666;
+    color: var(--color-text-muted);
 }
 
 .form-control {
     padding: 10px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     font-size: 0.9rem;
     transition: border-color 0.2s ease;
+    background: var(--color-surface-raised);
+    color: var(--color-text);
 }
 
 .form-control:focus {
-    border-color: #007bff;
+    border-color: var(--brand);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    box-shadow: 0 0 0 2px var(--color-focus-ring);
 }
 
 .btn {
     padding: 10px 20px;
-    border: 1px solid rgba(0,0,0,0.15);
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
     display: inline-block;
-    background: #fff;
-    color: #212529;
+    background: var(--color-surface-raised);
+    color: var(--color-text);
 }
 
-.btn-primary {
-    background-color: #007bff;
-    color: white;
+.btn.btn-primary {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-fg);
+    border: 1px solid var(--btn-primary-border);
+    border-radius: var(--border-radius-pill);
+    box-shadow: var(--shadow-btn-primary-rest);
+    transition:
+        var(--transition-btn-glow),
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-    transform: translateY(-1px);
+.btn.btn-primary:hover {
+    background: var(--btn-primary-bg-hover);
+    color: var(--btn-primary-fg-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-btn-primary-hover);
 }
 
 .add-to-cart-btn {
@@ -111,18 +127,18 @@
 
 
 .product-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
     transition: all 0.3s ease;
     overflow: hidden;
     position: relative;
-    border: 1px solid #f0f0f0;
+    border: 1px solid var(--color-border);
 }
 
 .product-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-lg);
 }
 
 .product-image {
@@ -130,7 +146,7 @@
     width: 100%;
     height: 220px;
     overflow: hidden;
-    background: #f8f9fa;
+    background: var(--color-surface-raised);
 }
 
 .product-image img {
@@ -169,7 +185,7 @@
 .product-name {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text);
     margin: 0 0 8px 0;
     line-height: 1.4;
     min-height: 2.8em;
@@ -182,7 +198,7 @@
 }
 
 .product-brand {
-    color: #666;
+    color: var(--color-text-muted);
     font-size: 0.9rem;
     margin-bottom: 12px;
     font-weight: 500;
@@ -195,7 +211,7 @@
 .product-price .price {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #e74c3c;
+    color: var(--color-highlight);
 }
 
 .product-stock {
@@ -208,7 +224,7 @@
 .product-actions {
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--color-divider);
 }
 
 .btn-detail {
@@ -216,20 +232,29 @@
     width: 100%;
     text-align: center;
     padding: 10px 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    border: none;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-fg);
+    border: 1px solid var(--btn-primary-border);
+    border-radius: var(--border-radius-pill);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: var(--shadow-btn-primary-rest);
+    transition:
+        var(--transition-btn-glow),
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .btn-detail:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: var(--shadow-btn-primary-hover);
+    background: var(--btn-primary-bg-hover);
+    color: var(--btn-primary-fg-hover);
 }
 
 
@@ -237,19 +262,20 @@
     grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
-    background: #f8f9fa;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
     border-radius: 10px;
     margin: 20px 0;
 }
 
 .empty-message h3 {
     margin-bottom: 15px;
-    color: #666;
+    color: var(--color-text-muted);
 }
 
 .empty-message p {
     margin-bottom: 20px;
-    color: #888;
+    color: var(--color-text-subtle);
 }
 
 
@@ -318,35 +344,33 @@
 
 
 .products-header .text-muted {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: var(--color-surface-card);
     padding: 15px 20px;
     border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-border);
     font-size: 1rem;
-    color: #495057 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    color: var(--color-text-muted) !important;
+    box-shadow: var(--box-shadow);
     margin-bottom: 20px;
 }
 
 .products-header .text-muted strong {
-    color: #007bff;
+    color: var(--color-link);
     font-weight: 700;
     font-size: 1.1rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 
 .products-count {
     display: inline-flex;
     align-items: center;
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    color: white;
+    background: var(--gradient-primary);
+    color: var(--color-text-inverse);
     padding: 8px 15px;
     border-radius: 20px;
     font-weight: 600;
     font-size: 0.9rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+    box-shadow: var(--shadow-glow-accent);
     margin-left: 10px;
 }
 
@@ -356,53 +380,52 @@
 
 
 .search-highlight {
-    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
-    color: white;
+    background: var(--color-warning-muted);
+    color: var(--color-warning);
     padding: 4px 8px;
     border-radius: 6px;
     font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-warning);
 }
 
 
 .category-highlight {
-    background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
-    color: white;
+    background: var(--color-info-muted);
+    color: var(--color-info);
     padding: 4px 8px;
     border-radius: 6px;
     font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-info);
 }
 
 
 .product-price .price {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    color: white;
+    background: var(--gradient-accent);
+    color: var(--color-text-inverse);
     padding: 6px 12px;
     border-radius: 20px;
     display: inline-block;
     font-weight: 700;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+    box-shadow: var(--shadow-sm);
     font-family: 'Courier New', monospace;
 }
 
 
 .total-summary-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: var(--gradient-surface);
+    color: var(--color-text-inverse);
     padding: 20px;
     border-radius: 15px;
     text-align: center;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: var(--shadow-md);
     margin-bottom: 20px;
+    border: 1px solid var(--color-border);
 }
 
 .total-summary-card .total-number {
     font-size: 2rem;
     font-weight: 700;
-    color: #ffd700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    color: var(--color-highlight);
     margin-bottom: 8px;
 }
 

@@ -1,8 +1,9 @@
 
 .footer {
-    background: #2c3e50;
-    color: white;
+    background: var(--main-background);
+    color: var(--text-color);
     margin-top: 60px;
+    border-top: 1px solid var(--color-border);
 }
 
 .footer-content {
@@ -13,20 +14,20 @@
 }
 
 .footer-section h4 {
-    color: #ecf0f1;
+    color: var(--text-color);
     margin: 0 0 20px 0;
     font-size: 18px;
     font-weight: 600;
 }
 
 .footer-section h5 {
-    color: #ecf0f1;
+    color: var(--color-text-muted);
     margin: 20px 0 10px 0;
     font-size: 16px;
 }
 
 .footer-section p {
-    color: #bdc3c7;
+    color: var(--color-text-muted);
     line-height: 1.6;
     margin-bottom: 15px;
 }
@@ -46,13 +47,13 @@
 }
 
 .footer-links a {
-    color: #bdc3c7;
+    color: var(--color-text-muted);
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .footer-links a:hover {
-    color: #3498db;
+    color: var(--color-link-hover);
 }
 
 .social-links {
@@ -62,18 +63,18 @@
 }
 
 .social-link {
-    color: #bdc3c7;
+    color: var(--color-text-muted);
     text-decoration: none;
     padding: 8px 12px;
-    border: 1px solid #34495e;
+    border: 1px solid var(--color-border-strong);
     border-radius: 6px;
     transition: all 0.3s;
 }
 
 .social-link:hover {
-    color: white;
-    border-color: #3498db;
-    background: #3498db;
+    color: var(--color-text-inverse);
+    border-color: var(--button-color);
+    background: var(--button-color);
 }
 
 .newsletter-form {
@@ -85,14 +86,14 @@
 .newsletter-form input {
     flex: 1;
     padding: 10px;
-    border: 1px solid #34495e;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
-    background: #34495e;
-    color: white;
+    background: var(--color-surface-raised);
+    color: var(--color-text);
 }
 
 .newsletter-form input::placeholder {
-    color: #bdc3c7;
+    color: var(--color-text-subtle);
 }
 
 .newsletter-form button {
@@ -100,7 +101,7 @@
 }
 
 .footer-bottom {
-    border-top: 1px solid #34495e;
+    border-top: 1px solid var(--color-divider);
     padding: 20px 0;
 }
 
@@ -118,13 +119,13 @@
 }
 
 .footer-bottom-links a {
-    color: #bdc3c7;
+    color: var(--color-text-muted);
     text-decoration: none;
     font-size: 14px;
 }
 
 .footer-bottom-links a:hover {
-    color: #3498db;
+    color: var(--color-link-hover);
 }
 
 @media (max-width: 768px) {

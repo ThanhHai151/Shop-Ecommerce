@@ -2,6 +2,8 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
+    <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="${product.productName} + ' - JSB ComputerShop'">
       Chi tiết sản phẩm
@@ -22,28 +24,30 @@
       }
 
       .breadcrumb a {
-        color: #007bff;
+        color: var(--color-link);
         text-decoration: none;
         margin-right: 8px;
       }
 
       .breadcrumb a:hover {
         text-decoration: underline;
+        color: var(--color-link-hover);
       }
 
       .breadcrumb span {
         margin: 0 8px;
-        color: #999;
+        color: var(--color-text-subtle);
       }
 
       .product-detail-content {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 40px;
-        background: white;
+        background: var(--card-bg);
+        border: 1px solid var(--color-border);
         padding: 30px;
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--box-shadow);
       }
 
       .product-image-section {
@@ -55,21 +59,21 @@
         max-height: 500px;
         object-fit: contain;
         border-radius: 8px;
-        border: 1px solid #f0f0f0;
+        border: 1px solid var(--color-divider);
         padding: 20px;
-        background: #f8f9fa;
+        background: var(--color-surface-raised);
       }
 
       .product-info-section h1 {
         font-size: 2rem;
         margin-bottom: 15px;
-        color: #333;
+        color: var(--color-text);
       }
 
       .product-category {
         display: inline-block;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: var(--gradient-primary);
+        color: var(--color-text-inverse);
         padding: 6px 15px;
         border-radius: 20px;
         font-size: 0.9rem;
@@ -78,12 +82,12 @@
       }
 
       .product-price-section {
-        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-        color: white;
+        background: var(--gradient-accent);
+        color: var(--color-text-inverse);
         padding: 20px;
         border-radius: 10px;
         margin: 20px 0;
-        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        box-shadow: var(--shadow-md);
       }
 
       .product-price-section .price-label {
@@ -106,21 +110,21 @@
       }
 
       .stock-available {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
+        background: var(--color-success-muted);
+        color: var(--color-success);
+        border: 1px solid var(--color-success);
       }
 
       .stock-low {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeaa7;
+        background: var(--color-warning-muted);
+        color: var(--color-warning);
+        border: 1px solid var(--color-warning);
       }
 
       .stock-out {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+        background: var(--color-danger-muted);
+        color: var(--color-danger);
+        border: 1px solid var(--color-danger);
       }
 
       .product-description {
@@ -131,11 +135,11 @@
       .product-description h3 {
         font-size: 1.3rem;
         margin-bottom: 15px;
-        color: #333;
+        color: var(--color-text);
       }
 
       .product-description p {
-        color: #666;
+        color: var(--color-text-muted);
         margin-bottom: 10px;
       }
 
@@ -158,26 +162,18 @@
         text-align: center;
       }
 
-      .btn-primary {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        color: white;
+      .btn.btn-primary {
         flex: 1;
-        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
       }
 
       .btn-secondary {
-        background: #6c757d;
-        color: white;
+        background: var(--main-background);
+        color: var(--color-text-inverse);
         flex: 1;
       }
 
       .btn-secondary:hover {
-        background: #5a6268;
+        background: var(--color-surface-card);
         transform: translateY(-2px);
       }
 
@@ -195,7 +191,7 @@
 
       .quantity-selector label {
         font-weight: 500;
-        color: #333;
+        color: var(--color-text);
       }
 
       .quantity-controls {
@@ -207,8 +203,9 @@
       .quantity-btn {
         width: 40px;
         height: 40px;
-        border: 1px solid #ddd;
-        background: white;
+        border: 1px solid var(--color-border);
+        background: var(--color-surface-raised);
+        color: var(--color-text);
         border-radius: 6px;
         cursor: pointer;
         font-size: 1.2rem;
@@ -216,24 +213,27 @@
       }
 
       .quantity-btn:hover {
-        background: #f0f0f0;
-        border-color: #007bff;
+        background: var(--color-surface-card);
+        border-color: var(--brand);
       }
 
       .quantity-input {
         width: 70px;
         text-align: center;
         padding: 8px;
-        border: 1px solid #ddd;
+        border: 1px solid var(--color-border);
         border-radius: 6px;
         font-size: 1rem;
         font-weight: 500;
+        background: var(--color-surface-raised);
+        color: var(--color-text);
       }
 
       .product-meta {
         margin: 30px 0;
         padding: 20px;
-        background: #f8f9fa;
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
         border-radius: 8px;
       }
 
@@ -241,7 +241,7 @@
         display: flex;
         justify-content: space-between;
         padding: 10px 0;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid var(--color-divider);
       }
 
       .product-meta-item:last-child {
@@ -250,11 +250,11 @@
 
       .product-meta-label {
         font-weight: 500;
-        color: #666;
+        color: var(--color-text-muted);
       }
 
       .product-meta-value {
-        color: #333;
+        color: var(--color-text);
         font-weight: 600;
       }
 

@@ -22,13 +22,13 @@
 }
 
 .banner-main { 
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-    color: white; 
+    background: var(--gradient-primary); 
+    color: var(--banner-hero-text); 
 }
 
 .banner-secondary { 
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
-    color: white; 
+    background: var(--gradient-accent); 
+    color: var(--banner-hero-text); 
 }
 
 .banner-content { 
@@ -55,35 +55,52 @@
 }
 
 .btn-banner { 
-    background: white; 
-    color: #333; 
-    padding: 12px 30px; 
-    font-weight: 600; 
-    border-radius: 8px; 
+    background: var(--btn-primary-bg); 
+    color: var(--btn-primary-fg); 
+    border: 1px solid var(--btn-primary-border);
+    padding: 12px 28px; 
+    font-weight: 700; 
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: var(--border-radius-pill); 
     text-decoration: none; 
     display: inline-block; 
-    transition: all 0.3s; 
+    box-shadow: var(--shadow-btn-primary-rest);
+    transition:
+        var(--transition-btn-glow),
+        transform 0.3s ease,
+        background 0.3s ease,
+        color 0.3s ease;
 }
 
 .btn-banner:hover { 
     transform: translateY(-2px); 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2); 
+    background: var(--btn-primary-bg-hover);
+    color: var(--btn-primary-fg-hover);
+    box-shadow: var(--shadow-btn-primary-hover); 
 }
 
 .btn-banner-secondary { 
-    background: rgba(255,255,255,0.2); 
-    color: white; 
-    border: 2px solid white; 
-    padding: 10px 20px; 
-    border-radius: 8px; 
+    background: rgba(255,255,255,0.1); 
+    color: var(--color-text-inverse); 
+    border: 2px solid rgba(255,255,255,0.4); 
+    padding: 10px 24px; 
+    border-radius: var(--border-radius-pill); 
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     text-decoration: none; 
     display: inline-block; 
-    transition: all 0.3s; 
+    transition: all 0.3s ease; 
 }
 
 .btn-banner-secondary:hover { 
-    background: white; 
-    color: #f5576c; 
+    background: var(--color-text-inverse); 
+    color: var(--color-text-on-accent); 
+    border-color: var(--color-text-inverse);
+    box-shadow: var(--shadow-btn-primary-hover);
 }
 
 .category-icon { 
@@ -92,16 +109,17 @@
 }
 
 .product-card { 
-    background: white; 
+    background: var(--card-bg); 
+    border: 1px solid var(--color-border);
     border-radius: 12px; 
     overflow: hidden; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    box-shadow: var(--box-shadow); 
     transition: all 0.3s; 
 }
 
 .product-card:hover { 
     transform: translateY(-5px); 
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
+    box-shadow: var(--shadow-lg); 
 }
 
 .product-image { 
@@ -141,24 +159,25 @@
     font-size: 1.2rem; 
     font-weight: 600; 
     margin-bottom: 8px; 
+    color: var(--color-text);
 }
 
 .product-brand { 
-    color: #666; 
+    color: var(--color-text-muted); 
     margin-bottom: 12px; 
 }
 
 .product-price { 
     font-size: 1.3rem; 
     font-weight: 700; 
-    color: var(--brand); 
+    color: var(--color-highlight); 
 }
 
 
 .product-actions {
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--color-divider);
 }
 
 .btn-detail {
@@ -166,20 +185,30 @@
     width: 100%;
     text-align: center;
     padding: 10px 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-fg);
+    border: 1px solid var(--btn-primary-border);
+    border-radius: var(--border-radius-pill);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     text-decoration: none;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    cursor: pointer;
+    box-shadow: var(--shadow-btn-primary-rest);
+    transition:
+        var(--transition-btn-glow),
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .btn-detail:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: var(--shadow-btn-primary-hover);
+    background: var(--btn-primary-bg-hover);
+    color: var(--btn-primary-fg-hover);
 }
 
 
@@ -202,13 +231,14 @@
     grid-column: 1 / -1;
     text-align: center;
     padding: 40px 20px;
-    background: #f8f9fa;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
     border-radius: 10px;
     margin: 20px 0;
 }
 
 .no-products-message p {
     margin-bottom: 20px;
-    color: #666;
+    color: var(--color-text-muted);
     font-size: 1.1rem;
 }
