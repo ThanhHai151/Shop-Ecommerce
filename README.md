@@ -12,7 +12,7 @@ E-commerce website for computer parts built with Spring Boot and Thymeleaf.
 ### Option A: Local Development (No Docker Needed) — Recommended
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=h2"
+./mvnw spring-boot:run '-Dspring-boot.run.arguments=--spring.profiles.active=h2'
 ```
 
 Access: **http://localhost:2345**
