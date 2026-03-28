@@ -81,10 +81,12 @@
     font-weight: 600;
 }
 
-
+.admin-form-container {
+    margin: 2rem;
+}
 .admin-form {
     background: #ffffff;
-    padding: 0;
+    padding: 1rem;
     margin-bottom: 1rem;
 }
 

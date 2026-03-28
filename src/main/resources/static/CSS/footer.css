@@ -14,7 +14,8 @@
 }
 
 .footer-section h4 {
-    color: var(--text-color);
+    color: var(--brand-accent);
+    /* color: var(--text-color); */
     margin: 0 0 20px 0;
     font-size: 18px;
     font-weight: 600;
@@ -142,4 +143,8 @@
     .newsletter-form {
         flex-direction: column;
     }
+}
+
+[data-theme="dark"] {
+  --main-background: black;
 }

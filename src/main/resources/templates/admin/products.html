@@ -45,7 +45,47 @@
                 <p>Quản lý thông tin sản phẩm và kho hàng</p>
             </div>
 
-            
+            <!-- Statistics Cards -->
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-primary">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${#lists.size(products)}">0</h3>
+                        <p>Tổng Sản Phẩm</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${inStockCount}">0</h3>
+                        <p>Còn Hàng</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${lowStockCount}">0</h3>
+                        <p>Sắp Hết Hàng</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admin-stat-warning">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="admin-stat-content">
+                        <h3 th:text="${outOfStockCount}">0</h3>
+                        <p>Hết Hàng</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
             <div th:if="${success}" class="admin-alert admin-alert-success">
                 <i class="fas fa-check-circle"></i>
                 <span th:text="${success}"></span>
@@ -167,46 +207,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            
-            <div class="admin-stats-grid">
-                <div class="admin-stat-card">
-                    <div class="admin-stat-icon admin-stat-primary">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <div class="admin-stat-content">
-                        <h3 th:text="${#lists.size(products)}">0</h3>
-                        <p>Tổng Sản Phẩm</p>
-                    </div>
-                </div>
-                <div class="admin-stat-card">
-                    <div class="admin-stat-icon admin-stat-success">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="admin-stat-content">
-                        <h3 th:text="${inStockCount}">0</h3>
-                        <p>Còn Hàng</p>
-                    </div>
-                </div>
-                <div class="admin-stat-card">
-                    <div class="admin-stat-icon admin-stat-danger">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="admin-stat-content">
-                        <h3 th:text="${lowStockCount}">0</h3>
-                        <p>Sắp Hết Hàng</p>
-                    </div>
-                </div>
-                <div class="admin-stat-card">
-                    <div class="admin-stat-icon admin-stat-warning">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
-                    <div class="admin-stat-content">
-                        <h3 th:text="${outOfStockCount}">0</h3>
-                        <p>Hết Hàng</p>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
