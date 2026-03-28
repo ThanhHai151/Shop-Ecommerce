@@ -343,7 +343,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin: 2rem;
+    margin: 1rem;
 }
 
 .admin-stat-card {
@@ -982,16 +982,14 @@ body {
 /* ========== COLLAPSIBLE SIDEBAR ========== */
 .sidebar-toggle {
     position: fixed;
-    top: 1rem;
-    left: 280px;
+    top: 0.2rem;
+    left: 230px;
     z-index: 10001;
-    background: #1e40af;
-    color: white;
+    background: transparent;
+    color: black;
     border: none;
-    border-radius: 8px;
     padding: 0.75rem;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
@@ -1001,7 +999,6 @@ body {
 }
 
 .sidebar-toggle:hover {
-    background: #1e3a8a;
     transform: scale(1.1);
 }
 
@@ -1046,7 +1043,7 @@ body {
 }
 
 .sidebar-toggle.collapsed {
-    left: 80px;
+    left: 30px;
 }
 
 .sidebar-toggle.collapsed i {
