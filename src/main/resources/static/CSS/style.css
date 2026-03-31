@@ -228,6 +228,12 @@ body {
   align-items: center;
 }
 
+.product-stock span,
+.product-stock strong {
+  margin-right: 6px;
+  color: var(--color-text);
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 15px;

@@ -333,7 +333,7 @@
               th:if="${product.stockQuantity <= 5 and product.stockQuantity > 0}"
             >
               ⚠ Chỉ còn
-              <strong th:text="${product.stockQuantity}">0</strong> sản phẩm
+              <strong th:text="${product.stockQuantity}">0</strong>  sản phẩm
             </span>
             <span th:if="${product.stockQuantity == 0}"> ✗ Tạm hết hàng </span>
           </div>
@@ -403,7 +403,8 @@
               type="button"
               class="btn btn-primary"
               th:attr="data-id=${product.productId}"
-              th:disabled="${product.stockQuantity == 0}"
+              th:disabled="${product.stockQuantity == 0 || session.role == 'admin'}"
+              th:if="${session.role != 'admin'}"
               onclick="addToCart(this)"
             >
               <span th:if="${product.stockQuantity > 0}"
@@ -489,5 +490,8 @@
           });
       }
     </script>
+
+    <script th:src="@{/JavaScript/header.js}"></script>
+    <script th:src="@{/JavaScript/main.js}"></script>
   </body>
 </html>

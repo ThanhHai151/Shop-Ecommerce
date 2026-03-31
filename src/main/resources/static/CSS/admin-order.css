@@ -735,3 +735,201 @@
     }
 }
 
+/* ----- Dark Theme Overrides for Order Management ----- */
+[data-theme="dark"] .bulk-status-select {
+    background: #1a2e28;
+    color: #b0e4cc;
+    border-color: rgba(176, 228, 204, 0.2);
+}
+
+[data-theme="dark"] .bulk-status-select:hover {
+    border-color: #408a71;
+}
+
+[data-theme="dark"] .bulk-status-select:focus {
+    border-color: #408a71;
+    box-shadow: 0 0 0 3px rgba(64, 138, 113, 0.2);
+}
+
+[data-theme="dark"] .bulk-status-select:disabled {
+    background: #285a48;
+    opacity: 0.6;
+    color: #7aad95;
+}
+
+[data-theme="dark"] .modal-content {
+    background: #1f3d33;
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .modal-header h3 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .modal-body p {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .modal-footer {
+    border-top-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-btn-secondary {
+    background: #285a48;
+    color: #b0e4cc;
+    border-color: rgba(176, 228, 204, 0.2);
+}
+
+[data-theme="dark"] .admin-btn-secondary:hover {
+    background: #1f3d33;
+    border-color: #408a71;
+}
+
+[data-theme="dark"] .admin-table-container {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-table-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .customer-info strong {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .customer-info small {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .money-display {
+    color: #3ecf8e;
+}
+
+[data-theme="dark"] .admin-btn-info {
+    background: #285a48;
+    color: #b0e4cc;
+    border-color: #408a71;
+}
+
+[data-theme="dark"] .admin-btn-info:hover {
+    background: #408a71;
+    color: #f4fffa;
+}
+
+[data-theme="dark"] .admin-btn-info i {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-btn-info:hover i {
+    color: #f4fffa;
+}
+
+[data-theme="dark"] .dropdown-toggle {
+    background: #285a48;
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .dropdown-toggle:hover {
+    background: #408a71;
+    box-shadow: 0 4px 12px rgba(64, 138, 113, 0.3);
+}
+
+[data-theme="dark"] .admin-dropdown-menu {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .dropdown-item {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+    background-color: #285a48;
+    color: #e8f5f2;
+}
+
+[data-theme="dark"] .dropdown-item.text-danger:hover {
+    background-color: rgba(220, 38, 38, 0.2);
+}
+
+[data-theme="dark"] .admin-order-header {
+    background: #285a48;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-order-info h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-order-section {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-order-section h3 {
+    color: #b0e4cc;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-info-item {
+    border-bottom-color: rgba(176, 228, 204, 0.1);
+}
+
+[data-theme="dark"] .admin-info-item label {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-info-item span {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .product-info strong {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .product-info small {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-table-total {
+    background: #285a48;
+}
+
+[data-theme="dark"] .admin-table tbody tr {
+    border-bottom-color: rgba(176, 228, 204, 0.1);
+}
+
+[data-theme="dark"] .admin-table tbody tr:hover {
+    background: rgba(55, 107, 88, 0.2);
+}
+
+[data-theme="dark"] .admin-table-header h2,
+[data-theme="dark"] .admin-summary-count {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table thead {
+    background: linear-gradient(135deg, #408a71 0%, #285a48 100%);
+}
+
+[data-theme="dark"] .modal-content {
+    background: #1f3d33;
+}
+
+[data-theme="dark"] .modal-header h3 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .modal-body p {
+    color: #b0e4cc;
+}
+

@@ -84,6 +84,12 @@ public class CartController {
             return Map.of("success", false, "message", "Vui lòng đăng nhập để thêm vào giỏ hàng.");
         }
 
+        // Check if user is admin - admin cannot add to cart
+        String role = (String) session.getAttribute("role");
+        if (role != null && "admin".equalsIgnoreCase(role)) {
+            return Map.of("success", false, "message", "Admin không thể thêm sản phẩm vào giỏ hàng.");
+        }
+
         try {
             var productOpt = productService.getProductById(productId);
             if (productOpt.isEmpty()) {
@@ -109,6 +115,13 @@ public class CartController {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) return "redirect:/login";
+
+        // Check if user is admin - admin cannot add to cart
+        String role = (String) session.getAttribute("role");
+        if (role != null && "admin".equalsIgnoreCase(role)) {
+            redirectAttributes.addFlashAttribute("error", "Admin không thể thêm sản phẩm vào giỏ hàng.");
+            return "redirect:/products";
+        }
 
         try {
             var productOpt = productService.getProductById(productId);
@@ -209,6 +222,13 @@ public class CartController {
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) return "redirect:/login";
 
+        // Check if user is admin - admin cannot checkout
+        String role = (String) session.getAttribute("role");
+        if (role != null && "admin".equalsIgnoreCase(role)) {
+            model.addAttribute("error", "Admin không thể đặt hàng.");
+            return "redirect:/";
+        }
+
         try {
             List<CartItem> cartItems = cartService.getCartItemsSafe(userId);
             double total             = cartService.getCartTotal(userId);
@@ -235,6 +255,13 @@ public class CartController {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) return "redirect:/login";
+
+        // Check if user is admin - admin cannot create order
+        String role = (String) session.getAttribute("role");
+        if (role != null && "admin".equalsIgnoreCase(role)) {
+            redirectAttributes.addFlashAttribute("error", "Admin không thể đặt hàng.");
+            return "redirect:/";
+        }
 
         try {
             List<CartItem> cartItems = cartService.getCartItemsSafe(userId);

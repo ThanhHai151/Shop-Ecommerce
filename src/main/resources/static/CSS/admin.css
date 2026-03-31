@@ -149,43 +149,39 @@ body {
 
 
 .admin-header {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background: var(--color-admin-header-bg);
     padding: 2.5rem 2rem;
     padding-right: 5rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--color-admin-table-border);
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
     position: sticky;
     top: 0;
     z-index: 10000;
     backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
 }
 
 .admin-header h1 {
     font-size: 2.25rem;
-    color: #0f172a;
+    color: var(--color-admin-text-primary);
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--main-background), var(--button-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    transition: color 0.3s ease;
 }
 
 .admin-header h1 i {
-    background: linear-gradient(135deg, var(--main-background), var(--button-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: inherit;
     font-size: 2rem;
 }
 
 .admin-header p {
-    color: #64748b;
+    color: var(--color-admin-text-secondary);
     font-size: 1.125rem;
     font-weight: 400;
+    transition: color 0.3s ease;
 }
 
 .header-actions {
@@ -1151,4 +1147,112 @@ body {
 
 [data-theme="light"] .admin-header p {
     color: var(--color-text-muted);
+}
+
+/* ----- Admin: dark theme (sidebar + chrome) ----- */
+[data-theme="dark"] .admin-main {
+    background-color: #0f1815;
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-header {
+    background: #1a2e28;
+    border-bottom-color: rgba(176, 228, 204, 0.1);
+}
+
+[data-theme="dark"] .admin-header h1 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-header h1 i {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-header p {
+    color: #7aad95;
+}
+
+/* ----- Dark Theme: Card & Content Elements ----- */
+[data-theme="dark"] .admin-stat-card {
+    background: linear-gradient(135deg, #285a48 0%, #1f3d33 100%);
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-stat-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .admin-stat-content h3 {
+    background: linear-gradient(135deg, #b0e4cc, #7aad95);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme="dark"] .admin-stat-content p {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-table-container {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-table {
+    background: #1f3d33;
+}
+
+[data-theme="dark"] .admin-table-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-table thead {
+    background: linear-gradient(135deg, #408a71 0%, #285a48 100%);
+}
+
+[data-theme="dark"] .admin-table tbody tr {
+    border-bottom-color: rgba(176, 228, 204, 0.1);
+}
+
+[data-theme="dark"] .admin-table tbody tr:hover {
+    background: rgba(64, 138, 113, 0.15);
+    box-shadow: 0 4px 12px rgba(64, 138, 113, 0.2);
+}
+
+[data-theme="dark"] .admin-table tbody td {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table tbody td strong {
+    color: #e8f5f2;
+}
+
+[data-theme="dark"] .admin-form-container {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-form-container:hover {
+    box-shadow: 0 8px 35px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .admin-form-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-form-header h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .activity-list {
+    background: #1f3d33;
+}
+
+[data-theme="dark"] .activity-item {
+    border-bottom-color: rgba(176, 228, 204, 0.1);
 }

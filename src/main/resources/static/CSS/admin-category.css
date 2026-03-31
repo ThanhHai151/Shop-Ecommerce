@@ -266,3 +266,104 @@
         text-align: center;
     }
 }
+
+/* ----- Dark Theme Overrides for Category Management ----- */
+[data-theme="dark"] .admin-table-container {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-table-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-table-header h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table tbody tr {
+    border-bottom-color: rgba(176, 228, 204, 0.1);
+}
+
+[data-theme="dark"] .admin-table tbody tr:hover {
+    background: rgba(55, 107, 88, 0.2);
+}
+
+[data-theme="dark"] .admin-table tbody td {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table tbody td strong {
+    color: #e8f5f2;
+}
+
+[data-theme="dark"] .admin-form {
+    background: #1a2e28;
+}
+
+[data-theme="dark"] .admin-form-group label {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-form-group input,
+[data-theme="dark"] .admin-form-group textarea {
+    background: #1a2e28;
+    color: #b0e4cc;
+    border-color: rgba(176, 228, 204, 0.2);
+}
+
+[data-theme="dark"] .admin-form-group input:focus,
+[data-theme="dark"] .admin-form-group textarea:focus {
+    border-color: #408a71;
+    box-shadow: 0 0 0 3px rgba(64, 138, 113, 0.2);
+}
+
+[data-theme="dark"] .admin-edit-form {
+    background: #1a2e28;
+    border-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-edit-form label {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-edit-form input,
+[data-theme="dark"] .admin-edit-form textarea {
+    background: #091413;
+    color: #b0e4cc;
+    border-color: rgba(176, 228, 204, 0.2);
+}
+
+[data-theme="dark"] .text-center {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .text-center i {
+    color: #5c8f7a;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-table-header h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table-header h2 i {
+    color: #8fd9be;
+}
+
+[data-theme="dark"] .admin-table thead {
+    background: linear-gradient(135deg, #408a71 0%, #285a48 100%);
+}
+
+[data-theme="dark"] .admin-form-header h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-form-header h2 i {
+    color: #8fd9be;
+}

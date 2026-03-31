@@ -220,6 +220,20 @@
     font-size: 0.9rem;
 }
 
+[data-theme="light"] .product-stock {
+    color: #9a6a00 !important;
+}
+
+[data-theme="light"] .product-stock span,
+[data-theme="light"] .product-stock strong {
+    color: #7d5500;
+}
+
+[data-theme="light"] .product-stock span::after,
+[data-theme="light"] .product-stock strong::after {
+    content: "\00a0";
+}
+
 
 .product-actions {
     margin-top: 12px;
@@ -376,6 +390,10 @@
 
 .products-count i {
     margin-right: 6px;
+}
+
+.products-count strong::after {
+    content: "\00a0";
 }
 
 

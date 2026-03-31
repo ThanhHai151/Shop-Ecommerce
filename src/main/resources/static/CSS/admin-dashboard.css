@@ -340,3 +340,99 @@
         gap: 1rem;
     }
 }
+
+/* ----- Dark Theme Overrides for Dashboard ----- */
+[data-theme="dark"] .activity-item,
+[data-theme="dark"] .stock-alert-item {
+    border-bottom-color: rgba(176, 228, 204, 0.1);
+}
+
+[data-theme="dark"] .activity-item:hover,
+[data-theme="dark"] .stock-alert-item:hover {
+    background: rgba(55, 107, 88, 0.2);
+}
+
+[data-theme="dark"] .activity-title,
+[data-theme="dark"] .stock-alert-title {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .activity-subtitle,
+[data-theme="dark"] .stock-alert-subtitle {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .activity-empty,
+[data-theme="dark"] .stock-alert-empty {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .activity-empty i,
+[data-theme="dark"] .stock-alert-empty i {
+    color: #5c8f7a;
+}
+
+[data-theme="dark"] .status-item {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.2);
+}
+
+[data-theme="dark"] .status-item:hover {
+    border-color: #408a71;
+    box-shadow: 0 8px 25px rgba(64, 138, 113, 0.2);
+}
+
+[data-theme="dark"] .status-title {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .status-subtitle {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .stock-unit {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .dashboard-content {
+    background: #0f1815;
+}
+
+/* Card-like sections in dashboard */
+[data-theme="dark"] .admin-stat-card {
+    background: linear-gradient(135deg, #285a48 0%, #1f3d33 100%);
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-stat-content h3 {
+    background: linear-gradient(135deg, #b0e4cc, #7aad95);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme="dark"] .admin-stat-content p {
+    color: #7aad95;
+}
+
+/* Dashboard action buttons dark theme */
+[data-theme="dark"] .dashboard-actions .admin-btn-large {
+    background: linear-gradient(135deg, #285a48 0%, #1f3d33 100%);
+    color: #b0e4cc;
+    border: 1px solid rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .dashboard-actions .admin-btn-large:hover {
+    background: linear-gradient(135deg, #408a71 0%, #285a48 100%);
+    box-shadow: 0 8px 25px rgba(64, 138, 113, 0.3);
+}
+
+[data-theme="dark"] .btn-title {
+    color: #e8f5f2;
+}
+
+[data-theme="dark"] .btn-subtitle {
+    color: #7aad95;
+}

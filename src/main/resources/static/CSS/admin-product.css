@@ -422,3 +422,110 @@
         justify-content: center;
     }
 }
+
+/* ----- Dark Theme Overrides for Product/Content Tables ----- */
+[data-theme="dark"] .admin-table-container {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-table-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .product-info strong {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .product-info small {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .empty-state {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .empty-state i {
+    color: #5c8f7a;
+}
+
+[data-theme="dark"] .empty-state div:first-of-type {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .empty-state div:last-of-type {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-form-container {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .admin-form-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-form-group label {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-form-group input,
+[data-theme="dark"] .admin-form-group select,
+[data-theme="dark"] .admin-form-group textarea {
+    background: #1a2e28;
+    color: #b0e4cc;
+    border-color: rgba(176, 228, 204, 0.2);
+}
+
+[data-theme="dark"] .admin-form-group input:focus,
+[data-theme="dark"] .admin-form-group select:focus,
+[data-theme="dark"] .admin-form-group textarea:focus {
+    border-color: #408a71;
+    box-shadow: 0 0 0 3px rgba(64, 138, 113, 0.2);
+}
+
+[data-theme="dark"] .form-help {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-info-section {
+    background: #1a2e28;
+    border-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .admin-info-section h3 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-info-item label {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-info-item span {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table-header h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table-header h2 i {
+    color: #8fd9be;
+}
+
+[data-theme="dark"] .admin-table thead {
+    background: linear-gradient(135deg, #408a71 0%, #285a48 100%);
+}
+
+[data-theme="dark"] .admin-form-header h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-form-header h2 i {
+    color: #8fd9be;
+}

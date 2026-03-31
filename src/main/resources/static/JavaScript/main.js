@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var cartBadge = document.querySelector(".cart-count");
     if (!cartBadge) return;
     cartBadge.textContent = String(n);
-    if (n <= 0) cartBadge.classList.add("is-empty");
-    else cartBadge.classList.remove("is-empty");
+    // Dùng toggle để chắc chắn class được quản lý đúng: ẩn khi = 0, hiện khi > 0
+    cartBadge.classList.toggle("is-empty", n === 0);
   }
 
   window.updateCartCount = function updateCartCount() {

@@ -89,9 +89,19 @@
   --danger: var(--color-danger);
   --warning: var(--color-warning);
 
-  /* Admin workspace (light panel on top of dark body — keeps tables readable) */
-  --color-admin-canvas: #eef5f2;
-  --color-admin-ink: #1a2e28;
+  /* Admin workspace (dark theme: dark background, light text) */
+  --color-admin-canvas: #0f1815;
+  --color-admin-ink: #b0e4cc;
+  /* Admin table & content colors - dark theme */
+  --color-admin-table-bg: #1a2e28;
+  --color-admin-table-border: rgba(176, 228, 204, 0.14);
+  --color-admin-text-primary: #b0e4cc;
+  --color-admin-text-secondary: #7aad95;
+  --color-admin-text-tertiary: #5c8f7a;
+  --color-admin-text-light: #e8f5f2;
+  --color-admin-card-bg: #1f3d33;
+  --color-admin-header-bg: #0f172a;
+  --color-admin-header-border: rgba(176, 228, 204, 0.1);
 
   /* Pill CTA (dark: charcoal + cyan text, reference UI) */
   --btn-primary-bg: #0f1815;
@@ -201,6 +211,17 @@
   --brand-light: #408a71;
   --muted: var(--color-text-muted);
 
+  /* Admin workspace light theme */
   --color-admin-canvas: #f4fbf7;
   --color-admin-ink: #1a3d32;
+  /* Admin table & content colors - light theme */
+  --color-admin-table-bg: #ffffff;
+  --color-admin-table-border: rgba(40, 90, 72, 0.15);
+  --color-admin-text-primary: #1a3d32;
+  --color-admin-text-secondary: #3d6b58;
+  --color-admin-text-tertiary: #5c8570;
+  --color-admin-text-light: #f8fafc;
+  --color-admin-card-bg: #ffffff;
+  --color-admin-header-bg: #ffffff;
+  --color-admin-header-border: rgba(40, 90, 72, 0.12);
 }

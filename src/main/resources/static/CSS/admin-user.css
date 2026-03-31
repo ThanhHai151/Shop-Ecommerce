@@ -359,3 +359,86 @@
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(2, 119, 189, 0.3);
 }
+
+/* ----- Dark Theme Overrides for User Management ----- */
+[data-theme="dark"] .admin-table-container {
+    background: #1f3d33;
+    border-color: rgba(176, 228, 204, 0.15);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .user-table-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .user-table-title {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .username {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .user-email {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .date-cell {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .admin-table tbody tr {
+    border-bottom-color: rgba(176, 228, 204, 0.1);
+}
+
+[data-theme="dark"] .admin-table tbody tr:hover {
+    background: rgba(55, 107, 88, 0.2);
+}
+
+[data-theme="dark"] .empty-icon {
+    background: #285a48;
+}
+
+[data-theme="dark"] .empty-icon i {
+    color: #5c8f7a;
+}
+
+[data-theme="dark"] .empty-state h3 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .empty-state p {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .empty-state {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #7aad95;
+}
+
+[data-theme="dark"] .protected-admin {
+    background: #285a48;
+    border-color: rgba(176, 228, 204, 0.15);
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .user-table-header {
+    background: #285a48;
+    border-bottom-color: rgba(176, 228, 204, 0.15);
+}
+
+[data-theme="dark"] .user-table-header h2 {
+    color: #b0e4cc;
+}
+
+[data-theme="dark"] .admin-table thead {
+    background: linear-gradient(135deg, #408a71 0%, #285a48 100%);
+}
+
+[data-theme="dark"] .admin-table-header h2 i {
+    color: #8fd9be;
+}
