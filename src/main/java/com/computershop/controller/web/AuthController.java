@@ -23,6 +23,9 @@ public class AuthController {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    private com.computershop.service.impl.CartServiceImpl cartService;
+
     /**
      * Displays the login page.
      *
@@ -54,7 +57,7 @@ public class AuthController {
         // Support both "usernameOrEmail" and "username" field names
         String loginInput = usernameOrEmail != null ? usernameOrEmail : usernameField;
         if (loginInput == null || loginInput.isBlank()) {
-            redirectAttributes.addFlashAttribute("error", "Vui lòng nhập tên đăng nhập hoặc email");
+            redirectAttributes.addFlashAttribute("error", "Please enter your username or email");
             return "redirect:/login";
         }
 
@@ -71,6 +74,11 @@ public class AuthController {
                 session.setAttribute("userId", user.getUserId());
                 session.setAttribute("username", user.getUsername());
 
+                try {
+                    int mapCount = cartService.getCartItemCount(user.getUserId());
+                    session.setAttribute("cartCount", mapCount);
+                } catch (Exception ignored) {}
+
                 String role = (user.getRole() != null) ? user.getRole().getRoleName() : "customer";
                 session.setAttribute("role", role);
 
@@ -80,11 +88,18 @@ public class AuthController {
                     return "redirect:/";
                 }
             } else {
-                redirectAttributes.addFlashAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng");
+                redirectAttributes.addFlashAttribute("error", "Invalid username or password");
                 return "redirect:/login";
             }
+        } catch (RuntimeException e) {
+            if ("ACCOUNT_LOCKED".equals(e.getMessage())) {
+                redirectAttributes.addFlashAttribute("error", "Your account has been locked. Please contact the administrator.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Login failed: " + e.getMessage());
+            }
+            return "redirect:/login";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Đăng nhập thất bại: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Login failed: " + e.getMessage());
             return "redirect:/login";
         }
     }
@@ -128,35 +143,47 @@ public class AuthController {
     @PostMapping("/register")
     public String register(
             @RequestParam String username,
-            @RequestParam String email,
             @RequestParam String password,
             @RequestParam String confirmPassword,
+            @RequestParam(required = false) String address,
             RedirectAttributes redirectAttributes) {
 
         try {
             // Validate passwords match
             if (!password.equals(confirmPassword)) {
                 redirectAttributes.addFlashAttribute("error", "Passwords do not match");
+                redirectAttributes.addFlashAttribute("username", username);
+                redirectAttributes.addFlashAttribute("address", address);
+                return "redirect:/register";
+            }
+
+            if (password.length() < 6) {
+                redirectAttributes.addFlashAttribute("error", "Password must be at least 6 characters");
+                redirectAttributes.addFlashAttribute("username", username);
+                redirectAttributes.addFlashAttribute("address", address);
+                return "redirect:/register";
+            }
+
+            // Validate address
+            if (address == null || address.trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Please enter a default shipping address");
+                redirectAttributes.addFlashAttribute("username", username);
                 return "redirect:/register";
             }
 
             // Check if username exists
             if (userService.existsByUsername(username)) {
                 redirectAttributes.addFlashAttribute("error", "Username already exists");
-                return "redirect:/register";
-            }
-
-            // Check if email exists
-            if (userService.existsByEmail(email)) {
-                redirectAttributes.addFlashAttribute("error", "Email already exists");
+                redirectAttributes.addFlashAttribute("address", address);
                 return "redirect:/register";
             }
 
             // Create user
             User user = new User();
             user.setUsername(username);
-            user.setEmail(email);
             user.setPassword(password);
+            user.setAddress(address.trim());
+            user.setEnabled(true);
 
             userService.registerUser(user);
 
@@ -165,6 +192,8 @@ public class AuthController {
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Registration failed: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("username", username);
+            redirectAttributes.addFlashAttribute("address", address);
             return "redirect:/register";
         }
     }

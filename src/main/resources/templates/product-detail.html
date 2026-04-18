@@ -5,8 +5,8 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${product.productName} + ' - JSB ComputerShop'">
-      Chi tiết sản phẩm
+    <title th:text="${product.productName} + ' - ComputerShop'">
+      Product Details
     </title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
     <link rel="stylesheet" th:href="@{/CSS/header.css}" />
@@ -288,9 +288,9 @@
 
     <main class="product-detail-container">
       <div class="breadcrumb">
-        <a href="/">Trang chủ</a>
+        <a href="/">Home</a>
         <span>›</span>
-        <a href="/products">Sản phẩm</a>
+        <a href="/products">Products</a>
         <span>›</span>
         <span th:text="${product.productName}">Product Name</span>
       </div>
@@ -313,7 +313,7 @@
           </div>
 
           <div class="product-price-section">
-            <div class="price-label">Giá bán</div>
+            <div class="price-label">Price</div>
             <div
               class="price"
               th:text="${#numbers.formatDecimal(product.price,1,'COMMA',0,'POINT')} + ' ₫'"
@@ -327,19 +327,19 @@
             th:classappend="${product.stockQuantity > 5 ? 'stock-available' : (product.stockQuantity > 0 ? 'stock-low' : 'stock-out')}"
           >
             <span th:if="${product.stockQuantity > 5}">
-              ✓ Còn hàng - Sẵn sàng giao hàng
+              ✓ In Stock - Ready to ship
             </span>
             <span
               th:if="${product.stockQuantity <= 5 and product.stockQuantity > 0}"
             >
-              ⚠ Chỉ còn
-              <strong th:text="${product.stockQuantity}">0</strong>  sản phẩm
+              ⚠ Only
+              <strong th:text="${product.stockQuantity}">0</strong> items left
             </span>
-            <span th:if="${product.stockQuantity == 0}"> ✗ Tạm hết hàng </span>
+            <span th:if="${product.stockQuantity == 0}"> ✗ Out of Stock </span>
           </div>
 
           <div class="quantity-selector" th:if="${product.stockQuantity > 0}">
-            <label>Số lượng:</label>
+            <label>Quantity:</label>
             <div class="quantity-controls">
               <button class="quantity-btn" onclick="decreaseQuantity()">
                 -
@@ -363,9 +363,9 @@
           </div>
 
           <div class="product-description">
-            <h3>Mô tả sản phẩm</h3>
+            <h3>Product Description</h3>
             <p
-              th:text="${product.description != null and !#strings.isEmpty(product.description) ? product.description : 'Chưa có mô tả chi tiết cho sản phẩm này.'}"
+              th:text="${product.description != null and !#strings.isEmpty(product.description) ? product.description : 'No detailed description available for this product.'}"
             >
               Product description
             </p>
@@ -373,7 +373,7 @@
 
           <div class="product-meta">
             <div class="product-meta-item">
-              <span class="product-meta-label">Mã sản phẩm:</span>
+              <span class="product-meta-label">Product ID:</span>
               <span
                 class="product-meta-value"
                 th:text="'SP' + ${product.productId}"
@@ -381,7 +381,7 @@
               >
             </div>
             <div class="product-meta-item" th:if="${product.category != null}">
-              <span class="product-meta-label">Danh mục:</span>
+              <span class="product-meta-label">Category:</span>
               <span
                 class="product-meta-value"
                 th:text="${product.category.categoryName}"
@@ -389,10 +389,10 @@
               >
             </div>
             <div class="product-meta-item">
-              <span class="product-meta-label">Tình trạng:</span>
+              <span class="product-meta-label">Status:</span>
               <span
                 class="product-meta-value"
-                th:text="${product.stockQuantity > 0 ? 'Còn hàng' : 'Hết hàng'}"
+                th:text="${product.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}"
                 >Status</span
               >
             </div>
@@ -408,11 +408,11 @@
               onclick="addToCart(this)"
             >
               <span th:if="${product.stockQuantity > 0}"
-                >Thêm vào giỏ hàng</span
+                >Add to Cart</span
               >
-              <span th:if="${product.stockQuantity == 0}">Hết hàng</span>
+              <span th:if="${product.stockQuantity == 0}">Out of Stock</span>
             </button>
-            <a href="/products" class="btn btn-secondary">Tiếp tục mua sắm</a>
+            <a href="/products" class="btn btn-secondary">Continue Shopping</a>
           </div>
         </div>
       </div>
@@ -445,7 +445,7 @@
 
         button.disabled = true;
         const originalText = button.innerHTML;
-        button.innerHTML = "Đang thêm...";
+        button.innerHTML = "Adding...";
 
         fetch("/cart/add-ajax", {
           method: "POST",
@@ -457,12 +457,12 @@
             if (data.success) {
               if (typeof window.showToast === "function")
                 window.showToast(
-                  data.message || "Đã thêm sản phẩm vào giỏ hàng!",
+                  data.message || "Product added to cart!",
                   "success",
                 );
               if (typeof window.updateCartCount === "function")
                 window.updateCartCount();
-              button.innerHTML = "✓ Đã thêm";
+              button.innerHTML = "✓ Added";
               button.classList.add("btn-success");
               setTimeout(() => {
                 button.innerHTML = originalText;
@@ -472,7 +472,7 @@
             } else {
               if (typeof window.showToast === "function")
                 window.showToast(
-                  data.message || "Có lỗi xảy ra khi thêm vào giỏ hàng",
+                  data.message || "Error adding to cart",
                   "error",
                 );
               button.innerHTML = originalText;
@@ -482,7 +482,7 @@
           .catch(() => {
             if (typeof window.showToast === "function")
               window.showToast(
-                "Có lỗi xảy ra. Vui lòng đăng nhập và thử lại.",
+                "An error occurred. Please login and try again.",
                 "error",
               );
             button.innerHTML = originalText;

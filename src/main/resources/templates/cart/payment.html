@@ -5,7 +5,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thanh toán - Chuyển khoản ngân hàng</title>
+    <title>Payment - Bank Transfer</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
     <link rel="stylesheet" th:href="@{/CSS/header.css}" />
     <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
@@ -226,29 +226,29 @@
         </div>
         <div class="vcb-badge">
           <i class="fas fa-check-circle"></i>
-          VietQR — Quét được bằng tất cả app ngân hàng
+          VietQR — Scan with any banking app
         </div>
 
-        <!-- Thông tin đơn hàng -->
+        <!-- Order information -->
         <div class="order-info">
           <p>
-            <span>Mã đơn hàng</span>
+            <span>Order ID</span>
             <strong th:text="'#' + ${order.orderId}">-</strong>
           </p>
           <p>
-            <span>Ngân hàng</span>
+            <span>Bank</span>
             <strong th:text="${bankName}">-</strong>
           </p>
           <p>
-            <span>Số tài khoản</span>
+            <span>Account Number</span>
             <strong th:text="${accountNumber}">-</strong>
           </p>
           <p>
-            <span>Chủ tài khoản</span>
+            <span>Account Name</span>
             <strong th:text="${accountName}">-</strong>
           </p>
           <p>
-            <span>Nội dung CK</span>
+            <span>Transfer Note</span>
             <strong th:text="${note}">-</strong>
           </p>
         </div>
@@ -261,7 +261,7 @@
           >&nbsp;&#8363;
         </div>
 
-        <!-- QR Code (VietQR EMVCo — tự điền STK + số tiền + nội dung) -->
+        <!-- QR Code -->
         <div class="qr-outer">
           <img th:src="${qrImageUrl}" alt="VietQR Vietcombank" />
           <div class="qr-bank-label">Vietcombank &middot; VietQR</div>
@@ -270,10 +270,10 @@
         </div>
         <p class="qr-scan-hint">
           <i class="fas fa-qrcode"></i>
-          Quét bằng app ngân hàng bất kỳ — số tiền &amp; nội dung tự điền
+          Scan using any banking app — amount &amp; note auto-filled
         </p>
 
-        <!-- Ngân hàng hỗ trợ -->
+        <!-- Supported Banks -->
         <div class="bank-support">
           <span class="bank-tag">Vietcombank</span>
           <span class="bank-tag">MB Bank</span>
@@ -287,47 +287,47 @@
           <span class="bank-tag">ZaloPay</span>
         </div>
 
-        <!-- Hướng dẫn -->
+        <!-- Instructions -->
         <div class="steps">
-          <h4><i class="fas fa-info-circle"></i> Hướng dẫn thanh toán</h4>
+          <h4><i class="fas fa-info-circle"></i> Payment Instructions</h4>
           <ol>
-            <li>Mở app ngân hàng hoặc ví điện tử (MoMo, ZaloPay, ...)</li>
+            <li>Open banking app or e-wallet (MoMo, ZaloPay, ...)</li>
             <li>
-              Chọn <strong>Quét mã QR</strong> hoặc
-              <strong>Chuyển khoản</strong>
+              Select <strong>Scan QR code</strong> or
+              <strong>Transfer</strong>
             </li>
             <li>
-              Quét mã QR bên trên — thông tin sẽ <strong>tự động điền</strong>
+              Scan the QR code above — information will be <strong>auto-filled</strong>
             </li>
             <li>
-              Kiểm tra <strong>số tiền</strong> và
-              <strong>nội dung chuyển khoản</strong>
+              Check <strong>amount</strong> and
+              <strong>transfer note</strong>
             </li>
-            <li>Xác nhận thanh toán</li>
+            <li>Confirm payment</li>
           </ol>
         </div>
 
         <div class="note-box">
-          <strong><i class="fas fa-exclamation-triangle"></i> Lưu ý:</strong>
-          Vui lòng điền đúng nội dung chuyển khoản
+          <strong><i class="fas fa-exclamation-triangle"></i> Note:</strong>
+          Please enter the exact transfer note
           <strong th:text="${note}"></strong>
-          để đơn hàng được xác nhận tự động.
+          for the order to be confirmed automatically.
         </div>
 
         <hr class="divider" />
 
         <div class="payment-actions">
           <a th:href="@{/user/orders}" class="btn btn-primary">
-            <i class="fas fa-list-alt"></i> Xem đơn hàng của tôi
+            <i class="fas fa-list-alt"></i> View my orders
           </a>
           <a th:href="@{/products}" class="btn btn-outline">
-            <i class="fas fa-shopping-bag"></i> Tiếp tục mua sắm
+            <i class="fas fa-shopping-bag"></i> Continue shopping
           </a>
         </div>
 
         <p class="success-note">
-          Sau khi thanh toán thành công, đơn hàng của bạn sẽ được xử lý trong
-          vòng 24 giờ.
+          After successful payment, your order will be processed within
+          24 hours.
         </p>
       </div>
     </div>

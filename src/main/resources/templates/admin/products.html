@@ -5,7 +5,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Sản Phẩm - Computer Shop Admin</title>
+    <title>Manage Products - Computer Shop Admin</title>
     <link rel="stylesheet" th:href="@{/CSS/admin.css}">
     <link rel="stylesheet" th:href="@{/CSS/admin-product.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -19,17 +19,17 @@
             </div>
             <ul class="admin-nav">
                 <li><a th:href="@{/admin/dashboard}"><i class="fas fa-chart-bar"></i> <span>Dashboard</span></a></li>
-                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> <span>Người Dùng</span></a></li>
-                <li><a th:href="@{/admin/products}" class="active"><i class="fas fa-box"></i> <span>Sản Phẩm</span></a></li>
-                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> <span>Danh Mục</span></a></li>
-                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> <span>Đơn Hàng</span></a></li>
-                <li><a th:href="@{/}"><i class="fas fa-home"></i> <span>Trang Chủ</span></a></li>
-                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> <span>Đăng Xuất</span></a></li>
+                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> <span>Users</span></a></li>
+                <li><a th:href="@{/admin/products}" class="active"><i class="fas fa-box"></i> <span>Products</span></a></li>
+                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> <span>Categories</span></a></li>
+                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+                <li><a th:href="@{/}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
             </ul>
         </nav>
 
         <!-- Collapsible Sidebar Toggle -->
-        <button class="sidebar-toggle" id="sidebarToggle" title="Thu gọn/Mở rộng sidebar">
+        <button class="sidebar-toggle" id="sidebarToggle" title="Collapse/Expand sidebar">
             <i class="fas fa-chevron-left"></i>
         </button>
 
@@ -41,8 +41,8 @@
 
             <div class="admin-header">
             <th:block th:replace="~{fragments/theme-toggle :: buttonAdmin}"></th:block>
-                <h1><i class="fas fa-box"></i> Quản Lý Sản Phẩm</h1>
-                <p>Quản lý thông tin sản phẩm và kho hàng</p>
+                <h1><i class="fas fa-box"></i> Manage Products</h1>
+                <p>Manage product information and inventory</p>
             </div>
 
             <!-- Statistics Cards -->
@@ -53,7 +53,7 @@
                     </div>
                     <div class="admin-stat-content">
                         <h3 th:text="${#lists.size(products)}">0</h3>
-                        <p>Tổng Sản Phẩm</p>
+                        <p>Total Products</p>
                     </div>
                 </div>
                 <div class="admin-stat-card">
@@ -62,7 +62,7 @@
                     </div>
                     <div class="admin-stat-content">
                         <h3 th:text="${inStockCount}">0</h3>
-                        <p>Còn Hàng</p>
+                        <p>In Stock</p>
                     </div>
                 </div>
                 <div class="admin-stat-card">
@@ -71,7 +71,7 @@
                     </div>
                     <div class="admin-stat-content">
                         <h3 th:text="${lowStockCount}">0</h3>
-                        <p>Sắp Hết Hàng</p>
+                        <p>Low Stock</p>
                     </div>
                 </div>
                 <div class="admin-stat-card">
@@ -80,7 +80,7 @@
                     </div>
                     <div class="admin-stat-content">
                         <h3 th:text="${outOfStockCount}">0</h3>
-                        <p>Hết Hàng</p>
+                        <p>Out of Stock</p>
                     </div>
                 </div>
             </div>
@@ -98,21 +98,21 @@
             
             <div class="admin-quick-actions">
                 <a th:href="@{/admin/products/add}" class="admin-btn admin-btn-primary admin-btn-large">
-                    <i class="fas fa-plus-circle"></i> Thêm Sản Phẩm Mới
+                    <i class="fas fa-plus-circle"></i> Add New Product
                 </a>
                 <button type="button" class="admin-btn admin-btn-info admin-btn-large" onclick="refreshProducts()">
-                    <i class="fas fa-sync-alt"></i> Làm Mới Danh Sách
+                    <i class="fas fa-sync-alt"></i> Refresh List
                 </button>
             </div>
 
             
             <div class="admin-table-container">
                 <div class="admin-table-header">
-                    <h2><i class="fas fa-list"></i> Danh Sách Sản Phẩm</h2>
+                    <h2><i class="fas fa-list"></i> Product List</h2>
                     <div class="admin-table-actions">
                         <span class="admin-summary-count">
                             <i class="fas fa-box"></i>
-                            Tổng: <strong th:text="${#lists.size(products)}">0</strong>sản phẩm
+                            Total: <strong th:text="${#lists.size(products)}">0</strong> products
                         </span>
                     </div>
                 </div>
@@ -120,12 +120,12 @@
                     <thead>
                         <tr>
                             <th><i class="fas fa-hashtag"></i> ID</th>
-                            <th><i class="fas fa-box"></i> Tên Sản Phẩm</th>
-                            <th><i class="fas fa-tag"></i> Danh Mục</th>
-                            <th><i class="fas fa-dollar-sign"></i> Giá</th>
-                            <th><i class="fas fa-warehouse"></i> Số Lượng</th>
-                            <th><i class="fas fa-info-circle"></i> Trạng Thái</th>
-                            <th><i class="fas fa-cogs"></i> Thao Tác</th>
+                            <th><i class="fas fa-box"></i> Product Name</th>
+                            <th><i class="fas fa-tag"></i> Category</th>
+                            <th><i class="fas fa-dollar-sign"></i> Price</th>
+                            <th><i class="fas fa-warehouse"></i> Quantity</th>
+
+                            <th><i class="fas fa-cogs"></i> Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,23 +162,13 @@
                                 <span th:classappend="${product.stockQuantity <= 5} ? 'text-danger' : (${product.stockQuantity <= 20} ? 'text-warning' : 'text-success')"
                                       th:text="${product.stockQuantity}"></span>
                             </td>
-                            <td>
-                                <span th:if="${product.stockQuantity > 20}" class="admin-badge admin-badge-success">
-                                    <i class="fas fa-check"></i> Còn Hàng
-                                </span>
-                                <span th:if="${product.stockQuantity > 0 && product.stockQuantity <= 20}" class="admin-badge admin-badge-warning">
-                                    <i class="fas fa-exclamation-triangle"></i> Sắp Hết
-                                </span>
-                                <span th:if="${product.stockQuantity <= 0}" class="admin-badge admin-badge-danger">
-                                    <i class="fas fa-times"></i> Hết Hàng
-                                </span>
-                            </td>
+
                             <td>
                                 <div class="admin-actions">
                                     
                                     <a th:href="@{/admin/products/{id}/edit(id=${product.productId})}" 
                                        class="admin-btn admin-btn-info">
-                                        <i class="fas fa-edit"></i> <span>Sửa</span>
+                                        <i class="fas fa-edit"></i> <span>Edit</span>
                                     </a>
                                     
                                     
@@ -187,21 +177,21 @@
                                           style="display: inline-block;">
                                         <button type="submit" 
                                                 class="admin-btn admin-btn-danger"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.')">
-                                            <i class="fas fa-trash"></i> <span>Xóa</span>
+                                                onclick="return confirm('Are you sure you want to delete this product? This action cannot be undone.')">
+                                            <i class="fas fa-trash"></i> <span>Delete</span>
                                         </button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(products)}">
-                            <td colspan="7" class="text-center text-muted">
+                            <td colspan="6" class="text-center text-muted">
                                 <i class="fas fa-box-open"></i>
                                 <div style="margin-top: 1rem; font-size: 1.2rem; font-weight: 600;">
-                                    Không có sản phẩm nào
+                                    No products found
                                 </div>
                                 <div style="margin-top: 0.5rem; color: #94a3b8;">
-                                    Hãy thêm sản phẩm đầu tiên để bắt đầu!
+                                    Add your first product to get started!
                                 </div>
                             </td>
                         </tr>

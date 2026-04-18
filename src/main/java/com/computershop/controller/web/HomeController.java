@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
@@ -62,5 +65,34 @@ public class HomeController {
     @GetMapping("/about")
     public String about() {
         return "about";
+    }
+
+    /**
+     * Handles newsletter email subscription.
+     *
+     * @param email email address to subscribe
+     * @param redirectAttributes redirect attributes
+     * @return redirect back with success message
+     */
+    @PostMapping("/newsletter")
+    public String subscribeNewsletter(
+            @RequestParam(required = false) String email,
+            RedirectAttributes redirectAttributes) {
+        if (email == null || email.trim().isEmpty() || !email.contains("@")) {
+            redirectAttributes.addFlashAttribute("newsletterError", "Invalid email. Please try again.");
+            return "redirect:/";
+        }
+        // In a real system, we'd save the email to database
+        // For now, just acknowledge the subscription
+        redirectAttributes.addFlashAttribute("newsletterSuccess", "Subscribed successfully! Email: " + email);
+        return "redirect:/";
+    }
+
+    /**
+     * Redirect /categories to /products page.
+     */
+    @GetMapping("/categories")
+    public String categories() {
+        return "redirect:/products";
     }
 }

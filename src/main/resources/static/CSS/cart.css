@@ -23,7 +23,7 @@
 
 .cart-table th {
     background: var(--gradient-primary);
-    color: var(--color-text-inverse);
+    color: var(--banner-hero-text);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -126,7 +126,7 @@
 .order-summary { 
     width: 350px; 
     background: var(--gradient-surface);
-    color: var(--color-text-inverse);
+    color: var(--banner-hero-text);
     padding: 25px; 
     border-radius: 15px;
     box-shadow: var(--shadow-lg);
@@ -136,7 +136,7 @@
 }
 
 .order-summary h3 {
-    color: var(--color-text-inverse);
+    color: var(--banner-hero-text);
     margin-bottom: 20px;
     text-align: center;
     font-size: 1.3rem;

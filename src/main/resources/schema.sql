@@ -25,8 +25,10 @@ CREATE TABLE users (
     user_id INT IDENTITY PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255),
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) UNIQUE,
     roleid INT,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    address VARCHAR(500),
     CONSTRAINT FK_users_roles FOREIGN KEY (roleid) REFERENCES roles(role_id)
 );
 

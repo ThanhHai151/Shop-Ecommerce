@@ -43,16 +43,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return Optional.empty(); // email field removed
     }
 
     @Override
     public User createUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username '" + user.getUsername() + "' already exists");
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email '" + user.getEmail() + "' already exists");
         }
 
         if (user.getRole() == null) {
@@ -72,13 +69,9 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Username '" + userDetails.getUsername() + "' already exists");
         }
 
-        if (!user.getEmail().equals(userDetails.getEmail()) &&
-            userRepository.existsByEmail(userDetails.getEmail())) {
-            throw new RuntimeException("Email '" + userDetails.getEmail() + "' already exists");
-        }
 
         user.setUsername(userDetails.getUsername());
-        user.setEmail(userDetails.getEmail());
+
         if (userDetails.getRole() != null) {
             user.setRole(userDetails.getRole());
         }
@@ -101,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return false; // email not used
     }
 
     @Override
@@ -120,19 +113,23 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+            user.setEnabled(!user.isEnabled());
             userRepository.save(user);
         } else {
             throw new RuntimeException("User not found with id: " + userId);
         }
     }
 
+    public void resetUserPassword(Integer userId, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        user.setPasswordHash(hashPassword(newPassword));
+        userRepository.save(user);
+    }
+
     @Override
     public boolean validateCredentials(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
-        if (userOpt.isEmpty()) {
-            userOpt = userRepository.findByEmail(username);
-        }
-
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             return verifyPassword(password, user.getPasswordHash());
@@ -154,10 +151,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByRoleName(roleName);
     }
 
-    public User registerCustomer(String username, String email, String password) {
+    public User registerCustomer(String username, String password) {
         User user = new User();
         user.setUsername(username);
-        user.setEmail(email);
         user.setPasswordHash(hashPassword(password));
         user.setRole(roleService.getCustomerRole());
         return createUser(user);
@@ -177,7 +173,11 @@ public class UserServiceImpl implements UserService {
     public Optional<User> authenticate(String usernameOrEmail, String password) {
         Optional<User> user = getUserByUsernameOrEmail(usernameOrEmail);
         if (user.isPresent()) {
-            if (verifyPassword(password, user.get().getPasswordHash())) {
+            User foundUser = user.get();
+            if (!foundUser.isEnabled()) {
+                throw new RuntimeException("ACCOUNT_LOCKED");
+            }
+            if (verifyPassword(password, foundUser.getPasswordHash())) {
                 return user;
             }
         }
@@ -185,6 +185,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public User registerUser(User user) {
+        if (user.getRole() == null) {
+            user.setRole(roleService.getCustomerRole());
+        }
         user.setPasswordHash(hashPassword(user.getPassword()));
         user.setPassword(null);
         return userRepository.save(user);

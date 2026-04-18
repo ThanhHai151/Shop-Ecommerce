@@ -31,7 +31,7 @@ CREATE TABLE dbo.users (
     user_id INT IDENTITY(1,1) PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NULL UNIQUE,
     roleid INT NULL,
     is_active BIT NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT GETDATE(),

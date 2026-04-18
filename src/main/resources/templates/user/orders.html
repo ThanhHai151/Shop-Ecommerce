@@ -5,7 +5,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đơn hàng của tôi - JSB ComputerShop</title>
+    <title>My Orders - ComputerShop</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
     <link rel="stylesheet" th:href="@{/CSS/header.css}" />
     <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
@@ -212,8 +212,8 @@
 
     <div class="orders-container">
       <div class="orders-header">
-        <h1><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</h1>
-        <p>Xem tất cả đơn hàng bạn đã đặt</p>
+        <h1><i class="fas fa-shopping-bag"></i> My Orders</h1>
+        <p>View all orders you have placed</p>
       </div>
 
       <div th:if="${success}" class="alert alert-success">
@@ -226,10 +226,10 @@
 
       <div th:if="${#lists.isEmpty(orders)}" class="empty-state">
         <i class="fas fa-shopping-bag"></i>
-        <h3>Chưa có đơn hàng nào</h3>
-        <p>Bạn chưa có đơn hàng nào. Hãy bắt đầu mua sắm ngay!</p>
+        <h3>No orders yet</h3>
+        <p>You have no orders yet. Start shopping now!</p>
         <a href="/products" class="btn btn-primary" style="margin-top: 1rem"
-          >Xem sản phẩm</a
+          >View products</a
         >
       </div>
 
@@ -238,7 +238,7 @@
           <div class="order-card-header">
             <div>
               <div class="order-id">
-                Đơn hàng #<span th:text="${order.orderId}"></span>
+                Order #<span th:text="${order.orderId}"></span>
               </div>
               <div class="order-date" th:if="${order.orderDate != null}">
                 <i class="fas fa-calendar"></i>
@@ -247,14 +247,14 @@
                 ></span>
               </div>
               <div class="order-date" th:if="${order.orderDate == null}">
-                <i class="fas fa-calendar"></i> Ngày đặt: Chưa cập nhật
+                <i class="fas fa-calendar"></i> Order Date: Not updated
               </div>
             </div>
             <div>
               <span
                 class="order-status"
                 th:classappend="${order.status == 'pending'} ? 'status-pending' : (${order.status == 'pending_payment'} ? 'status-pending_payment' : (${order.status == 'confirmed'} ? 'status-confirmed' : (${order.status == 'shipping'} ? 'status-shipping' : (${order.status == 'completed'} ? 'status-completed' : 'status-cancelled'))))"
-                th:text="${order.status == 'pending'} ? 'Đang xử lý' : (${order.status == 'pending_payment'} ? 'Chờ thanh toán' : (${order.status == 'confirmed'} ? 'Đã xác nhận' : (${order.status == 'shipping'} ? 'Đang vận chuyển' : (${order.status == 'completed'} ? 'Hoàn thành' : (${order.status == 'cancelled'} ? 'Đã hủy' : order.status)))))"
+                th:text="${order.status == 'pending'} ? 'Processing' : (${order.status == 'pending_payment'} ? 'Pending Payment' : (${order.status == 'confirmed'} ? 'Confirmed' : (${order.status == 'shipping'} ? 'Shipping' : (${order.status == 'completed'} ? 'Completed' : (${order.status == 'cancelled'} ? 'Cancelled' : order.status)))))"
               >
               </span>
             </div>
@@ -266,7 +266,7 @@
               <span
                 th:text="${order.orderDetails != null ? #lists.size(order.orderDetails) : 0}"
               ></span>
-              sản phẩm
+              products
             </div>
             <div class="order-total">
               <span
@@ -281,7 +281,7 @@
               th:href="@{/user/orders/{id}(id=${order.orderId})}"
               class="btn btn-primary"
             >
-              <i class="fas fa-eye"></i> Xem chi tiết
+              <i class="fas fa-eye"></i> View details
             </a>
             <a
               th:if="${order.status == 'pending_payment'}"
@@ -289,7 +289,7 @@
               class="btn"
               style="background: #ae2070; color: white"
             >
-              <i class="fas fa-qrcode"></i> Thanh toán ngay
+              <i class="fas fa-qrcode"></i> Pay Now
             </a>
           </div>
         </div>

@@ -16,9 +16,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     
     Optional<User> findByUsername(String username);
     
-    Optional<User> findByEmail(String email);
-    
-    @Query("SELECT u FROM User u WHERE u.username = :usernameOrEmail OR u.email = :usernameOrEmail")
+
+    @Query("SELECT u FROM User u WHERE u.username = :usernameOrEmail")
     Optional<User> findByUsernameOrEmail(@Param("usernameOrEmail") String usernameOrEmail);
     
     List<User> findByRole(Role role);
@@ -28,8 +27,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     
     boolean existsByUsername(String username);
     
-    boolean existsByEmail(String email);
-    
+
     @Query("SELECT COUNT(u) FROM User u WHERE u.role.roleName = :roleName")
     long countByRoleName(@Param("roleName") String roleName);
     

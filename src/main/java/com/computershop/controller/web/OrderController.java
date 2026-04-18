@@ -119,7 +119,7 @@ public class OrderController {
         // Check if user is admin - admin cannot create order
         String role = (String) session.getAttribute("role");
         if (role != null && "admin".equalsIgnoreCase(role)) {
-            redirectAttributes.addFlashAttribute("error", "Admin không thể đặt hàng.");
+            redirectAttributes.addFlashAttribute("error", "Admin cannot place orders.");
             return "redirect:/";
         }
 

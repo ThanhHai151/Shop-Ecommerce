@@ -131,6 +131,9 @@ CREATE TABLE dbo.orders (
     user_id INT NOT NULL,
     order_date DATETIME NOT NULL DEFAULT GETDATE(),
     status VARCHAR(50) NULL DEFAULT 'pending',
+    shipping_address NVARCHAR(MAX) NULL,
+    payment_method VARCHAR(50) NULL,
+    notes NVARCHAR(MAX) NULL,
     CONSTRAINT FK_orders_users FOREIGN KEY (user_id) REFERENCES dbo.users(user_id)
 );
 GO

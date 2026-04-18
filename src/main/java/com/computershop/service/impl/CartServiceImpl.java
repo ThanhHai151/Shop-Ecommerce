@@ -95,9 +95,13 @@ public class CartServiceImpl implements CartService {
             return cartItemRepository.save(item);
         } else {
             CartItem newItem = new CartItem(cart, product, quantity);
+            // Save newItem FIRST so it becomes managed and gets an ID.
+            newItem = cartItemRepository.save(newItem);
+            // Add managed item to cart to keep OSIV cache synced without triggering double-insert.
+            cart.getCartItems().add(newItem);
             cart.setUpdatedAt(LocalDateTime.now());
             cartRepository.save(cart);
-            return cartItemRepository.save(newItem);
+            return newItem;
         }
     }
 

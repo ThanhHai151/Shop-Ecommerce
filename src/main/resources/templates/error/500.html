@@ -5,7 +5,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lỗi hệ thống - JSB ComputerShop</title>
+    <title>System Error - ComputerShop</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
     <link rel="stylesheet" th:href="@{/CSS/header.css}" />
     <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
@@ -54,12 +54,12 @@
     <main class="container">
       <div class="error-container">
         <h1 class="error-code">500</h1>
-        <h2 class="error-title">Lỗi hệ thống</h2>
+        <h2 class="error-title">System Error</h2>
         <p
           class="error-message"
-          th:text="${errorMessage} ?: 'Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn. Vui lòng thử lại sau.'"
+          th:text="${errorMessage} ?: 'An error occurred while processing your request. Please try again later.'"
         ></p>
-        <a href="/" class="btn-home">Quay về trang chủ</a>
+        <a href="/" class="btn-home">Back to Home</a>
       </div>
     </main>
 

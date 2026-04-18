@@ -40,6 +40,9 @@ public class Order {
     @Column(name = "shipping_address")
     private String shippingAddress;
 
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
     @Column(name = "notes")
     private String notes;
     
@@ -56,6 +59,7 @@ public class Order {
     public List<OrderDetail> getOrderDetails() {return orderDetails;}
     public String getStatus() {return status;}
     public String getShippingAddress() {return shippingAddress;}
+    public String getPaymentMethod() {return paymentMethod;}
     public String getNotes() {return notes;}
 
     public void setOrderId(Integer orderId) {this.orderId = orderId;}
@@ -64,6 +68,7 @@ public class Order {
     public void setOrderDetails(List<OrderDetail> orderDetails) {this.orderDetails = orderDetails;}
     public void setStatus(String status) {this.status = status;}
     public void setShippingAddress(String shippingAddress) {this.shippingAddress = shippingAddress;}
+    public void setPaymentMethod(String paymentMethod) {this.paymentMethod = paymentMethod;}
     public void setNotes(String notes) {this.notes = notes;}
     
     public double getTotalAmount() {

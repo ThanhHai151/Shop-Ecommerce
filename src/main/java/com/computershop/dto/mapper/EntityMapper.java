@@ -84,7 +84,7 @@ public final class EntityMapper {
         UserDTO dto = new UserDTO();
         dto.setUserId(user.getUserId());
         dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
+        dto.setEmail(null);
 
         if (user.getRole() != null) {
             dto.setRoleName(user.getRole().getRoleName());
@@ -167,7 +167,7 @@ public final class EntityMapper {
         if (order.getUser() != null) {
             dto.setUserId(order.getUser().getUserId());
             dto.setUsername(order.getUser().getUsername());
-            dto.setUserEmail(order.getUser().getEmail());
+            dto.setUserEmail(null);
         }
 
         if (order.getOrderDetails() != null) {

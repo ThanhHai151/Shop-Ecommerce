@@ -6,7 +6,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Đăng nhập - JSB ComputerShop</title>
+	<title>Login - ComputerShop</title>
 	<link rel="stylesheet" th:href="@{/CSS/style.css}" />
 	<link rel="stylesheet" th:href="@{/CSS/header.css}" />
 	<link rel="stylesheet" th:href="@{/CSS/footer.css}" />
@@ -20,35 +20,35 @@
 		<div class="auth-wrapper">
 		<div class="auth-header">
 			<div>
-				<h2>Đăng nhập vào tài khoản</h2>
-				<div class="muted">Đăng nhập để tiếp tục mua sắm và quản lý đơn hàng</div>
+				<h2>Login to your account</h2>
+				<div class="muted">Login to continue shopping and managing your orders</div>
 			</div>
 		</div>
 
-		<div th:if="${error}" class="error" th:text="${error}">Lỗi đăng nhập</div>
-		<div th:if="${param.error}" class="error">Tên đăng nhập hoặc mật khẩu không đúng.</div>
-		<div th:if="${message}" class="success" th:text="${message}">Thông báo</div>
-		<div th:if="${success}" class="success" th:text="${success}">Thành công</div>
-		<div th:if="${param.logout}" class="success">Bạn đã đăng xuất thành công.</div>			<form th:action="@{/login}" method="post">
+		<div th:if="${error}" class="error" th:text="${error}">Login Error</div>
+		<div th:if="${param.error}" class="error">Invalid username or password.</div>
+		<div th:if="${message}" class="success" th:text="${message}">Notification</div>
+		<div th:if="${success}" class="success" th:text="${success}">Success</div>
+		<div th:if="${param.logout}" class="success">You have been logged out successfully.</div>			<form th:action="@{/login}" method="post">
 
 				<div class="form-row">
-					<label for="username" class="muted">Email hoặc tên đăng nhập</label>
-					<input id="username" name="username" type="text" placeholder="you@example.com" required />
+					<label for="username" class="muted">Username</label>
+					<input id="username" name="username" type="text" placeholder="username" required />
 				</div>
 
 				<div class="form-row">
-					<label for="password" class="muted">Mật khẩu</label>
+					<label for="password" class="muted">Password</label>
 					<input id="password" name="password" type="password" placeholder="••••••••" required />
 				</div>
 
 				<div class="helper">
-					<label><input type="checkbox" name="remember-me" /> Ghi nhớ tôi</label>
-					<a href="/forgot-password" class="muted">Quên mật khẩu?</a>
+					<label><input type="checkbox" name="remember-me" /> Remember me</label>
+					<a href="/forgot-password" class="muted">Forgot password?</a>
 				</div>
 
 				<div class="login-actions">
-					<button class="btn" type="submit">Đăng nhập</button>
-					<a class="muted" href="/register">Tạo tài khoản mới</a>
+					<button class="btn" type="submit">Login</button>
+					<a class="muted" href="/register">Create new account</a>
 				</div>
 			</form>
 		</div>

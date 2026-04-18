@@ -17,10 +17,12 @@ import com.computershop.service.impl.ProductServiceImpl;
 
 /**
  * Controller for product-related public routes.
- * Handles displaying products, product details, search, and filtering.
+ * Handles displaying products, product details, search, and filtering with pagination.
  */
 @Controller
 public class ProductController {
+
+    private static final int PAGE_SIZE = 9; // products per page
 
     @Autowired
     private ProductServiceImpl productService;
@@ -29,14 +31,7 @@ public class ProductController {
     private CategoryServiceImpl categoryService;
 
     /**
-     * Displays the products listing page.
-     *
-     * @param category filter by category (optional)
-     * @param sort sorting option (optional)
-     * @param minPrice minimum price filter (optional)
-     * @param maxPrice maximum price filter (optional)
-     * @param model the model
-     * @return products listing view
+     * Displays the products listing page with filtering, sorting and pagination.
      */
     @GetMapping("/products")
     public String products(
@@ -45,6 +40,7 @@ public class ProductController {
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "0") int page,
             Model model) {
         try {
             List<Product> products;
@@ -76,21 +72,35 @@ public class ProductController {
                     case "price-desc" -> products.stream()
                             .sorted(java.util.Comparator.comparing((Product p) -> p.getPrice()).reversed())
                             .toList();
-                    case "popular" -> products; // keep DB order (most sold first when no filter)
+                    case "popular" -> products; // keep DB order
                     default -> products.stream()
                             .sorted(java.util.Comparator.comparing(p -> p.getProductName()))
                             .toList();
                 };
             }
 
-            model.addAttribute("products", products);
-            model.addAttribute("totalProducts", products.size());
+            // Pagination
+            int totalProducts = products.size();
+            int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);
+            if (page < 0) page = 0;
+            if (page >= totalPages && totalPages > 0) page = totalPages - 1;
+
+            int fromIndex = page * PAGE_SIZE;
+            int toIndex = Math.min(fromIndex + PAGE_SIZE, totalProducts);
+            List<Product> pagedProducts = (totalProducts > 0) ? products.subList(fromIndex, toIndex) : products;
+
+            model.addAttribute("products", pagedProducts);
+            model.addAttribute("totalProducts", totalProducts);
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("selectedCategory", category);
             model.addAttribute("currentSort", sort != null ? sort : "name");
             model.addAttribute("searchQuery", search);
             model.addAttribute("minPrice", minPrice);
             model.addAttribute("maxPrice", maxPrice);
+            // Pagination attributes
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("pageSize", PAGE_SIZE);
 
             return "products";
         } catch (Exception e) {
@@ -98,16 +108,14 @@ public class ProductController {
             model.addAttribute("products", List.of());
             model.addAttribute("totalProducts", 0);
             model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("currentPage", 0);
+            model.addAttribute("totalPages", 0);
             return "products";
         }
     }
 
     /**
      * Displays product detail page.
-     *
-     * @param id the product ID
-     * @param model the model
-     * @return product detail view or redirect to products page
      */
     @GetMapping({"/product/{id}", "/products/{id}"})
     public String productDetail(@PathVariable("id") Integer id, Model model) {
@@ -140,21 +148,33 @@ public class ProductController {
     }
 
     /**
-     * Handles product search.
-     *
-     * @param keyword the search keyword
-     * @param model the model
-     * @return search results view
+     * Handles product search with pagination.
      */
     @GetMapping("/search")
-    public String search(@RequestParam("q") String q, Model model) {
+    public String search(
+            @RequestParam("q") String q,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
         try {
-            List<Product> products = productService.searchProducts(q);
-            model.addAttribute("products", products);
-            model.addAttribute("totalProducts", products.size());
+            List<Product> allProducts = productService.searchProducts(q);
+
+            int totalProducts = allProducts.size();
+            int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);
+            if (page < 0) page = 0;
+            if (page >= totalPages && totalPages > 0) page = totalPages - 1;
+
+            int fromIndex = page * PAGE_SIZE;
+            int toIndex = Math.min(fromIndex + PAGE_SIZE, totalProducts);
+            List<Product> pagedProducts = (totalProducts > 0) ? allProducts.subList(fromIndex, toIndex) : allProducts;
+
+            model.addAttribute("products", pagedProducts);
+            model.addAttribute("totalProducts", totalProducts);
             model.addAttribute("searchQuery", q);
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("currentSort", "name");
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("pageSize", PAGE_SIZE);
 
             return "products";
         } catch (Exception e) {
@@ -162,6 +182,8 @@ public class ProductController {
             model.addAttribute("products", List.of());
             model.addAttribute("totalProducts", 0);
             model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("currentPage", 0);
+            model.addAttribute("totalPages", 0);
             return "products";
         }
     }

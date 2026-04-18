@@ -309,3 +309,43 @@ body {
 .toast-error .toast-icon {
   color: var(--color-danger);
 }
+
+/* ── Newsletter Toast Banner ─────────────────────────────────────────────── */
+.newsletter-toast {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 9998;
+  padding: 16px 20px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.4s ease;
+}
+
+.newsletter-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.newsletter-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* form-row textarea support */
+.form-row textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}

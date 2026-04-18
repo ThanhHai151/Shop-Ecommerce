@@ -17,6 +17,8 @@ import com.computershop.main.entities.User;
 import com.computershop.service.impl.OrderServiceImpl;
 import com.computershop.service.impl.UserServiceImpl;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -48,11 +50,11 @@ public class UserController {
             if (user != null) {
                 model.addAttribute("user", user);
             } else {
-                model.addAttribute("error", "Không tìm thấy thông tin tài khoản");
+                model.addAttribute("error", "Account information not found");
             }
             return "user/profile";
         } catch (Exception e) {
-            model.addAttribute("error", "Không thể tải thông tin tài khoản: " + e.getMessage());
+            model.addAttribute("error", "Could not load account information: " + e.getMessage());
             return "user/profile";
         }
     }
@@ -63,8 +65,7 @@ public class UserController {
     @PostMapping("/profile/update")
     public String updateProfile(
             HttpSession session,
-            @RequestParam String email,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
@@ -74,12 +75,61 @@ public class UserController {
         try {
             User user = userService.getUserById(userId).orElse(null);
             if (user != null) {
-                user.setEmail(email);
                 userService.updateUser(userId, user);
-                model.addAttribute("success", "Cập nhật thông tin thành công!");
+                redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
             }
         } catch (Exception e) {
-            model.addAttribute("error", "Cập nhật thất bại: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Update failed: " + e.getMessage());
+        }
+
+        return "redirect:/user/profile";
+    }
+
+    /**
+     * Changes user password.
+     */
+    @PostMapping("/change-password")
+    public String changePassword(
+            HttpSession session,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            if (newPassword.length() < 6) {
+                redirectAttributes.addFlashAttribute("error", "New password must be at least 6 characters");
+                return "redirect:/user/profile";
+            }
+            
+            if (!newPassword.equals(confirmPassword)) {
+                redirectAttributes.addFlashAttribute("error", "Passwords do not match");
+                return "redirect:/user/profile";
+            }
+
+            if (currentPassword.equals(newPassword)) {
+                redirectAttributes.addFlashAttribute("error", "New password cannot be the same as the current password");
+                return "redirect:/user/profile";
+            }
+
+            User user = userService.getUserById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (!userService.verifyPassword(currentPassword, user.getPasswordHash())) {
+                redirectAttributes.addFlashAttribute("error", "Incorrect current password");
+                return "redirect:/user/profile";
+            }
+
+            userService.changePassword(userId, newPassword);
+            redirectAttributes.addFlashAttribute("success", "Password changed successfully!");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Password change failed: " + e.getMessage());
         }
 
         return "redirect:/user/profile";
@@ -125,11 +175,11 @@ public class UserController {
                 model.addAttribute("order", order);
                 return "user/order-detail";
             } else {
-                model.addAttribute("error", "Không tìm thấy đơn hàng");
+                model.addAttribute("error", "Order not found");
                 return "redirect:/user/orders";
             }
         } catch (Exception e) {
-            model.addAttribute("error", "Không thể tải chi tiết đơn hàng: " + e.getMessage());
+            model.addAttribute("error", "Could not load order details: " + e.getMessage());
             return "redirect:/user/orders";
         }
     }
@@ -150,7 +200,7 @@ public class UserController {
             model.addAttribute("orderedProducts", orderedProducts);
             model.addAttribute("totalProducts", orderedProducts.size());
         } catch (Exception e) {
-            model.addAttribute("error", "Không thể tải sản phẩm đã mua: " + e.getMessage());
+            model.addAttribute("error", "Could not load ordered products: " + e.getMessage());
             model.addAttribute("orderedProducts", List.of());
             model.addAttribute("totalProducts", 0);
         }

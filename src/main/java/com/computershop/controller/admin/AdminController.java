@@ -19,6 +19,7 @@ import com.computershop.main.entities.Category;
 import com.computershop.main.entities.Order;
 import com.computershop.main.entities.Product;
 import com.computershop.main.entities.User;
+import com.computershop.main.repositories.ImageRepository;
 import com.computershop.service.impl.CategoryServiceImpl;
 import com.computershop.service.impl.OrderServiceImpl;
 import com.computershop.service.impl.ProductServiceImpl;
@@ -45,6 +46,9 @@ public class AdminController {
 
     @Autowired
     private OrderServiceImpl orderService;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     /**
      * Checks if the current user is an admin.
@@ -156,8 +160,29 @@ public class AdminController {
 
         try {
             userService.toggleUserStatus(userId);
-            redirectAttributes.addFlashAttribute("success", "User status updated");
+            redirectAttributes.addFlashAttribute("success", "User status updated successfully");
 
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+        }
+
+        return "redirect:/admin/users";
+    }
+
+    /**
+     * Resets user password to default.
+     */
+    @PostMapping("/users/{id}/reset-password")
+    public String resetUserPassword(@PathVariable("id") Integer userId,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        if (!isAdmin(session)) {
+            return "redirect:/login";
+        }
+
+        try {
+            userService.resetUserPassword(userId, "123456");
+            redirectAttributes.addFlashAttribute("success", "User password successfully reset to '123456'");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
         }
@@ -350,6 +375,7 @@ public class AdminController {
     @PostMapping("/products/create")
     public String createProduct(@ModelAttribute("newProduct") Product product,
                               @RequestParam("categoryId") Integer categoryId,
+                              @RequestParam(value = "imageUrl", required = false) String imageUrl,
                               HttpSession session,
                               RedirectAttributes redirectAttributes) {
         if (!isAdmin(session)) {
@@ -370,6 +396,13 @@ public class AdminController {
             Optional<Category> categoryOpt = categoryService.getCategoryById(categoryId);
             if (categoryOpt.isPresent()) {
                 product.setCategory(categoryOpt.get());
+            }
+
+            // Save image if URL provided
+            if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                com.computershop.main.entities.Image image = new com.computershop.main.entities.Image(imageUrl.trim());
+                image = imageRepository.save(image);
+                product.setImage(image);
             }
 
             productService.createProduct(product);
@@ -574,12 +607,12 @@ public class AdminController {
                 Order order = orderOpt.get();
                 order.setStatus(status);
                 orderService.updateOrder(orderId, order);
-                redirectAttributes.addFlashAttribute("success", "Cập nhật trạng thái đơn hàng thành công!");
+                redirectAttributes.addFlashAttribute("success", "Order status updated successfully!");
             } else {
-                redirectAttributes.addFlashAttribute("error", "Không tìm thấy đơn hàng");
+                redirectAttributes.addFlashAttribute("error", "Order not found");
             }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
         }
 
         return "redirect:/admin/orders/" + orderId;

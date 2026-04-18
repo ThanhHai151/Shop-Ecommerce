@@ -6,33 +6,33 @@
                 <div class="brand">
                     <span class="brand-sparkle" aria-hidden="true">✨</span>
                     <img src="/Images/logo.png" alt="logo" onerror="this.style.display='none'" />
-                    <a href="/" class="brand-name">JSB ComputerShop</a>
+                    <a href="/" class="brand-name">ComputerShop</a>
                     <span class="brand-sparkle" aria-hidden="true">✨</span>
                 </div>
             </div>
 
             <form id="search-form" class="header-cell header-cell-search search" th:action="@{/search}" method="get">
-                <input id="q" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." />
+                <input id="q" type="search" name="q" placeholder="Search products..." />
                 <!-- <button class="btn btn-search btn-primary" type="submit">
-                    <span>Tìm kiếm</span>
+                    <span>Search</span>
                 </button> -->
             </form>
 
             <nav class="header-cell header-cell-nav nav">
                 <div th:if="${session.userId == null}" class="nav-guest">
-                    <a href="/" class="nav-link">Trang chủ</a>
-                    <a href="/products" class="nav-link">Sản phẩm</a>
-                    <a href="/about" class="nav-link">Giới thiệu</a>
-                    <a href="/login" class="nav-link btn btn-primary">Đăng nhập</a>
-                    <a href="/register" class="nav-link">Đăng ký</a>
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/products" class="nav-link">Products</a>
+                    <a href="/about" class="nav-link">About</a>
+                    <a href="/login" class="nav-link btn btn-primary">Login</a>
+                    <a href="/register" class="nav-link">Register</a>
                 </div>
 
                 <div th:if="${session.userId != null && session.role != 'admin'}" class="nav-user">
-                    <a href="/" class="nav-link">Trang chủ</a>
-                    <a href="/products" class="nav-link">Sản phẩm</a>
-                    <a href="/about" class="nav-link">Giới thiệu</a>
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/products" class="nav-link">Products</a>
+                    <a href="/about" class="nav-link">About</a>
                     <a href="/cart/view" class="nav-link cart-link">
-                        <span>Giỏ hàng</span>
+                        <span>Cart</span>
                         <span class="cart-count"
                               th:text="${session.cartCount ?: 0}"
                               th:classappend="${(session.cartCount ?: 0) == 0} ? ' is-empty' : ''">0</span>
@@ -44,19 +44,19 @@
                             <span class="dropdown-arrow">▼</span>
                         </button>
                         <div class="user-menu-dropdown" id="userMenuDropdown">
-                            <a href="/user/profile" class="dropdown-item">Thông tin tài khoản</a>
-                            <a href="/user/orders" class="dropdown-item">Đơn hàng</a>
-                            <a href="/user/ordered-products" class="dropdown-item">Sản phẩm đã mua</a>
+                            <a href="/user/profile" class="dropdown-item">Profile</a>
+                            <a href="/user/orders" class="dropdown-item">Orders</a>
+                            <a href="/user/ordered-products" class="dropdown-item">Purchased Products</a>
                             <hr class="dropdown-divider">
-                            <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                            <a href="/logout" class="dropdown-item">Logout</a>
                         </div>
                     </div>
                 </div>
 
                 <div th:if="${session.userId != null && session.role == 'admin'}" class="nav-admin">
-                    <a href="/admin/products" class="nav-link">Sản phẩm</a>
-                    <a href="/admin/users" class="nav-link">Tài khoản</a>
-                    <a href="/admin/orders" class="nav-link">Đơn hàng</a>
+                    <a href="/admin/products" class="nav-link">Products</a>
+                    <a href="/admin/users" class="nav-link">Users</a>
+                    <a href="/admin/orders" class="nav-link">Orders</a>
 
                     <div class="user-menu">
                         <button type="button" class="user-menu-btn" onclick="toggleUserMenu()">
@@ -64,10 +64,10 @@
                             <span class="dropdown-arrow">▼</span>
                         </button>
                         <div class="user-menu-dropdown" id="userMenuDropdown">
-                            <a href="/user/profile" class="dropdown-item">Thông tin tài khoản</a>
+                            <a href="/user/profile" class="dropdown-item">Profile</a>
                             <a href="/admin/dashboard" class="dropdown-item">Dashboard</a>
                             <hr class="dropdown-divider">
-                            <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                            <a href="/logout" class="dropdown-item">Logout</a>
                         </div>
                     </div>
                 </div>

@@ -5,7 +5,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Sản Phẩm Mới - Computer Shop Admin</title>
+    <title>Add New Product - Computer Shop Admin</title>
     <link rel="stylesheet" th:href="@{/CSS/admin.css}">
     <link rel="stylesheet" th:href="@{/CSS/admin-category.css}">
     <link rel="stylesheet" th:href="@{/CSS/admin-product.css}">
@@ -20,17 +20,17 @@
             </div>
             <ul class="admin-nav">
                 <li><a th:href="@{/admin/dashboard}"><i class="fas fa-chart-bar"></i> <span>Dashboard</span></a></li>
-                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> <span>Người Dùng</span></a></li>
-                <li><a th:href="@{/admin/products}" class="active"><i class="fas fa-box"></i> <span>Sản Phẩm</span></a></li>
-                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> <span>Danh Mục</span></a></li>
-                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> <span>Đơn Hàng</span></a></li>
-                <li><a th:href="@{/}"><i class="fas fa-home"></i> <span>Trang Chủ</span></a></li>
-                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> <span>Đăng Xuất</span></a></li>
+                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> <span>Users</span></a></li>
+                <li><a th:href="@{/admin/products}" class="active"><i class="fas fa-box"></i> <span>Products</span></a></li>
+                <li><a th:href="@{/admin/categories}"><i class="fas fa-tags"></i> <span>Categories</span></a></li>
+                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+                <li><a th:href="@{/}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
             </ul>
         </nav>
 
         <!-- Collapsible Sidebar Toggle -->
-        <button class="sidebar-toggle" id="sidebarToggle" title="Thu gọn/Mở rộng sidebar">
+        <button class="sidebar-toggle" id="sidebarToggle" title="Collapse/Expand sidebar">
             <i class="fas fa-chevron-left"></i>
         </button>
 
@@ -42,9 +42,9 @@
 
             <div class="admin-header">
             <th:block th:replace="~{fragments/theme-toggle :: buttonAdmin}"></th:block>
-                <h1><i class="fas fa-plus-circle"></i> Thêm Sản Phẩm Mới</h1>
+                <h1><i class="fas fa-plus-circle"></i> Add New Product</h1>
                 <div class="admin-breadcrumb">
-                    <a th:href="@{/admin/products}"><i class="fas fa-arrow-left"></i> Quay lại danh sách sản phẩm</a>
+                    <a th:href="@{/admin/products}"><i class="fas fa-arrow-left"></i> Back to product list</a>
                 </div>
             </div>
 
@@ -61,12 +61,12 @@
             
             <div class="admin-form-container">
                 <div class="admin-form-header">
-                    <h2><i class="fas fa-box"></i> Thông Tin Sản Phẩm</h2>
+                    <h2><i class="fas fa-box"></i> Product Information</h2>
                     <div class="form-progress">
                         <div class="progress-bar">
                             <div class="progress-fill" id="formProgress"></div>
                         </div>
-                        <span class="progress-text">0% Hoàn thành</span>
+                        <span class="progress-text">0% Completed</span>
                     </div>
                 </div>
                 
@@ -78,107 +78,131 @@
                     
                     
                     <div class="form-section">
-                        <h3><i class="fas fa-info-circle"></i> Thông Tin Cơ Bản</h3>
+                        <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
                         <div class="admin-form-row">
                             <div class="admin-form-group">
-                                <label for="productName"><i class="fas fa-box"></i> Tên Sản Phẩm *</label>
+                                <label for="productName"><i class="fas fa-box"></i> Product Name *</label>
                                 <input type="text" 
                                        id="productName"
                                        th:field="*{productName}" 
-                                       placeholder="Nhập tên sản phẩm..." 
+                                       placeholder="Enter product name..." 
                                        required
                                        oninput="validateForm()">
-                                <div class="field-help">Tên sản phẩm phải rõ ràng và dễ hiểu</div>
+                                <div class="field-help">Product name should be clear and understandable</div>
                             </div>
                             <div class="admin-form-group">
-                                <label for="categoryId"><i class="fas fa-tag"></i> Danh Mục *</label>
+                                <label for="categoryId"><i class="fas fa-tag"></i> Category *</label>
                                 <select id="categoryId" name="categoryId" required onchange="validateForm()">
-                                    <option value="">-- Chọn Danh Mục --</option>
+                                    <option value="">-- Select Category --</option>
                                     <option th:each="category : ${categories}" 
                                             th:value="${category.categoryId}" 
                                             th:text="${category.categoryName}"></option>
                                 </select>
-                                <div class="field-help">Chọn danh mục phù hợp với sản phẩm</div>
+                                <div class="field-help">Select a category suitable for the product</div>
                             </div>
                         </div>
                     </div>
 
                     
                     <div class="form-section">
-                        <h3><i class="fas fa-dollar-sign"></i> Thông Tin Giá Cả</h3>
+                        <h3><i class="fas fa-dollar-sign"></i> Pricing Information</h3>
                         <div class="admin-form-row">
                             <div class="admin-form-group">
-                                <label for="price"><i class="fas fa-money-bill-wave"></i> Giá Bán (VND) *</label>
+                                <label for="price"><i class="fas fa-money-bill-wave"></i> Selling Price (VND) *</label>
                                 <div class="input-with-currency">
-                                    <input 
+                                    <input type="number"
                                            id="price"
                                            th:field="*{price}" 
                                            min="1000"
+                                           step="1000"
                                            placeholder="0" 
                                            required
                                            oninput="validateForm(); formatPrice(this)">
                                     <span class="currency-symbol">VND</span>
                                 </div>
-                                <div class="field-help">Giá tối thiểu: 1,000 VND</div>
+                                <div class="field-help">Minimum price: 1,000 VND</div>
                                 <div id="pricePreview" class="price-preview"></div>
                             </div>
                             <div class="admin-form-group">
-                                <label for="stockQuantity"><i class="fas fa-warehouse"></i> Số Lượng Tồn Kho</label>
+                                <label for="stockQuantity"><i class="fas fa-warehouse"></i> Stock Quantity</label>
                                 <input type="number" 
                                        id="stockQuantity"
                                        th:field="*{stockQuantity}" 
                                        min="0"
                                        placeholder="0"
                                        oninput="validateForm(); updateStockStatus(this.value)">
-                                <div class="field-help">Để trống nếu chưa có hàng trong kho</div>
+                                <div class="field-help">Leave blank if no stock</div>
                                 <div id="stockStatus" class="stock-status"></div>
                             </div>
                         </div>
                     </div>
 
-                    
+                    <!-- Image Section -->
                     <div class="form-section">
-                        <h3><i class="fas fa-align-left"></i> Mô Tả Chi Tiết</h3>
+                        <h3><i class="fas fa-image"></i> Product Image</h3>
                         <div class="admin-form-group">
-                            <label for="description"><i class="fas fa-file-alt"></i> Mô Tả Sản Phẩm</label>
-                            <textarea id="description"
-                                     th:field="*{description}" 
-                                     placeholder="Nhập mô tả chi tiết về sản phẩm..." 
-                                     rows="6"
-                                     oninput="validateForm(); updateCharCount(this)"></textarea>
-                            <div class="char-counter">
-                                <span id="charCount">0</span>/1000 ký tự
+                            <label for="imageUrl"><i class="fas fa-link"></i> Image URL</label>
+                            <input type="url"
+                                   id="imageUrl"
+                                   name="imageUrl"
+                                   placeholder="https://example.com/image.jpg"
+                                   oninput="updatePreview(); previewImage(this.value)">
+                            <div class="field-help">Paste the direct URL of the product image</div>
+                            <div id="imagePreviewContainer" style="margin-top:0.75rem; display:none;">
+                                <img id="imagePreviewImg" src="" alt="Image preview"
+                                     style="max-width:200px; max-height:200px; border-radius:8px; border:1px solid #dee2e6; object-fit:contain;">
                             </div>
-                            <div class="field-help">Mô tả chi tiết giúp khách hàng hiểu rõ hơn về sản phẩm</div>
                         </div>
                     </div>
 
                     
                     <div class="form-section">
-                        <h3><i class="fas fa-eye"></i> Xem Trước Sản Phẩm</h3>
+                        <h3><i class="fas fa-align-left"></i> Detailed Description</h3>
+                        <div class="admin-form-group">
+                            <label for="description"><i class="fas fa-file-alt"></i> Product Description</label>
+                            <textarea id="description"
+                                     th:field="*{description}" 
+                                     placeholder="Enter detailed product description..." 
+                                     rows="6"
+                                     oninput="validateForm(); updateCharCount(this)"></textarea>
+                            <div class="char-counter">
+                                <span id="charCount">0</span>/1000 characters
+                            </div>
+                            <div class="field-help">A detailed description helps customers better understand the product</div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-eye"></i> Product Preview</h3>
                         <div class="product-preview" id="productPreview">
                             <div class="preview-card">
                                 <div class="preview-header">
-                                    <div class="preview-category">Chưa chọn danh mục</div>
-                                    <div class="preview-stock">Chưa có thông tin</div>
+                                    <div class="preview-category">No category selected</div>
+                                    <div class="preview-stock">No info</div>
                                 </div>
-                                <h4 class="preview-name">Tên sản phẩm sẽ hiển thị ở đây</h4>
+                                <div id="previewImageWrapper" style="margin:0.75rem 0; display:none;">
+                                    <img id="previewImage" src="" alt="Preview"
+                                         style="width:100%; max-height:180px; object-fit:contain; border-radius:8px;">
+                                </div>
+                                <h4 class="preview-name">Product name will appear here</h4>
                                 <div class="preview-price">0 VND</div>
-                                <div class="preview-description">Mô tả sản phẩm sẽ hiển thị ở đây</div>
+                                <div class="preview-description">Product description will appear here</div>
                             </div>
                         </div>
                     </div>
+
 
                     
                     <div class="admin-form-actions">
                         <button type="submit" class="admin-btn admin-btn-success" id="submitBtn" disabled>
-                            <i class="fas fa-plus"></i> Thêm Sản Phẩm
+                            <i class="fas fa-plus"></i> Add Product
                         </button>
                         <a th:href="@{/admin/products}" class="admin-btn admin-btn-secondary">
-                            <i class="fas fa-times"></i> Hủy Bỏ
+                            <i class="fas fa-times"></i> Cancel
                         </a>
                         <button type="reset" class="admin-btn admin-btn-warning" onclick="resetForm()">
-                            <i class="fas fa-redo"></i> Làm Mới
+                            <i class="fas fa-redo"></i> Reset
                         </button>
                     </div>
                 </form>
@@ -213,7 +237,7 @@
             
             // Update progress bar
             progressFill.style.width = progress + '%';
-            progressText.textContent = Math.round(progress) + '% Hoàn thành';
+            progressText.textContent = Math.round(progress) + '% Completed';
             
             // Update submit button
             submitBtn.disabled = !isValid;
@@ -225,31 +249,56 @@
         function updatePreview() {
             const productName = document.getElementById('productName').value.trim();
             const categorySelect = document.getElementById('categoryId');
-            const categoryName = categorySelect.options[categorySelect.selectedIndex]?.text || 'Chưa chọn danh mục';
+            const categoryName = categorySelect.options[categorySelect.selectedIndex]?.text || 'No category selected';
             const price = document.getElementById('price').value;
             const stock = document.getElementById('stockQuantity').value;
             const description = document.getElementById('description').value.trim();
+            const imageUrl = document.getElementById('imageUrl') ? document.getElementById('imageUrl').value.trim() : '';
             
-            document.querySelector('.preview-name').textContent = productName || 'Tên sản phẩm sẽ hiển thị ở đây';
+            document.querySelector('.preview-name').textContent = productName || 'Product name will appear here';
             document.querySelector('.preview-category').textContent = categoryName;
             document.querySelector('.preview-price').textContent = price ? formatCurrency(price) + ' VND' : '0 VND';
-            document.querySelector('.preview-description').textContent = description || 'Mô tả sản phẩm sẽ hiển thị ở đây';
+            document.querySelector('.preview-description').textContent = description || 'Product description will appear here';
+            
+            // Update preview image
+            const previewImageWrapper = document.getElementById('previewImageWrapper');
+            const previewImage = document.getElementById('previewImage');
+            if (imageUrl && previewImageWrapper && previewImage) {
+                previewImage.src = imageUrl;
+                previewImageWrapper.style.display = 'block';
+            } else if (previewImageWrapper) {
+                previewImageWrapper.style.display = 'none';
+            }
             
             const stockElement = document.querySelector('.preview-stock');
             if (stock && parseInt(stock) > 0) {
-                stockElement.textContent = 'Còn ' + stock + ' sản phẩm';
+                stockElement.textContent = 'In stock: ' + stock;
                 stockElement.className = 'preview-stock in-stock';
             } else {
-                stockElement.textContent = 'Hết hàng';
+                stockElement.textContent = 'Out of stock';
                 stockElement.className = 'preview-stock out-stock';
             }
         }
+
+        function previewImage(url) {
+            const container = document.getElementById('imagePreviewContainer');
+            const img = document.getElementById('imagePreviewImg');
+            if (url && container && img) {
+                img.src = url;
+                img.onerror = function() { container.style.display = 'none'; };
+                img.onload = function() { container.style.display = 'block'; };
+                container.style.display = 'block';
+            } else if (container) {
+                container.style.display = 'none';
+            }
+        }
+
 
         function formatPrice(input) {
             const value = input.value;
             if (value) {
                 document.getElementById('pricePreview').textContent = 
-                    'Hiển thị: ' + formatCurrency(value) + ' VND';
+                    'Preview: ' + formatCurrency(value) + ' VND';
             } else {
                 document.getElementById('pricePreview').textContent = '';
             }
@@ -264,16 +313,16 @@
             const stock = parseInt(value);
             
             if (isNaN(stock) || stock === 0) {
-                statusElement.textContent = 'Trạng thái: Hết hàng';
+                statusElement.textContent = 'Status: Out of stock';
                 statusElement.className = 'stock-status out-of-stock';
             } else if (stock <= 5) {
-                statusElement.textContent = 'Trạng thái: Sắp hết hàng';
+                statusElement.textContent = 'Status: Low stock';
                 statusElement.className = 'stock-status low-stock';
             } else if (stock <= 20) {
-                statusElement.textContent = 'Trạng thái: Còn ít hàng';
+                statusElement.textContent = 'Status: Very few in stock';
                 statusElement.className = 'stock-status medium-stock';
             } else {
-                statusElement.textContent = 'Trạng thái: Còn nhiều hàng';
+                statusElement.textContent = 'Status: In stock';
                 statusElement.className = 'stock-status in-stock';
             }
         }

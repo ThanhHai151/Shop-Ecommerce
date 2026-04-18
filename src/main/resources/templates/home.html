@@ -5,7 +5,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trang chủ - JSB ComputerShop</title>
+    <title>Home - ComputerShop</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
     <link rel="stylesheet" th:href="@{/CSS/header.css}" />
     <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
@@ -17,22 +17,32 @@
 
     <main class="main-content">
         
+        <!-- Newsletter Flash Messages -->
+        <div th:if="${newsletterSuccess}" class="newsletter-toast newsletter-success" id="newsletterAlert">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${newsletterSuccess}">Successfully subscribed!</span>
+        </div>
+        <div th:if="${newsletterError}" class="newsletter-toast newsletter-error" id="newsletterAlert">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${newsletterError}">Subscription error</span>
+        </div>
+
         <section class="hero-banners">
             <div class="container">
                 <div class="banners-grid">
                     <div class="banner banner-main">
                         <div class="banner-content">
-                            <h1 class="banner-title">Phụ kiện máy tính chất lượng cao</h1>
-                            <p class="banner-subtitle">Khuyến mãi lên đến 50% cho tất cả sản phẩm gaming</p>
-                            <a href="/products" class="btn-banner">Mua ngay</a>
+                            <h1 class="banner-title">High quality computer accessories</h1>
+                            <p class="banner-subtitle">Up to 50% off on all gaming products</p>
+                            <a href="/products" class="btn-banner">Shop now</a>
                         </div>
                     </div>
                     
                     <div class="banner banner-secondary">
                         <div class="banner-content">
-                            <h2 class="banner-title">Linh kiện Gaming Pro</h2>
-                            <p class="banner-subtitle">Nâng cấp setup của bạn với các sản phẩm cao cấp</p>
-                            <a href="/products" class="btn-banner-secondary">Khám phá</a>
+                            <h2 class="banner-title">Pro Gaming Components</h2>
+                            <p class="banner-subtitle">Upgrade your setup with premium products</p>
+                            <a href="/products" class="btn-banner-secondary">Explore</a>
                         </div>
                     </div>
                 </div>
@@ -42,37 +52,39 @@
         <div class="container">
             <section>
                 <div class="section-title">
-                    <h2>Danh mục nổi bật</h2>
-                    <a href="/categories" class="muted">Xem tất cả</a>
+                    <h2>Featured Categories</h2>
+                    <a href="/products" class="muted">View all</a>
                 </div>
                 <div class="categories">
-                    <div class="category">
-                        <div class="category-icon">⌨️</div>
-                        <h3>Bàn phím</h3>
-                    </div>
-                    <div class="category">
-                        <div class="category-icon">🖱️</div>
-                        <h3>Chuột</h3>
-                    </div>
-                    <div class="category">
-                        <div class="category-icon">🎧</div>
-                        <h3>Tai nghe</h3>
-                    </div>
-                    <div class="category">
-                        <div class="category-icon">💺</div>
-                        <h3>Ghế gaming</h3>
-                    </div>
-                    <div class="category">
-                        <div class="category-icon">🔧</div>
-                        <h3>Linh kiện</h3>
+                    <a th:each="cat : ${categories}" 
+                       th:href="@{/products(category=${cat.categoryName})}" 
+                       class="category category-link">
+                        <div class="category-icon">
+                            <span th:if="${cat.categoryName.toLowerCase().contains('keyboard') or cat.categoryName.toLowerCase().contains('bàn phím')}">⌨️</span>
+                            <span th:if="${cat.categoryName.toLowerCase().contains('mouse') or cat.categoryName.toLowerCase().contains('chuột')}">🖱️</span>
+                            <span th:if="${cat.categoryName.toLowerCase().contains('headset') or cat.categoryName.toLowerCase().contains('tai nghe')}">🎧</span>
+                            <span th:if="${cat.categoryName.toLowerCase().contains('chair') or cat.categoryName.toLowerCase().contains('ghế')}">💺</span>
+                            <span th:if="${cat.categoryName.toLowerCase().contains('monitor') or cat.categoryName.toLowerCase().contains('màn hình')}">🖥️</span>
+                            <span th:if="${cat.categoryName.toLowerCase().contains('speaker') or cat.categoryName.toLowerCase().contains('loa')}">🔊</span>
+                            <span th:if="${!cat.categoryName.toLowerCase().contains('keyboard') and !cat.categoryName.toLowerCase().contains('bàn phím') 
+                                          and !cat.categoryName.toLowerCase().contains('mouse') and !cat.categoryName.toLowerCase().contains('chuột')
+                                          and !cat.categoryName.toLowerCase().contains('headset') and !cat.categoryName.toLowerCase().contains('tai nghe')
+                                          and !cat.categoryName.toLowerCase().contains('chair') and !cat.categoryName.toLowerCase().contains('ghế')
+                                          and !cat.categoryName.toLowerCase().contains('monitor') and !cat.categoryName.toLowerCase().contains('màn hình')
+                                          and !cat.categoryName.toLowerCase().contains('speaker') and !cat.categoryName.toLowerCase().contains('loa')}">🔧</span>
+                        </div>
+                        <h3 th:text="${cat.categoryName}">Category</h3>
+                    </a>
+                    <div th:if="${categories == null or #lists.isEmpty(categories)}" class="no-categories">
+                        <p>No product categories yet</p>
                     </div>
                 </div>
             </section>
 
             <section>
                 <div class="section-title">
-                    <h2>Sản phẩm nổi bật</h2>
-                    <a href="/products?sort=popular" class="muted">Xem thêm</a>
+                    <h2>Featured Products</h2>
+                    <a href="/products?sort=popular" class="muted">See more</a>
                 </div>
 
                 <div class="products-grid">
@@ -84,7 +96,7 @@
                                  src="/Images/placeholder.svg"
                                  onerror="this.src='/Images/placeholder.svg'" />
                             <div class="product-overlay" th:if="${session.role != 'admin'}">
-                                <button type="button" class="btn btn-primary add-to-cart-btn" th:attr="data-id=${product.productId}">Thêm vào giỏ</button>
+                                <button type="button" class="btn btn-primary add-to-cart-btn" th:attr="data-id=${product.productId}">Add to cart</button>
                             </div>
                         </div>
                         <div class="product-info">
@@ -95,7 +107,7 @@
                             </div>
                             <div class="product-actions">
                                 <a th:href="@{/products/{id}(id=${product.productId})}" class="btn btn-detail">
-                                    Xem chi tiết
+                                    View details
                                 </a>
                             </div>
                         </div>
@@ -103,8 +115,8 @@
 
                     
                     <div th:if="${featuredProducts == null or #lists.isEmpty(featuredProducts)}" class="no-products-message">
-                        <p>Đang cập nhật sản phẩm mới...</p>
-                        <a href="/products" class="btn btn-primary">Xem tất cả sản phẩm</a>
+                        <p>Updating new products...</p>
+                        <a href="/products" class="btn btn-primary">View all products</a>
                     </div>
                 </div>
             </section>

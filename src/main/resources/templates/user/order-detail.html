@@ -5,7 +5,7 @@
     <script th:replace="~{fragments/theme-head :: earlyInit}"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chi tiết đơn hàng - JSB ComputerShop</title>
+    <title>Order Details - ComputerShop</title>
     <link rel="stylesheet" th:href="@{/CSS/style.css}" />
     <link rel="stylesheet" th:href="@{/CSS/header.css}" />
     <link rel="stylesheet" th:href="@{/CSS/footer.css}" />
@@ -257,12 +257,12 @@
       <div class="order-detail-header">
         <div>
           <h1>
-            <i class="fas fa-file-invoice"></i> Chi tiết đơn hàng #<span
+            <i class="fas fa-file-invoice"></i> Order Details #<span
               th:text="${order.orderId}"
             ></span>
           </h1>
           <a th:href="@{/user/orders}" class="back-link">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
+            <i class="fas fa-arrow-left"></i> Back to orders list
           </a>
         </div>
       </div>
@@ -274,41 +274,49 @@
 
       <div th:if="${order != null}">
         <div class="order-info-card">
-          <h2><i class="fas fa-info-circle"></i> Thông tin đơn hàng</h2>
+          <h2><i class="fas fa-info-circle"></i> Order Information</h2>
           <div class="info-grid">
             <div class="info-item">
-              <label>Mã đơn hàng:</label>
+              <label>Order ID:</label>
               <span>#<span th:text="${order.orderId}"></span></span>
             </div>
             <div class="info-item">
-              <label>Ngày đặt hàng:</label>
+              <label>Order Date:</label>
               <span
                 th:if="${order.orderDate != null}"
                 th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"
               ></span>
-              <span th:if="${order.orderDate == null}">Chưa cập nhật</span>
+              <span th:if="${order.orderDate == null}">Not updated</span>
             </div>
             <div class="info-item">
-              <label>Trạng thái:</label>
+              <label>Status:</label>
               <span
                 class="order-status"
-                th:classappend="${order.status == 'pending'} ? 'status-pending' :
-                                             (${order.status == 'pending_payment'}) ? 'status-pending_payment' :
-                                             (${order.status == 'confirmed'}) ? 'status-confirmed' :
-                                             (${order.status == 'shipping'}) ? 'status-shipping' :
-                                             (${order.status == 'completed'}) ? 'status-completed' :
-                                             'status-cancelled'"
-                th:text="${order.status == 'pending' ? 'Đang xử lý' :
-                                       (order.status == 'pending_payment' ? 'Chờ thanh toán' :
-                                       (order.status == 'confirmed' ? 'Đã xác nhận' :
-                                       (order.status == 'shipping' ? 'Đang vận chuyển' :
-                                       (order.status == 'completed' ? 'Hoàn thành' :
-                                       (order.status == 'cancelled' ? 'Đã hủy' : order.status)))))}"
+                th:classappend="${order.status == 'pending' ? 'status-pending' :
+                                 (order.status == 'pending_payment' ? 'status-pending_payment' :
+                                 (order.status == 'confirmed' ? 'status-confirmed' :
+                                 (order.status == 'shipping' ? 'status-shipping' :
+                                 (order.status == 'completed' ? 'status-completed' :
+                                 'status-cancelled'))))}"
+                th:text="${order.status == 'pending' ? 'Processing' :
+                          (order.status == 'pending_payment' ? 'Pending Payment' :
+                          (order.status == 'confirmed' ? 'Confirmed' :
+                          (order.status == 'shipping' ? 'Shipping' :
+                          (order.status == 'completed' ? 'Completed' :
+                          (order.status == 'cancelled' ? 'Cancelled' : (order.status ?: 'Pending'))))))}"
               >
               </span>
             </div>
             <div class="info-item">
-              <label>Tổng tiền:</label>
+              <label>Shipping Address:</label>
+              <span th:text="${order.shippingAddress ?: 'Not updated'}"></span>
+            </div>
+            <div class="info-item">
+              <label>Payment Method:</label>
+              <span th:text="${order.paymentMethod != null ? (order.paymentMethod == 'COD' ? 'Cash on Delivery (COD)' : order.paymentMethod) : 'Not updated'}"></span>
+            </div>
+            <div class="info-item">
+              <label>Total Amount:</label>
               <span
                 class="total-amount"
                 th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'"
@@ -335,11 +343,10 @@
         >
           <div>
             <strong style="color: #9d174d"
-              ><i class="fas fa-credit-card"></i> Đơn hàng chưa được thanh
-              toán</strong
+              ><i class="fas fa-credit-card"></i> Unpaid Order</strong
             >
             <p style="margin: 4px 0 0; color: #be185d; font-size: 0.9rem">
-              Vui lòng hoàn tất thanh toán để đơn hàng được xử lý.
+              Please complete payment for the order to be processed.
             </p>
           </div>
           <a
@@ -354,22 +361,22 @@
               white-space: nowrap;
             "
           >
-            <i class="fas fa-qrcode"></i> Thanh toán ngay
+            <i class="fas fa-qrcode"></i> Pay Now
           </a>
         </div>
 
         <div class="order-info-card">
-          <h2><i class="fas fa-list"></i> Sản phẩm trong đơn hàng</h2>
+          <h2><i class="fas fa-list"></i> Products in Order</h2>
           <table
             class="order-items-table"
             th:if="${!#lists.isEmpty(order.orderDetails)}"
           >
             <thead>
               <tr>
-                <th>Sản phẩm</th>
-                <th>Đơn giá</th>
-                <th>Số lượng</th>
-                <th>Thành tiền</th>
+                <th>Product</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Amount</th>
               </tr>
             </thead>
             <tbody>
@@ -407,7 +414,7 @@
             <tfoot>
               <tr class="order-total-row">
                 <td colspan="3" style="text-align: right">
-                  <strong>Tổng cộng:</strong>
+                  <strong>Total:</strong>
                 </td>
                 <td>
                   <span
@@ -423,7 +430,7 @@
             class="empty-state"
           >
             <i class="fas fa-box-open"></i>
-            <p>Không có sản phẩm trong đơn hàng</p>
+            <p>No products in this order</p>
           </div>
         </div>
       </div>

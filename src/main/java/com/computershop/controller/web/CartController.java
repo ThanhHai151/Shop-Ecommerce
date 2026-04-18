@@ -21,12 +21,15 @@ import com.computershop.main.entities.Order;
 import com.computershop.main.entities.OrderDetail;
 import com.computershop.main.entities.Product;
 import com.computershop.service.impl.CartServiceImpl;
+import com.computershop.service.impl.MomoSandboxService;
 import com.computershop.service.impl.MomoService;
+import com.computershop.service.impl.VNPayService;
 import com.computershop.service.impl.OrderDetailServiceImpl;
 import com.computershop.service.impl.OrderServiceImpl;
 import com.computershop.service.impl.ProductServiceImpl;
 import com.computershop.service.impl.UserServiceImpl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -51,6 +54,12 @@ public class CartController {
     @Autowired
     private MomoService momoService;
 
+    @Autowired
+    private MomoSandboxService momoSandboxService;
+
+    @Autowired
+    private VNPayService vnPayService;
+
     // ─── Xem giỏ hàng ────────────────────────────────────────────────────────
 
     @GetMapping("/view")
@@ -65,7 +74,7 @@ public class CartController {
             model.addAttribute("cartTotal", total);
             return "cart/view";
         } catch (Exception e) {
-            model.addAttribute("error", "Không thể tải giỏ hàng: " + e.getMessage());
+            model.addAttribute("error", "Could not load cart: " + e.getMessage());
             return "cart/view";
         }
     }
@@ -81,26 +90,26 @@ public class CartController {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
-            return Map.of("success", false, "message", "Vui lòng đăng nhập để thêm vào giỏ hàng.");
+            return Map.of("success", false, "message", "Please login to add to cart.");
         }
 
         // Check if user is admin - admin cannot add to cart
         String role = (String) session.getAttribute("role");
         if (role != null && "admin".equalsIgnoreCase(role)) {
-            return Map.of("success", false, "message", "Admin không thể thêm sản phẩm vào giỏ hàng.");
+            return Map.of("success", false, "message", "Admin cannot add products to cart.");
         }
 
         try {
             var productOpt = productService.getProductById(productId);
             if (productOpt.isEmpty()) {
-                return Map.of("success", false, "message", "Sản phẩm không tồn tại.");
+                return Map.of("success", false, "message", "Product does not exist.");
             }
             cartService.addToCart(userId, productId, quantity);
             int count = cartService.getCartItemCount(userId);
             session.setAttribute("cartCount", count);
-            return Map.of("success", true, "message", "Đã thêm vào giỏ hàng!", "count", count);
+            return Map.of("success", true, "message", "Added to cart!", "count", count);
         } catch (Exception e) {
-            return Map.of("success", false, "message", e.getMessage() != null ? e.getMessage() : "Có lỗi xảy ra.");
+            return Map.of("success", false, "message", e.getMessage() != null ? e.getMessage() : "An error occurred.");
         }
     }
 
@@ -119,18 +128,20 @@ public class CartController {
         // Check if user is admin - admin cannot add to cart
         String role = (String) session.getAttribute("role");
         if (role != null && "admin".equalsIgnoreCase(role)) {
-            redirectAttributes.addFlashAttribute("error", "Admin không thể thêm sản phẩm vào giỏ hàng.");
+            redirectAttributes.addFlashAttribute("error", "Admin cannot add products to cart.");
             return "redirect:/products";
         }
 
         try {
             var productOpt = productService.getProductById(productId);
             if (productOpt.isEmpty()) {
-                redirectAttributes.addFlashAttribute("error", "Sản phẩm không tồn tại");
+                redirectAttributes.addFlashAttribute("error", "Product does not exist");
                 return "redirect:/products";
             }
             cartService.addToCart(userId, productId, quantity);
-            redirectAttributes.addFlashAttribute("success", "Đã thêm vào giỏ hàng");
+            int count = cartService.getCartItemCount(userId);
+            session.setAttribute("cartCount", count);
+            redirectAttributes.addFlashAttribute("success", "Added to cart");
             return "redirect:/cart/view";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -153,11 +164,13 @@ public class CartController {
         try {
             if (quantity <= 0) {
                 cartService.removeFromCart(cartItemId);
-                redirectAttributes.addFlashAttribute("success", "Đã xoá sản phẩm");
+                redirectAttributes.addFlashAttribute("success", "Product removed");
             } else {
                 cartService.updateCartItemQuantity(cartItemId, quantity);
-                redirectAttributes.addFlashAttribute("success", "Đã cập nhật giỏ hàng");
+                redirectAttributes.addFlashAttribute("success", "Cart updated");
             }
+            int count = cartService.getCartItemCount(userId);
+            session.setAttribute("cartCount", count);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -177,7 +190,9 @@ public class CartController {
 
         try {
             cartService.removeFromCart(cartItemId);
-            redirectAttributes.addFlashAttribute("success", "Đã xoá sản phẩm");
+            int count = cartService.getCartItemCount(userId);
+            session.setAttribute("cartCount", count);
+            redirectAttributes.addFlashAttribute("success", "Product removed");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -193,7 +208,8 @@ public class CartController {
 
         try {
             cartService.clearCart(userId);
-            redirectAttributes.addFlashAttribute("success", "Đã xoá giỏ hàng");
+            session.setAttribute("cartCount", 0);
+            redirectAttributes.addFlashAttribute("success", "Cart cleared");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -225,7 +241,7 @@ public class CartController {
         // Check if user is admin - admin cannot checkout
         String role = (String) session.getAttribute("role");
         if (role != null && "admin".equalsIgnoreCase(role)) {
-            model.addAttribute("error", "Admin không thể đặt hàng.");
+            model.addAttribute("error", "Admin cannot place orders.");
             return "redirect:/";
         }
 
@@ -235,11 +251,19 @@ public class CartController {
 
             if (cartItems.isEmpty()) return "redirect:/cart/view";
 
+            // Pre-fill user's default address
+            try {
+                var userOpt = userService.getUserById(userId);
+                if (userOpt.isPresent()) {
+                    model.addAttribute("defaultAddress", userOpt.get().getAddress());
+                }
+            } catch (Exception ignored) {}
+
             model.addAttribute("cartItems", cartItems);
             model.addAttribute("cartTotal", total);
             return "cart/checkout";
         } catch (Exception e) {
-            model.addAttribute("error", "Không thể tải trang thanh toán: " + e.getMessage());
+            model.addAttribute("error", "Could not load checkout page: " + e.getMessage());
             return "redirect:/cart/view";
         }
     }
@@ -249,7 +273,9 @@ public class CartController {
     @PostMapping("/checkout")
     public String processCheckout(
             @RequestParam String shippingAddress,
+            @RequestParam String paymentMethod,
             @RequestParam(required = false) String notes,
+            HttpServletRequest request,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
@@ -259,92 +285,137 @@ public class CartController {
         // Check if user is admin - admin cannot create order
         String role = (String) session.getAttribute("role");
         if (role != null && "admin".equalsIgnoreCase(role)) {
-            redirectAttributes.addFlashAttribute("error", "Admin không thể đặt hàng.");
+            redirectAttributes.addFlashAttribute("error", "Admin cannot place orders.");
             return "redirect:/";
         }
 
         try {
             List<CartItem> cartItems = cartService.getCartItemsSafe(userId);
             if (cartItems.isEmpty()) {
-                redirectAttributes.addFlashAttribute("error", "Giỏ hàng trống");
+                redirectAttributes.addFlashAttribute("error", "Cart is empty");
                 return "redirect:/cart/view";
             }
 
             // 1. Lấy User
             var userOpt = userService.getUserById(userId);
             if (userOpt.isEmpty()) {
-                redirectAttributes.addFlashAttribute("error", "Không tìm thấy người dùng");
+                redirectAttributes.addFlashAttribute("error", "User not found");
                 return "redirect:/cart/view";
             }
 
-            // 2. Tạo Order
             Order order = new Order();
             order.setUser(userOpt.get());
             order.setOrderDate(LocalDateTime.now());
-            order.setStatus("pending_payment");
             order.setShippingAddress(shippingAddress);
+            order.setPaymentMethod(paymentMethod);
             if (notes != null && !notes.isBlank()) order.setNotes(notes);
+            
+            // Set status dựa vào phương thức thanh toán
+            if ("COD".equalsIgnoreCase(paymentMethod)) {
+                order.setStatus("shipping"); // COD - đã xác nhận, đang giao hàng
+            } else {
+                order.setStatus("pending_payment"); // Chờ thanh toán online
+            }
+            
             Order savedOrder = orderService.createOrder(order);
 
+            double totalAmount = 0.0;
             // 3. Tạo OrderDetail
             for (CartItem item : cartItems) {
                 Product product = item.getProduct();
+                double itemPrice = product.getPrice().doubleValue();
+                totalAmount += itemPrice * item.getQuantity();
+                
                 OrderDetail detail = new OrderDetail(
                     savedOrder,
                     product,
                     item.getQuantity(),
-                    BigDecimal.valueOf(product.getPrice().doubleValue())
+                    BigDecimal.valueOf(itemPrice)
                 );
                 orderDetailService.createOrderDetail(detail);
             }
 
             // 4. Xoá giỏ hàng
             cartService.clearCart(userId);
+            session.setAttribute("cartCount", 0);
 
-            // 5. Redirect sang trang hiển thị QR
-            return "redirect:/cart/payment/" + savedOrder.getOrderId();
+            // 5. Xử lý redirect tuỳ theo payment method
+            if ("MOMO".equals(paymentMethod)) {
+                String orderInfo = "Payment for order " + savedOrder.getOrderId() + " at ComputerShop";
+                var result = momoSandboxService.createPayment(savedOrder.getOrderId(), Math.round(totalAmount), orderInfo);
+                if (result.isSuccess()) {
+                    return "redirect:" + result.getPayUrl();
+                } else {
+                    redirectAttributes.addFlashAttribute("error", "MoMo payment creation error: " + result.getErrorMessage());
+                    return "redirect:/user/orders";
+                }
+            } else if ("VNPAY".equals(paymentMethod)) {
+                long amount = Math.round(totalAmount);
+                String orderInfo = "Payment for order " + savedOrder.getOrderId() + " at ComputerShop";
+                String ipAddr = request.getRemoteAddr();
+                
+                // Go to VNPay Sandbox
+                String payUrl = vnPayService.createPaymentUrl(
+                        savedOrder.getOrderId(), amount, orderInfo, ipAddr);
+                        
+                return "redirect:" + payUrl;
+            } else {
+                // COD - direct to orders page with success message
+                redirectAttributes.addFlashAttribute("success", "Order placed successfully! We will deliver to: " + shippingAddress);
+                return "redirect:/user/orders";
+            }
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Đặt hàng thất bại: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Order failed: " + e.getMessage());
             return "redirect:/cart/checkout";
         }
     }
 
-    // ─── Trang thanh toán QR VietQR ───────────────────────────────────────────
+    // ─── Trang thanh toán online (cho các đơn chưa thanh toán) ───────────────
 
     @GetMapping("/payment/{orderId}")
     public String paymentPage(@PathVariable Integer orderId,
+                              HttpServletRequest request,
                               HttpSession session,
-                              Model model) {
+                              RedirectAttributes redirectAttributes) {
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) return "redirect:/login";
 
         try {
             var orderOpt = orderService.getOrderById(orderId);
             if (orderOpt.isEmpty() || !orderOpt.get().getUser().getUserId().equals(userId)) {
-                return "redirect:/orders";
+                return "redirect:/user/orders";
             }
 
             Order order  = orderOpt.get();
+            
+            // Nếu đơn hàng đã được thanh toán hoặc huỷ bỏ thì không cho thanh toán lại
+            if (!"pending_payment".equals(order.getStatus())) {
+                redirectAttributes.addFlashAttribute("error", "This order cannot be paid.");
+                return "redirect:/user/orders";
+            }
+            
             long amount  = Math.round(order.getTotalAmount());
-            String note  = "Thanh toan don hang #" + orderId;
+            String orderInfo = "Payment for order " + orderId + " at ComputerShop";
+            String ipAddr = request.getRemoteAddr();
 
-            // Sinh QR VietQR Quick Link — ảnh QR từ img.vietqr.io, đúng chuẩn NAPAS
-            String qrImageUrl = momoService.buildVietQRQuickLink(amount, note);
-
-            model.addAttribute("order",         order);
-            model.addAttribute("qrImageUrl",    qrImageUrl);
-            model.addAttribute("accountNumber", momoService.getAccountNumber());
-            model.addAttribute("accountName",   momoService.getAccountName());
-            model.addAttribute("bankName",      momoService.getBankName());
-            model.addAttribute("amount",        amount);
-            model.addAttribute("note",          note);
-
-            return "cart/payment";
+            // Tạo thanh toán qua MoMo Sandbox hoặc VNPay Sandbox
+            if ("MOMO".equals(order.getPaymentMethod())) {
+                var result = momoSandboxService.createPayment(orderId, amount, orderInfo);
+                if (result.isSuccess()) {
+                    return "redirect:" + result.getPayUrl();
+                } else {
+                    redirectAttributes.addFlashAttribute("error", "MoMo payment creation error: " + result.getErrorMessage());
+                    return "redirect:/user/orders";
+                }
+            } else {
+                String payUrl = vnPayService.createPaymentUrl(orderId, amount, orderInfo, ipAddr);
+                return "redirect:" + payUrl;
+            }
 
         } catch (Exception e) {
-            model.addAttribute("error", "Không thể tạo QR thanh toán: " + e.getMessage());
-            return "redirect:/orders";
+            redirectAttributes.addFlashAttribute("error", "Could not create payment: " + e.getMessage());
+            return "redirect:/user/orders";
         }
     }
 }
